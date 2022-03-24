@@ -17,7 +17,7 @@
         <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập">
     </div>
     <div class="form-group">
-        <label for="password" class="form-label">Tên đăng nhập</label>
+        <label for="password" class="form-label">Mật khẩu</label>
         <input type="text" class="form-control" id="password" name="password" placeholder="Mật khẩu">
     </div>
     <button type="submit" class="btn">Đăng nhập</button>

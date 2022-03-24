@@ -14,3 +14,6 @@
     height: 16px;
     margin-top: 6px;
 }
+.table-header{
+    text-align: start;
+}
