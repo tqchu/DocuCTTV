@@ -20,18 +20,23 @@ public class AdminDAO {
 		String username=admin.getUsername();
 		String password= admin.getPassword();
 		String sql="SELECT * FROM admin WHERE (username=?) and (password=?)";
-		Connection connection=dataSource.getConnection();
-		PreparedStatement statement=connection.prepareStatement(sql);
-		statement.setString(1, username);
-		statement.setString(2, password);
-		ResultSet resultSet= statement.executeQuery();
-		while (resultSet.next()){
-			int userId= resultSet.getInt("user_id");
-			String fullName= resultSet.getString("fullname");
-			String userName= resultSet.getString("username");
-			String passWord= resultSet.getString("password");
-			String role= resultSet.getString("role");
-			authenticatedAdmin=new Admin(userId,username,passWord,fullName,role);
+		try{
+			Connection connection=dataSource.getConnection();
+			PreparedStatement statement=connection.prepareStatement(sql);
+			statement.setString(1, username);
+			statement.setString(2, password);
+			ResultSet resultSet= statement.executeQuery();
+			while (resultSet.next()){
+				int userId= resultSet.getInt("user_id");
+				String fullName= resultSet.getString("fullname");
+				String userName= resultSet.getString("username");
+				String passWord= resultSet.getString("password");
+				String role= resultSet.getString("role");
+				authenticatedAdmin=new Admin(userId,username,passWord,fullName,role);
+			}
+		}
+		catch (SQLException e){
+			e.printStackTrace();
 		}
 		return authenticatedAdmin;
 	}

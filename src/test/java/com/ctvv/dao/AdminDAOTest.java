@@ -36,7 +36,14 @@ class AdminDAOTest {
 
 	@Test
 	void validate() {
-
+		Admin admin = new Admin("12345689","dochautrinh");
+		try{
+			adminDAO.validate(admin);
+			assertEquals(admin.getRole(),"admin");
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 
 	@AfterEach
