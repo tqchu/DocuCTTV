@@ -1,0 +1,142 @@
+.header {
+    background-color: #fff;
+    display: flex;
+    align-items: CENTER;
+    padding: 6px 8px 10px;
+}
+
+.header__logo {
+    background-image: url("images/logo.png");
+    background-size: contain;
+    width: 126px;
+    height: 47px;
+}
+
+.header__action {
+    line-height: 16px;
+    height: 16px;
+    margin-top: 14px;
+    opacity: 0.7;
+    border-left: 1px solid rgba(0, 0, 0, 0.7);
+    padding-left: 10px;
+}
+
+.table-header {
+    text-align: start;
+}
+
+.admin-information {
+    margin-left: auto;
+    margin-right: 8px;
+    position: relative;
+    padding: 10px 0;
+
+}
+
+.admin-information__icon {
+    font-size: 14px;
+}
+
+.admin-information__admin-name {
+    margin-left: 6px;
+    font-size: 14px;
+}
+
+.admin-information__popover::before {
+    content: '';
+
+}
+
+.admin-information__popover {
+    position: absolute;
+    display: none;
+    top: calc(100% - 2px);
+    right: 0;
+    background-color: #fff;
+    width: 160px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+}
+
+.admin-information__popover-item {
+    font-size: 15px;
+    padding: 6px 4px;
+    color: #000;
+    display: block;
+    text-decoration: none;
+}
+
+.admin-information__popover-item:hover {
+    color: #000;
+}
+
+.admin-information__popover-item:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.admin-information:hover .admin-information__popover {
+    display: block;
+}
+
+.login-box {
+    display: flex;
+    width: 320px;
+    margin: auto;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login__heading-text {
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 40px;
+}
+.form-group{
+    width: 280px;
+}
+.submit-btn{
+    background-color: #37BDDB !important;
+    color: #fff !important;
+    width: 120px;
+    margin-top: 20px;
+}
+.login__forget-password{
+    margin-top: 4px;
+    margin-left: auto;
+    margin-right: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #000 !important;
+    text-decoration: none;
+}
+.login__fail-message{
+    color: red;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+.admin__update-box{
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 60px auto auto;
+}
+.admin__update-form{
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.admin__update__form-group{
+    width: 320px;
+    margin-bottom: 8px;
+}
+.admin__update__btn{
+
+}
