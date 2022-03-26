@@ -35,4 +35,20 @@ public class AdminDAO {
 		}
 		return authenticatedAdmin;
 	}
+
+	public Admin update(Admin admin) throws SQLException{
+		String fullName= admin.getFullName();
+		String username= admin.getUsername();
+		String password= admin.getPassword();
+		int id= admin.getUser_id();
+		Connection connection = dataSource.getConnection();
+		String sql = "UPDATE admin SET fullname=?, username=?, password=? WHERE user_id=?";
+		PreparedStatement statement = connection.prepareStatement(sql);
+		statement.setString(1, fullName);
+		statement.setString(2, username);
+		statement.setString(3, password);
+		statement.setInt(4, id);
+		statement.execute();
+		return admin;
+	}
 }

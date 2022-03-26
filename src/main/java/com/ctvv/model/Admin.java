@@ -19,6 +19,18 @@ public class Admin {
 		this.password = password;
 		this.username=username;
 	}
+	public Admin( String fullName,String username,String password) {
+		this.password = password;
+		this.username=username;
+		this.fullName=fullName;
+	}
+
+	public Admin(int id, String fullName, String username, String password) {
+		this.user_id=id;
+		this.password = password;
+		this.username=username;
+		this.fullName=fullName;
+	}
 
 	public int getUser_id() {
 		return user_id;

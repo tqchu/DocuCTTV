@@ -24,16 +24,30 @@ public class AdminController
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 		session= request.getSession();
-		String role= (String) session.getAttribute("role");
+		Admin admin= (Admin) session.getAttribute("admin");
 		// Chuyển sang trang đăng nhập
-		if (role==null) {
+		if (admin==null) {
+			// Đặt headerAction là đăng nhập
+			request.setAttribute("headerAction", "Đăng nhập");
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/login/login.jsp");
 			dispatcher.forward(request, response);
 		}
 		//
 		else{
-			System.out.print(role);
+			String role=admin.getRole();
+			// TH1: role == super
+			if (role.equals("super")){
+				//
+				RequestDispatcher requestDispatcher= request.getRequestDispatcher("/admin/super/home.jsp");
+				requestDispatcher.forward(request, response);
+
+			}
+			else  {
+				RequestDispatcher requestDispatcher= request.getRequestDispatcher("/admin/admin/home.jsp");
+				requestDispatcher.forward(request, response);
+			}
 		}
 
 	}
@@ -58,14 +72,8 @@ public class AdminController
 			throw new ServletException();
 		}
 		if (authenticatedAdmin != null) {
-			// TH1: la admin
-			if (Objects.equals(authenticatedAdmin.getRole(), "admin")) {
-				session.setAttribute("role", "admin");
-			}
-			// TH2: super admin
-			else {
-				session.setAttribute("role", "super admin");
-			}
+			session.removeAttribute("loginMessage");
+			session.setAttribute("admin", authenticatedAdmin);
 			// Chuyển về lại trang home (/admin)
 			try {
 				response.sendRedirect(request.getContextPath()+ "/admin"); // contextPath: link web
@@ -76,8 +84,12 @@ public class AdminController
 		}
 		else {
 
-			// Đưa ra thông báo lỗi
-
+		session.setAttribute("loginMessage", "Sai tài khoản hoặc mật khẩu");
+			try {
+				response.sendRedirect(request.getContextPath()+"/admin");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
 		}
 		// TH2: validate fail
