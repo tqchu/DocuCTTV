@@ -140,3 +140,6 @@
 .admin__update__btn{
 
 }
+.admin__update__error-message{
+	color: red;
+}
