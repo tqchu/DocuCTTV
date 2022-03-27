@@ -58,8 +58,8 @@ public class AdminUpdateController
 		admin.setPassword(password);
 		try {
 			// Gán admin trong session bằng admin vừa được câp nhật
-			session.setAttribute("admin", adminDAO.update(admin));
-
+			Admin updatedAdmin = adminDAO.update(admin);
+			session.setAttribute("admin", updatedAdmin);
 		}
 		// Catch tất cả exception của SQLException
 		catch (SQLException e){

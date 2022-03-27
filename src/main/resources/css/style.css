@@ -142,4 +142,6 @@
 }
 .admin__update__error-message{
 	color: red;
+    margin-left: 22px;
+    margin-bottom: 20px;
 }
