@@ -97,16 +97,19 @@
     text-align: center;
     margin-bottom: 40px;
 }
-.form-group{
+
+.form-group {
     width: 280px;
 }
-.submit-btn{
+
+.submit-btn {
     background-color: #37BDDB !important;
     color: #fff !important;
     width: 120px;
     margin-top: 20px;
 }
-.login__forget-password{
+
+.login__forget-password {
     margin-top: 4px;
     margin-left: auto;
     margin-right: 20px;
@@ -115,33 +118,48 @@
     color: #000 !important;
     text-decoration: none;
 }
-.login__fail-message{
+
+.login__fail-message {
     color: red;
     margin-left: 20px;
     margin-bottom: 20px;
 }
-.admin__update-box{
+
+.admin__update-box {
     width: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 60px auto auto;
 }
-.admin__update-form{
+
+.admin__update-form {
     width: 320px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-.admin__update__form-group{
+
+.admin__update__form-group {
     width: 320px;
     margin-bottom: 8px;
 }
-.admin__update__btn{
 
+.admin__update__btn {
+
+    margin-top: 16px;
 }
-.admin__update__error-message{
-	color: red;
+
+.admin__update__error-message {
+    color: red;
     margin-left: 22px;
     margin-bottom: 20px;
+}
+
+.admin__forgot-password-message {
+    text-align: center;
+    margin: 160px auto auto;
+    font-size: 24px;
+    line-height: 30px;
+    color: green;
 }
