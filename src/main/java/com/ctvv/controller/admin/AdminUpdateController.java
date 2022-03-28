@@ -50,16 +50,20 @@ public class AdminUpdateController
 		}
 		session= request.getSession();
 		Admin admin= (Admin) session.getAttribute("admin");
+
+		// Lấy dữ liệu từ form
 		String fullName = request.getParameter("fullName");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		admin.setFullName(fullName);
-		admin.setUsername(username);
-		admin.setPassword(password);
+		// Tạo 1 bản sao của admin (session)
+		Admin updatedAdmin= new Admin(admin);
+		updatedAdmin.setFullName(fullName);
+		updatedAdmin.setUsername(username);
+		updatedAdmin.setPassword(password);
 		try {
-			// Gán admin trong session bằng admin vừa được câp nhật
-			session.setAttribute("admin", adminDAO.update(admin));
-
+			updatedAdmin = adminDAO.update(updatedAdmin);
+			// Gán admin trong session bằng admin vừa được câp nhật nếu không có exception xảy ra.
+			session.setAttribute("admin", updatedAdmin);
 		}
 		// Catch tất cả exception của SQLException
 		catch (SQLException e){

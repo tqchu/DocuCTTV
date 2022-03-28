@@ -20,7 +20,7 @@
           rel="stylesheet">
 </head>
 <body>
-<jsp:include page="../../common/header.jsp"/>
+<jsp:include page="../common/header.jsp"/>
 <div class="admin__update-box">
     <c:if test="${errorMessage!=null}">
         <div class="admin__update__error-message">${errorMessage}</div>
@@ -29,15 +29,18 @@
 
         <%--    <input type="hidden" name="userId" value="${admin.user_id}">--%>
         <div class="admin__update__form-group form-floating">
-            <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Tên">
+            <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Tên"
+                   value="${admin.fullName}">
             <label  for="fullName" class="">Tên</label>
         </div>
         <div class="admin__update__form-group form-floating">
-            <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập">
+            <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập"
+                   value="${admin.username}">
             <label  for="username" class="">Tên đăng nhập</label>
         </div>
         <div class="admin__update__form-group form-floating">
-            <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu"
+                   value="${admin.password}">
             <label  for="password" class="">Mật khẩu</label>
         </div>
         <button type="submit" class="btn btn-lg btn-primary admin__update__btn">Lưu</button>

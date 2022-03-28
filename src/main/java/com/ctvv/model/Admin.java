@@ -15,21 +15,30 @@ public class Admin {
 		this.role = role;
 	}
 
+	public Admin(Admin admin) {
+		this.user_id = admin.user_id;
+		this.username = admin.username;
+		this.password = admin.password;
+		this.fullName = admin.fullName;
+		this.role = admin.role;
+	}
+
 	public Admin(String password, String username) {
 		this.password = password;
-		this.username=username;
+		this.username = username;
 	}
-	public Admin( String fullName,String username,String password) {
+
+	public Admin(String fullName, String username, String password) {
 		this.password = password;
-		this.username=username;
-		this.fullName=fullName;
+		this.username = username;
+		this.fullName = fullName;
 	}
 
 	public Admin(int id, String fullName, String username, String password) {
-		this.user_id=id;
+		this.user_id = id;
 		this.password = password;
-		this.username=username;
-		this.fullName=fullName;
+		this.username = username;
+		this.fullName = fullName;
 	}
 
 	public int getUser_id() {
