@@ -163,3 +163,8 @@
     line-height: 30px;
     color: green;
 }
+.admin__update__success-message{
+    color: green;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
