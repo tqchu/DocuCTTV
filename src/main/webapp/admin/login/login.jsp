@@ -24,22 +24,22 @@
 
 </head>
 <body>
-<jsp:include page="../../common/header.jsp"/>
+<jsp:include page="../common/header.jsp"/>
 <div class="login-box">
     <div class="login__heading-text">Đăng nhập</div>
     <c:if test="${loginMessage!=null}">
         <div class="login__fail-message">${loginMessage}</div>
     </c:if>
     <form action="${context}/admin" method="post" class="login-form" autocomplete="off">
-        <div class="form-group">
-            <label for="username" class="form-label"></label>
+        <div class="form-group form-floating">
             <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập">
+            <label for="username" class="form-label">Tên đăng nhập</label>
         </div>
-        <div class="form-group">
-            <label for="password" class="form-label"></label>
+        <div class="form-group form-floating">
             <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">
+            <label for="password" class="form-label">Mật khẩu</label>
         </div>
-        <a href="" class="login__forget-password">Quên mật khẩu?</a>
+        <a href="${context}/admin/forgot-password" class="login__forget-password">Quên mật khẩu?</a>
         <button type="submit" class="btn submit-btn">Đăng nhập</button>
 </form>
 </div>
