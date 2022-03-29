@@ -25,7 +25,7 @@
     text-align: start;
 }
 
-.admin-information {
+.information {
     margin-left: auto;
     margin-right: 8px;
     position: relative;
@@ -33,21 +33,21 @@
 
 }
 
-.admin-information__icon {
+.information__icon {
     font-size: 14px;
 }
 
-.admin-information__admin-name {
+.information__admin-name {
     margin-left: 6px;
     font-size: 14px;
 }
 
-.admin-information__popover::before {
+.information__popover::before {
     content: '';
 
 }
 
-.admin-information__popover {
+.information__popover {
     position: absolute;
     display: none;
     top: calc(100% - 2px);
@@ -57,7 +57,7 @@
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
 }
 
-.admin-information__popover-item {
+.information__popover-item {
     font-size: 15px;
     padding: 6px 4px;
     color: #000;
@@ -65,19 +65,19 @@
     text-decoration: none;
 }
 
-.admin-information__popover-item:hover {
+.information__popover-item:hover {
     color: #000;
 }
 
-.admin-information__popover-item:hover {
+.information__popover-item:hover {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.admin-information:hover .admin-information__popover {
+.information:hover .information__popover {
     display: block;
 }
 
-.login-box {
+.login-box, .register-box {
     display: flex;
     width: 320px;
     margin: auto;
@@ -85,13 +85,13 @@
     flex-direction: column;
 }
 
-.login-form {
+.login-form, .register-form {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.login__heading-text {
+.login__heading-text, .register__heading-text {
     font-size: 1.5rem;
     font-weight: 500;
     text-align: center;
@@ -105,7 +105,7 @@
 .submit-btn {
     background-color: #37BDDB !important;
     color: #fff !important;
-    width: 120px;
+    width: 160px;
     margin-top: 20px;
 }
 
@@ -167,4 +167,40 @@
     color: green;
     margin-bottom: 20px;
     font-size: 18px;
+}
+
+
+/*CUSTOMER*/
+.customer-header{
+    display: flex;
+    width: 100%;
+}
+
+.customer-header__contact{
+    display: flex;
+    margin-left: 10px;
+}
+.customer-header__phone{
+    margin-right: 10px;
+    display: block;
+}
+.customer-header__phone i{
+    color: #F24E1E;
+    cursor: pointer;
+}
+.customer-header__phone__text{
+    margin-left: 4px;
+    text-decoration: none;
+    color: #000;
+}
+.customer-header__social{
+    border-left: 1px solid rgba(0,0,0,0.6);
+    padding: 0 8px;
+}
+.customer-header__facebook-icon{
+    color: #3c28ca;
+}
+.customer-header__insta-icon
+{
+    color: #f03a0a;
 }
