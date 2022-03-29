@@ -26,7 +26,7 @@
 <jsp:include page="../common/search-header.jsp"/>
 
 <div class="register-box">
-    <div class="register__heading-text">Thiết lập mật khẩu</div>
+    <div class="register__heading-text">Thiết lập tài khoản</div>
 
     <form action="${context}" method="post" class="register-form" autocomplete="off">
         <div class="form-group form-floating">
@@ -38,7 +38,45 @@
                    placeholder="Xác nhận mật khẩu">
             <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
         </div>
+        <div class="form-group form-floating">
+            <input type="text" class="form-control" id="fullName" name="fullName"
+                   placeholder="Họ tên">
+            <label for="fullName" class="form-label">Họ tên</label>
+        </div>
+        <div class="form-group form-floating">
+            <input type="date" class="form-control" id="birthday" name="birthday"
+                   placeholder="Ngày sinh">
+            <label for="birthday" class="form-label">Ngày sinh</label>
+        </div>
+        <div class="form-group register__gender">
+            Giới tính:
+            <br>
+            <span class="register__gender-option">
+                <input type="radio" id="gender-male" name="gender" value="male"
+                       placeholder="Giới tính">
+                <label for="gender-male" class="form-label">Nam</label>
+            </span>
+            <span class="register__gender-option">
+                <input type="radio" id="gender-female" name="gender" value="female"
+                       placeholder="Giới tính">
+                <label for="gender-female" class="form-label">Nữ</label>
 
+            </span>
+
+            <span class="register__gender-option">
+                <input type="radio" id="gender-undefined" name="gender" value="undefined"
+                       placeholder="Giới tính">
+                <label for="gender-undefined" class="form-label">Chưa xác định</label>
+            </span>
+
+
+        </div>
+        <div class="form-group register__accept-policy">
+            <input type="checkbox" id="accept-policy" name="accept-policy" value="accept">
+            <label for="accept-policy" class="accept-policy">Tôi đồng ý với các <a href="" style="color: #f03a0a">điều khoản sử
+                dụng</a> của
+                CTVV.</label>
+        </div>
 
         <button type="submit" class="btn submit-btn">Đăng ký</button>
     </form>

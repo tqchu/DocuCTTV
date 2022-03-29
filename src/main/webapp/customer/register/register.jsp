@@ -32,9 +32,10 @@
     <form action="${context}" method="post" class="register-form" autocomplete="off">
         <div class="form-group form-floating">
             <input type="text" class="form-control" id="phone" name="phone" placeholder="Số điện thoại">
-            <label for="phone" class="form-label">Số điện thoại</label>
+            <label for="phone" class="form-label">Nhập số điện thoại</label>
         </div>
         <button type="submit" class="btn submit-btn">Tiếp tục</button>
+
     </form>
 </div>
 <jsp:include page="../../common/footer.jsp"/>

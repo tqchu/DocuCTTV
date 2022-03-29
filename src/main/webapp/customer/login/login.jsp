@@ -43,6 +43,10 @@
         <a href="${context}/forgot-password" class="login__forget-password">Quên mật khẩu?</a>
         <button type="submit" class="btn submit-btn">Đăng nhập</button>
     </form>
+    <div class="register-suggestion">
+        Người dùng mới? <a href="${context}/register" class="register-suggestion-link">Đăng ký</a>
+    </div>
+
 </div>
 <jsp:include page="../../common/footer.jsp"/>
 </body>

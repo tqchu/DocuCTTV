@@ -142,7 +142,7 @@
 
 .admin__update__form-group {
     width: 320px;
-    margin-bottom: 8px;
+    margin-bottom: 2px;
 }
 
 .admin__update__btn {
@@ -203,4 +203,31 @@
 .customer-header__insta-icon
 {
     color: #f03a0a;
+}
+
+/* REGISTER */
+.register__gender-option{
+    margin-right: 10px;
+}
+.register__accept-policy{
+
+    display: flex;
+    align-items: center;
+    margin-top: 12px;
+
+}
+.accept-policy{
+
+    margin-left: 10px;
+
+}
+.register__gender{
+    margin-top: 6px;
+}
+.register-suggestion{
+    margin-left: 20px;
+    margin-top: 12px;
+}
+.register-suggestion-link{
+    color: forestgreen;
 }
