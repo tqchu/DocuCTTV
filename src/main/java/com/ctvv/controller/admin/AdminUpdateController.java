@@ -62,8 +62,18 @@ public class AdminUpdateController
 		updatedAdmin.setPassword(password);
 		try {
 			updatedAdmin = adminDAO.update(updatedAdmin);
+			// Thành công
 			// Gán admin trong session bằng admin vừa được câp nhật nếu không có exception xảy ra.
 			session.setAttribute("admin", updatedAdmin);
+			// Đặt tin nhắn thành công
+			request.setAttribute("successMessage", "Cập nhật thành công!");
+			RequestDispatcher dispatcher=request.getRequestDispatcher("/admin/update/updateInformationForm.jsp");
+			try {
+				dispatcher.forward(request, response);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 		}
 		// Catch tất cả exception của SQLException
 		catch (SQLException e){
