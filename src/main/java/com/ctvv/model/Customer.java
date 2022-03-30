@@ -96,4 +96,12 @@ public class Customer {
     public void setDoB(Date date) {
         this.DoB = date;
     }
+
+    public Address getAddress() {
+        return this.address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 }
