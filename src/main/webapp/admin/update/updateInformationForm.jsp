@@ -10,7 +10,7 @@
     <!-- RESET CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
           integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <!-- BOOSTRAP CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FONT   -->
@@ -24,24 +24,27 @@
 <div class="admin__update-box">
     <c:if test="${errorMessage!=null}">
         <div class="admin__update__error-message">${errorMessage}</div>
-    </c:if>
+    </c:if> <c:if test="${successMessage!=null}">
+    <div class="admin__update__success-message">${successMessage}</div>
+</c:if>
+
     <form action="${context}/admin/update" method="post" class="admin__update-form">
 
         <%--    <input type="hidden" name="userId" value="${admin.user_id}">--%>
         <div class="admin__update__form-group form-floating">
             <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Tên"
                    value="${admin.fullName}">
-            <label  for="fullName" class="">Tên</label>
+            <label for="fullName" class="">Tên</label>
         </div>
         <div class="admin__update__form-group form-floating">
             <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập"
                    value="${admin.username}">
-            <label  for="username" class="">Tên đăng nhập</label>
+            <label for="username" class="">Tên đăng nhập</label>
         </div>
         <div class="admin__update__form-group form-floating">
             <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu"
                    value="${admin.password}">
-            <label  for="password" class="">Mật khẩu</label>
+            <label for="password" class="">Mật khẩu</label>
         </div>
         <button type="submit" class="btn btn-lg btn-primary admin__update__btn">Lưu</button>
     </form>
