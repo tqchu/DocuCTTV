@@ -293,15 +293,16 @@
     margin-bottom: 8px;
 
 }
-
+.user__manage-account__menu-item__text,
 .user__manage-account__profile-item {
     color: #000;
     text-decoration: none;
+}
+.user__manage-account__profile-item{
     padding: 6px 0;
     font-size: 15px;
 }
-
-.user__manage-account__profile-item:hover {
+.user__manage-account__profile-item:hover, .user__manage-account__menu-item__text:hover {
     color: #ee4d2d;
 }
 
@@ -339,6 +340,7 @@
 
 .user__manage-account__content__main {
     margin-top: 20px;
+    font-size: 15px;
 }
 
 .user__manage-account__profile-form-group {
@@ -347,7 +349,7 @@
 }
 
 .user__manage-account__profile-form-group > label {
-    width: 100px;
+    width: 140px;
     text-align: end;
     margin-right: 20px;
     color: #777777;
@@ -381,9 +383,12 @@
 
 .user__manage-account__profile__submit-btn {
     margin-top: 40px;
-    margin-left: 124px;
+    margin-left: 164px;
     padding: 4px 0;
     font-size: 15px;
+}
+.user__manage-account__change-recipient-phone, .user__manage-account__forgot-password{
+    margin-left: 20px;
 }
 
 

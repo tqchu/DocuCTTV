@@ -37,9 +37,9 @@
                     <div class="user__manage-account__menu-list">
                         <div class="user__manage-account__menu-item">
                             <i class="las la-user-alt"></i>
-                            <div class="user__manage-account__menu-item__text">
+                            <a href="" class="user__manage-account__menu-item__text">
                                 Tài khoản của tôi
-                            </div>
+                            </a>
                             <div class="user__manage-account__profile-list">
                                 <a href="" class="user__manage-account__profile-item">Hồ sơ</a>
                                 <a href="" class="user__manage-account__profile-item">Đổi mật khẩu</a>
@@ -48,13 +48,14 @@
                         </div>
                         <div class="user__manage-account__menu-item">
                             <i class="las la-shopping-bag"></i>
-                            <div class="user__manage-account__menu-item__text">Đơn mua</div>
+                            <a href="" class="user__manage-account__menu-item__text">Đơn mua</a>
 
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-10">
+                    <%-- PROFILE--%>
                 <div class="user__manage-account__content">
                     <div class="user__manage-account__content__header">
                         <div class="user__manage-account__content__text-heading">
@@ -74,6 +75,7 @@
                             <div class="user__manage-account__profile-form-group">
                                 <label for="phoneNumber">Số điện thoại</label>
                                 <input type="text" name="phoneNumber" id="phoneNumber">
+                                <a href="" class="user__manage-account__change-recipient-phone">Đổi SDT</a>
                             </div>
                             <div class="user__manage-account__gender-group user__manage-account__profile-form-group"
                                  id="gender">
@@ -83,7 +85,7 @@
                                     <input type="radio" name="gender" id="male" value="male">
                                 </div>
                                 <div class="user__manage-account__gender-option">
-                                    <label for="male">Nữ</label>
+                                    <label for="female">Nữ</label>
                                     <input type="radio" name="gender" id="female" value="female">
                                 </div>
 
@@ -98,11 +100,94 @@
                                 <label for="birthday">Ngày sinh</label>
                                 <input type="date" name="birthday" id="birthday">
                             </div>
-                            <input type="submit" class="btn btn-md btn-primary user__manage-account__profile__submit-btn"
+
+                            <input type="submit"
+                                   class="btn btn-md btn-primary user__manage-account__profile__submit-btn"
                                    value="Lưu"
                             />
                         </form>
                     </div>
+                    <%-- CHANGE PASSWORD--%>
+                    <%--<div class="user__manage-account__content__header">
+                        <div class="user__manage-account__content__text-heading">
+                            Đổi Mật Khẩu
+                        </div>
+                        <div class="user__manage-account__content__text-description">
+                            Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác
+                        </div>
+
+                    </div>
+                    <div class="user__manage-account__content__main">
+                        <form action="" class="" method="post">
+                            <div class="user__manage-account__profile-form-group">
+                                <label for="oldPassword">Mật Khẩu Hiện Tại</label>
+                                <input type="text" name="oldPassword" id="oldPassword">
+                                <a href="" class="user__manage-account__forgot-password">Quên mật khẩu?</a>
+                            </div>
+                            <div class="user__manage-account__profile-form-group">
+                                <label for="password">Mật Khẩu Mới</label>
+                                <input type="text" name="password" id="password">
+                            </div>
+
+                            <div class="user__manage-account__profile-form-group">
+                                <label for="confirmedPassword">Xác Nhận Mật Khẩu</label>
+                                <input type="date" name="confirmedPassword" id="confirmedPassword">
+                            </div>
+                            <input type="submit"
+                                   class="btn btn-md btn-primary user__manage-account__profile__submit-btn"
+                                   value="Xác nhận"
+                            />
+                        </form>
+                    </div>--%>
+                    <%--ADDRESS--%>
+                    <%--<div class="user__manage-account__content__header">
+                        <div class="user__manage-account__content__text-heading">
+                            Địa chỉ
+                        </div>
+                        <div class="user__manage-account__content__text-description">
+                            Cập nhật thông tin nhận hàng ở đây
+                        </div>
+
+                    </div>
+                    <div class="user__manage-account__content__main">
+                        <form action="" class="" method="post">
+                            <div class="user__manage-account__profile-form-group">
+                                <label for="recipientName">Tên người nhận</label>
+                                <input type="text" name="recipientName" id="recipientName">
+                            </div>
+                            <div class="user__manage-account__profile-form-group">
+                                <label for="recipientPhoneNumber">Số điện thoại</label>
+                                <input type="text" name="recipientPhoneNumber" id="recipientPhoneNumber">
+                                <a href="" class="user__manage-account__change-recipient-phone">Đổi SDT</a>
+                            </div>
+
+                            <div class="user__manage-account__profile-form-group">
+                                <label for="address">Địa chỉ</label>
+                                <input type="text" name="address" id="address">
+                            </div>
+                            <input type="submit"
+                                   class="btn btn-md btn-primary user__manage-account__profile__submit-btn"
+                                   value="Xác nhận"
+                            />
+                        </form>
+                    </div>--%>
+                    <%--<div class="user__manage-account__purchase-bar">
+                        <a href="" class="user__manage-account__purchase-item">
+                            Chờ xác nhận
+                        </a>
+                        <a href="" class="user__manage-account__purchase-item">
+                            Đang giao
+                        </a>
+                        <a href="" class="user__manage-account__purchase-item">
+                            Đã giao
+                        </a>
+                        <a href="" class="user__manage-account__purchase-item">
+                        Đã hủy
+                        </a>
+                    </div>
+                    <div class="user__manage-account__purchase-list">
+
+                    </div>--%>
                 </div>
             </div>
         </div>
