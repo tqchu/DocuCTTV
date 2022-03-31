@@ -66,7 +66,7 @@
             <span class="register__gender-option">
                 <input type="radio" id="gender-undefined" name="gender" value="undefined"
                        placeholder="Giới tính">
-                <label for="gender-undefined" class="form-label">Chưa xác định</label>
+                <label for="gender-undefined" class="form-label">Khác</label>
             </span>
 
 

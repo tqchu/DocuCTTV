@@ -163,7 +163,8 @@
     line-height: 30px;
     color: green;
 }
-.admin__update__success-message{
+
+.admin__update__success-message {
     color: green;
     margin-bottom: 20px;
     font-size: 18px;
@@ -171,63 +172,218 @@
 
 
 /*CUSTOMER*/
-.customer-header{
+.user-header {
     display: flex;
     width: 100%;
+    margin-top: 10px;
 }
 
-.customer-header__contact{
+.user-header__contact {
     display: flex;
     margin-left: 10px;
 }
-.customer-header__phone{
+
+.user-header__phone {
     margin-right: 10px;
     display: block;
 }
-.customer-header__phone i{
+
+.user-header__phone i {
     color: #F24E1E;
     cursor: pointer;
 }
-.customer-header__phone__text{
+
+.user-header__phone__text {
     margin-left: 4px;
     text-decoration: none;
     color: #000;
 }
-.customer-header__social{
-    border-left: 1px solid rgba(0,0,0,0.6);
+
+.user-header__social {
+    border-left: 1px solid rgba(0, 0, 0, 0.6);
     padding: 0 8px;
 }
-.customer-header__facebook-icon{
+
+.user-header__facebook-icon {
     color: #3c28ca;
 }
-.customer-header__insta-icon
-{
+
+.user-header__insta-icon {
     color: #f03a0a;
 }
 
 /* REGISTER */
-.register__gender-option{
+.register__gender-option {
     margin-right: 10px;
 }
-.register__accept-policy{
+
+.register__accept-policy {
 
     display: flex;
     align-items: center;
     margin-top: 12px;
 
 }
-.accept-policy{
+
+.accept-policy {
 
     margin-left: 10px;
 
 }
-.register__gender{
+
+.register__gender {
     margin-top: 6px;
 }
-.register-suggestion{
+
+.register-suggestion {
     margin-left: 20px;
     margin-top: 12px;
 }
-.register-suggestion-link{
+
+.register-suggestion-link {
     color: forestgreen;
 }
+
+/*CUSTOMER - MANAGE ACCOUNT*/
+.user__manage-account {
+    background-color: var(--bg-color);
+    padding: 10px 0 30px;
+}
+
+.user__manage-account__menu {
+
+}
+
+.user__manage-account__menu__heading {
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 18px;
+    text-align: center;
+    padding-bottom: 26px;
+    margin-top: 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+
+.user__manage-account__menu-item {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.user__manage-account__menu-item__text {
+
+    margin-top: 3px;
+}
+
+.user__manage-account__menu-item i {
+    margin-right: 8px;
+    color: #1414de;
+    font-size: 20px;
+}
+
+.user__manage-account__profile-list {
+
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 32px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+
+}
+
+.user__manage-account__profile-item {
+    color: #000;
+    text-decoration: none;
+    padding: 6px 0;
+    font-size: 15px;
+}
+
+.user__manage-account__profile-item:hover {
+    color: #ee4d2d;
+}
+
+.user__manage-account__content {
+
+    padding: 16px 24px 120px;
+    background-color: #fff;
+
+}
+
+.user__manage-account__content__header {
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    padding-bottom: 16px;
+
+}
+
+.user__manage-account__content__text-heading {
+
+    font-size: 18px;
+
+}
+
+.user__manage-account__content__text-description {
+
+    font-size: 15px;
+    margin-top: 6px;
+    color: rgba(0, 0, 0, 0.7);
+
+}
+
+.user__manage-account__menu-list {
+    padding-top: 20px;
+}
+
+.user__manage-account__content__main {
+    margin-top: 20px;
+}
+
+.user__manage-account__profile-form-group {
+    margin-bottom: 16px;
+    font-size: 15px;
+}
+
+.user__manage-account__profile-form-group > label {
+    width: 100px;
+    text-align: end;
+    margin-right: 20px;
+    color: #777777;
+}
+
+.user__manage-account__profile-form-group > input {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    padding: 4px;
+    width: 360px;
+}
+
+.user__manage-account__gender-group {
+    display: flex;
+}
+
+.user__manage-account__gender-option label {
+    margin-right: 6px;
+}
+
+.user__manage-account__gender-option input {
+    transform: translateY(2px);
+}
+
+.user__manage-account__gender-option {
+    margin-right: 20px;
+}
+
+.user__manage-account__gender-option label {
+    padding-right: 4px;
+}
+
+.user__manage-account__profile__submit-btn {
+    margin-top: 40px;
+    margin-left: 124px;
+    padding: 4px 0;
+    font-size: 15px;
+}
+
+

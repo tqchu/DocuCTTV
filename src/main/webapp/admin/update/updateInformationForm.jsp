@@ -30,7 +30,6 @@
 
     <form action="${context}/admin/update" method="post" class="admin__update-form">
 
-        <%--    <input type="hidden" name="userId" value="${admin.user_id}">--%>
         <div class="admin__update__form-group form-floating">
             <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Tên"
                    value="${admin.fullName}">
