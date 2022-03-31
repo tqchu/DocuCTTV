@@ -11,9 +11,9 @@ public class Customer {
     String phonenumber;
     boolean gender;
     Date DoB;
-    Address address; //A customer is possible to have more than one address.
+    String address; //A customer is possible to have more than one address.
 
-    public Customer(int user_id, String username, String password, String fullname, String phonenumber, boolean gender, Date DoB, Address address) {
+    public Customer(int user_id, String username, String password, String fullname, String phonenumber, boolean gender, Date DoB, String address) {
         this.user_id = user_id;
         this.username = username;
         this.password = password;
@@ -26,6 +26,11 @@ public class Customer {
 
     public Customer(int user_id, String username, String password) {
         this.user_id = user_id;
+        this.username = username;
+        this.password = password;
+    }
+
+    public Customer(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -97,11 +102,12 @@ public class Customer {
         this.DoB = date;
     }
 
-    public Address getAddress() {
+    public String getAddress() {
         return this.address;
     }
 
-    public void setAddress(Address address) {
+    public void setAddress(String address) {
         this.address = address;
     }
+
 }
