@@ -33,8 +33,8 @@
     </c:if>
     <form action="${context}" method="post" class="login-form" autocomplete="off">
         <div class="form-group form-floating">
-            <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập">
-            <label for="username" class="form-label">Tên đăng nhập</label>
+            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Số điện thoại">
+            <label for="phoneNumber" class="form-label">Số điện thoại</label>
         </div>
         <div class="form-group form-floating">
             <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">

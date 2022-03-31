@@ -13,7 +13,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-@WebServlet(name = "CustomerController", value = "/customer/login")
+@WebServlet(name = "CustomerController", value = "")
 
 public class CustomerLoginController extends HttpServlet {
     HttpSession session;
@@ -28,7 +28,7 @@ public class CustomerLoginController extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/login/login.jsp");
             dispatcher.forward(request, response);
         } else {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/customer/common/header.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/customer/home/home.jsp");
             requestDispatcher.forward(request, response);
         }
     }
@@ -43,9 +43,9 @@ public class CustomerLoginController extends HttpServlet {
 
     private Customer validate(Customer customer) throws SQLException {
         Customer authenticatedCustomer = null;
-        String username = customer.getUsername();
-        String password = customer.getPassword();
-        String sql = "SELECT * FROM customer WHERE (username=?) and (password=?)";
+        String checkPhoneNumber = customer.getPhoneNumber();
+        String checkPassword = customer.getPassword();
+        String sql = "SELECT * FROM customer WHERE (phone_number=?) and (password=?)";
         Connection connection = null;
         DataSource dataSource = null;
         PreparedStatement statement = null;
@@ -53,13 +53,12 @@ public class CustomerLoginController extends HttpServlet {
         try {
             connection = dataSource.getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setString(1, username);
-            statement.setString(2, password);
+            statement.setString(1, checkPhoneNumber);
+            statement.setString(2,  checkPassword);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int userId = resultSet.getInt("user_id");
-                String userName = resultSet.getString("username");
-                String passWord = resultSet.getString("password");
+                String password = resultSet.getString("password");
                 String fullName = resultSet.getString("fullname");
                 String phoneNumber = resultSet.getString("phonenumber");
                 boolean genDer = resultSet.getBoolean("gender");
@@ -67,7 +66,7 @@ public class CustomerLoginController extends HttpServlet {
                 String address = resultSet.getString("address");
 
                 String role = resultSet.getString("role");
-                authenticatedCustomer = new Customer(userId, username, passWord, fullName, phoneNumber, genDer, dob, address);
+                authenticatedCustomer = new Customer(userId, password, fullName, phoneNumber, genDer, dob, address);
             }
         } finally {
             if (resultSet != null) resultSet.close();
@@ -78,9 +77,9 @@ public class CustomerLoginController extends HttpServlet {
     }
 
     private void authenticate(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        String username = request.getParameter("username");
+        String phoneNumber = request.getParameter("phoneNumber");
         String password = request.getParameter("password");
-        Customer customer = new Customer(username, password);
+        Customer customer = new Customer(phoneNumber, password);
         Customer authenticatedCustomer;
         // TH1: validate thành công
         try {
