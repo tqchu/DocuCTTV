@@ -5,13 +5,13 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 
-@WebServlet(name = "CustomerLogOutController", value = "/customer/logout")
+@WebServlet(name = "CustomerLogOutController", value = "/logout")
 public class CustomerLogOutController extends HttpServlet {
+    private HttpSession session;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session= request.getSession();
+        session= request.getSession();
         session.invalidate();
-        // Redirect về trang chủ
         response.sendRedirect(request.getContextPath());
     }
 

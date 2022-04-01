@@ -1,8 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:set var="context" value="${pageContext.request.contextPath}"/>
-<%--FONT AWESOME ICON--%>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<%-- FONT ICON--%>
+<link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
 <%--CONTENT--%>
 <div class="header">
     <a href="${context}/admin" class="header__logo"></a>
@@ -13,7 +13,7 @@
     <c:if test="${admin!=null}">
         <div class="information">
                 <span class="information__icon">
-                    <i class="fa-solid fa-user"></i>
+                   <i class="lar la-user-circle"></i>
                 </span>
             <span class="information__name">
                     ${admin.fullName}

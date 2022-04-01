@@ -1,11 +1,11 @@
 package com.ctvv.model;
 
 public class Admin {
-	int user_id;
-	String username;
-	String password;
-	String fullName;
-	String role;
+	private int user_id;
+	private String username;
+	private String password;
+	private String fullName;
+	private String role;
 
 	public Admin(int user_id, String username, String password, String fullName, String role) {
 		this.user_id = user_id;

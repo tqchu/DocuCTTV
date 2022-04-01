@@ -1,25 +1,39 @@
 package com.ctvv.controller.customer;
 
+import com.ctvv.dao.AdminDAO;
+import com.ctvv.dao.CustomerDAO;
 import com.ctvv.model.Admin;
 import com.ctvv.model.Customer;
 
-import java.util.Date;
-import java.time.LocalDate;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.sql.*;
-import java.time.LocalDate;
 import javax.sql.DataSource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-@WebServlet(name = "CustomerController", value = "/customer/login")
+@WebServlet(name = "CustomerController", value = "")
 
 public class CustomerLoginController extends HttpServlet {
     HttpSession session;
+    private CustomerDAO customerDAO;
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        Context context = null;
+        try {
+            context = new InitialContext();
+            DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
+            customerDAO = new CustomerDAO(dataSource);
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
     @Override
     protected void doGet(
@@ -31,61 +45,27 @@ public class CustomerLoginController extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/login/login.jsp");
             dispatcher.forward(request, response);
         } else {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/customer/common/header.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/customer/home/home.jsp");
             requestDispatcher.forward(request, response);
         }
     }
 
     @Override
     protected void doPost(
-            HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            HttpServletRequest request, HttpServletResponse response) throws ServletException {
         session = request.getSession();
         authenticate(request, response);
-    }
 
-    private Customer validate(Customer customer) throws SQLException {
-        Customer authenticatedCustomer = null;
-        String phonenumber = customer.getPhonenumber();
-        String password = customer.getPassword();
-        String sql = "SELECT * FROM customer WHERE (phonenumer=?) and (password=?)";
-        Connection connection = null;
-        DataSource dataSource = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setString(1, phonenumber);
-            statement.setString(2, password);
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                int userId = resultSet.getInt("user_id");
-                String passWord = resultSet.getString("password");
-                String fullName = resultSet.getString("fullname");
-                String phoneNumber = resultSet.getString("phonenumber");
-                boolean genDer = resultSet.getBoolean("gender");
-                Date dob = resultSet.getDate("DoB");
-                String address = resultSet.getString("address");
-
-                String role = resultSet.getString("role");
-                authenticatedCustomer = new Customer(userId, phoneNumber, passWord, fullName , genDer, address);
-            }
-        } finally {
-            if (resultSet != null) resultSet.close();
-            if (statement != null) statement.close();
-            if (connection != null) connection.close();
-        }
-        return authenticatedCustomer;
     }
 
     private void authenticate(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        String username = request.getParameter("phoneNumber");
-        String password = request.getParameter("passWord");
-        Customer customer = new Customer(username, password);
+        String phoneNumber = request.getParameter("phoneNumber");
+        String password = request.getParameter("password");
+        Customer customer = new Customer(phoneNumber, password);
         Customer authenticatedCustomer;
         // TH1: validate thành công
         try {
-            authenticatedCustomer = validate(customer);
+            authenticatedCustomer = customerDAO.validate(customer);
         } catch (SQLException e) {
             throw new ServletException();
         }
@@ -93,8 +73,9 @@ public class CustomerLoginController extends HttpServlet {
 
             session.setAttribute("customer", authenticatedCustomer);
 
+            RequestDispatcher dispatcher=request.getRequestDispatcher("/customer/home/home.jsp");
             try {
-                response.sendRedirect(request.getContextPath()); // contextPath: link web
+                dispatcher.forward(request, response);
             } catch (IOException e) {
                 e.printStackTrace();
             }
