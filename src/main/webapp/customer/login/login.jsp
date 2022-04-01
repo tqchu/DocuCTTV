@@ -31,7 +31,7 @@
     <c:if test="${loginMessage!=null}">
         <div class="login__fail-message">${loginMessage}</div>
     </c:if>
-    <form action="${context}" method="post" class="login-form" autocomplete="off">
+    <form action="${context}/" method="post" class="login-form" autocomplete="off">
         <div class="form-group form-floating">
             <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Số điện thoại">
             <label for="phoneNumber" class="form-label">Số điện thoại</label>

@@ -30,14 +30,15 @@
     margin-right: 8px;
     position: relative;
     padding: 10px 0;
-
+    display: flex;
+    align-items: center;
 }
 
 .information__icon {
-    font-size: 14px;
+    font-size: 20px;
 }
 
-.information__admin-name {
+.information__name {
     margin-left: 6px;
     font-size: 14px;
 }
@@ -184,7 +185,6 @@
 }
 
 .user-header__phone {
-    margin-right: 10px;
     display: block;
 }
 
@@ -200,8 +200,16 @@
 }
 
 .user-header__social {
-    border-left: 1px solid rgba(0, 0, 0, 0.6);
     padding: 0 8px;
+}
+
+.user-header__social:before {
+    height: 8px;
+    content: "";
+    border-left: 1px solid rgba(0, 0, 0, 0.6);
+    margin-right: 8px;
+
+
 }
 
 .user-header__facebook-icon {
@@ -242,6 +250,57 @@
 
 .register-suggestion-link {
     color: forestgreen;
+}
+
+/* CUSTOMER HEADER */
+.user__information {
+    margin-left: auto;
+    margin-right: 12px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.user__information__icon {
+
+    font-size: 20px;
+}
+
+.user__information__name {
+    margin-left: 4px;
+}
+
+.user__information__popover:before {
+    content: "";
+}
+
+.user__information__popover {
+    position: absolute;
+    display: none;
+    top: calc(100% - 2px);
+    right: 0;
+    background-color: #fff;
+    width: 160px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
+}
+
+.user__information__popover-item {
+    font-size: 15px;
+    padding: 6px 4px;
+    color: #000;
+    display: block;
+    text-decoration: none;
+}
+
+
+.user__information__popover-item:hover {
+    color: #000;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.user__information:hover .user__information__popover {
+    display: block;
 }
 
 /*CUSTOMER - MANAGE ACCOUNT*/

@@ -1,5 +1,7 @@
 package com.ctvv.controller.customer;
 
+import com.ctvv.dao.AdminDAO;
+import com.ctvv.dao.CustomerDAO;
 import com.ctvv.model.Admin;
 import com.ctvv.model.Customer;
 
@@ -17,6 +19,21 @@ import javax.naming.NamingException;
 
 public class CustomerLoginController extends HttpServlet {
     HttpSession session;
+    private CustomerDAO customerDAO;
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        Context context = null;
+        try {
+            context = new InitialContext();
+            DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
+            customerDAO = new CustomerDAO(dataSource);
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
     @Override
     protected void doGet(
@@ -35,45 +52,10 @@ public class CustomerLoginController extends HttpServlet {
 
     @Override
     protected void doPost(
-            HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            HttpServletRequest request, HttpServletResponse response) throws ServletException {
         session = request.getSession();
         authenticate(request, response);
 
-    }
-
-    private Customer validate(Customer customer) throws SQLException {
-        Customer authenticatedCustomer = null;
-        String checkPhoneNumber = customer.getPhoneNumber();
-        String checkPassword = customer.getPassword();
-        String sql = "SELECT * FROM customer WHERE (phone_number=?) and (password=?)";
-        Connection connection = null;
-        DataSource dataSource = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = dataSource.getConnection();
-            statement = connection.prepareStatement(sql);
-            statement.setString(1, checkPhoneNumber);
-            statement.setString(2,  checkPassword);
-            resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                int userId = resultSet.getInt("user_id");
-                String password = resultSet.getString("password");
-                String fullName = resultSet.getString("fullname");
-                String phoneNumber = resultSet.getString("phonenumber");
-                boolean genDer = resultSet.getBoolean("gender");
-                Date dob = resultSet.getDate("DoB");
-                String address = resultSet.getString("address");
-
-                String role = resultSet.getString("role");
-                authenticatedCustomer = new Customer(userId, password, fullName, phoneNumber, genDer, dob, address);
-            }
-        } finally {
-            if (resultSet != null) resultSet.close();
-            if (statement != null) statement.close();
-            if (connection != null) connection.close();
-        }
-        return authenticatedCustomer;
     }
 
     private void authenticate(HttpServletRequest request, HttpServletResponse response) throws ServletException {
@@ -83,7 +65,7 @@ public class CustomerLoginController extends HttpServlet {
         Customer authenticatedCustomer;
         // TH1: validate thành công
         try {
-            authenticatedCustomer = validate(customer);
+            authenticatedCustomer = customerDAO.validate(customer);
         } catch (SQLException e) {
             throw new ServletException();
         }
@@ -91,8 +73,9 @@ public class CustomerLoginController extends HttpServlet {
 
             session.setAttribute("customer", authenticatedCustomer);
 
+            RequestDispatcher dispatcher=request.getRequestDispatcher("/customer/home/home.jsp");
             try {
-                response.sendRedirect(request.getContextPath()); // contextPath: link web
+                dispatcher.forward(request, response);
             } catch (IOException e) {
                 e.printStackTrace();
             }
