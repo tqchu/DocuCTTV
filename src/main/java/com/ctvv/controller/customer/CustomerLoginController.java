@@ -3,11 +3,14 @@ package com.ctvv.controller.customer;
 import com.ctvv.model.Admin;
 import com.ctvv.model.Customer;
 
+import java.util.Date;
+import java.time.LocalDate;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
 import javax.sql.DataSource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -38,14 +41,13 @@ public class CustomerLoginController extends HttpServlet {
             HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         session = request.getSession();
         authenticate(request, response);
-
     }
 
     private Customer validate(Customer customer) throws SQLException {
         Customer authenticatedCustomer = null;
-        String username = customer.getUsername();
+        String phonenumber = customer.getPhonenumber();
         String password = customer.getPassword();
-        String sql = "SELECT * FROM customer WHERE (username=?) and (password=?)";
+        String sql = "SELECT * FROM customer WHERE (phonenumer=?) and (password=?)";
         Connection connection = null;
         DataSource dataSource = null;
         PreparedStatement statement = null;
@@ -53,12 +55,11 @@ public class CustomerLoginController extends HttpServlet {
         try {
             connection = dataSource.getConnection();
             statement = connection.prepareStatement(sql);
-            statement.setString(1, username);
+            statement.setString(1, phonenumber);
             statement.setString(2, password);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int userId = resultSet.getInt("user_id");
-                String userName = resultSet.getString("username");
                 String passWord = resultSet.getString("password");
                 String fullName = resultSet.getString("fullname");
                 String phoneNumber = resultSet.getString("phonenumber");
@@ -67,7 +68,7 @@ public class CustomerLoginController extends HttpServlet {
                 String address = resultSet.getString("address");
 
                 String role = resultSet.getString("role");
-                authenticatedCustomer = new Customer(userId, username, passWord, fullName, phoneNumber, genDer, dob, address);
+                authenticatedCustomer = new Customer(userId, phoneNumber, passWord, fullName , genDer, address);
             }
         } finally {
             if (resultSet != null) resultSet.close();
@@ -78,8 +79,8 @@ public class CustomerLoginController extends HttpServlet {
     }
 
     private void authenticate(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String username = request.getParameter("phoneNumber");
+        String password = request.getParameter("passWord");
         Customer customer = new Customer(username, password);
         Customer authenticatedCustomer;
         // TH1: validate thành công

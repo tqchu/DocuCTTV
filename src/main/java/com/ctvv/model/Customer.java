@@ -1,21 +1,20 @@
 package com.ctvv.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 
 public class Customer {
     int user_id;
-    String username;
+    String phonenumber;
     String password;
     String fullname;
-    String phonenumber;
     boolean gender;
-    Date DoB;
+    LocalDate DoB;
     String address; //A customer is possible to have more than one address.
 
-    public Customer(int user_id, String username, String password, String fullname, String phonenumber, boolean gender, Date DoB, String address) {
+    public Customer(int user_id,  String phonenumber, String password, String fullname, boolean gender, LocalDate DoB, String address) {
         this.user_id = user_id;
-        this.username = username;
         this.password = password;
         this.fullname = fullname;
         this.phonenumber = phonenumber;
@@ -24,20 +23,19 @@ public class Customer {
         this.address = address;
     }
 
-    public Customer(int user_id, String username, String password) {
+    public Customer(int user_id, String phonenumber, String password) {
         this.user_id = user_id;
-        this.username = username;
+        this.phonenumber = phonenumber;
         this.password = password;
     }
 
-    public Customer(String username, String password) {
-        this.username = username;
+    public Customer(String phonenumber, String password) {
+        this.phonenumber = phonenumber;
         this.password = password;
     }
 
     public Customer(Customer customer) {
         this.user_id = customer.user_id;
-        this.username = customer.username;
         this.password = customer.password;
         this.fullname = customer.fullname;
         this.phonenumber = customer.phonenumber;
@@ -52,14 +50,6 @@ public class Customer {
 
     public void setUser_id(int user_id) {
         this.user_id = user_id;
-    }
-
-    public String getUsername() {
-        return this.username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
@@ -94,11 +84,11 @@ public class Customer {
         this.gender = gender;
     }
 
-    public Date getDoB() {
+    public LocalDate getDoB() {
         return this.DoB;
     }
 
-    public void setDoB(Date date) {
+    public void setDoB(LocalDate date) {
         this.DoB = date;
     }
 
@@ -109,5 +99,6 @@ public class Customer {
     public void setAddress(String address) {
         this.address = address;
     }
+
 
 }

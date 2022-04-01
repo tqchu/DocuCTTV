@@ -9,7 +9,10 @@ import java.io.IOException;
 public class CustomerLogOutController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        HttpSession session= request.getSession();
+        session.invalidate();
+        // Redirect về trang chủ
+        response.sendRedirect(request.getContextPath());
     }
 
     @Override
