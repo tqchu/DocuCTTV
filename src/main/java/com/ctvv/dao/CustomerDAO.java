@@ -1,6 +1,7 @@
 package com.ctvv.dao;
 
 import com.ctvv.model.Customer;
+import com.ctvv.model.ShippingAddress;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -39,7 +40,9 @@ public class CustomerDAO {
 				String pNumber = resultSet.getString("phoneNumber");
 				Customer.Gender gender= Customer.Gender.values()[resultSet.getByte("gender")];
 				LocalDate dateOfBirth = resultSet.getDate("date_of_birth").toLocalDate();
-				authenticatedCustomer= new Customer(userId, password,fullName, pNumber, gender,dateOfBirth);
+				ShippingAddressDAO addressDAO=new ShippingAddressDAO(dataSource);
+				ShippingAddress address= addressDAO.getAddress(userId);
+				authenticatedCustomer= new Customer(userId, password,fullName, pNumber, gender,dateOfBirth,address);
 			}
 		}
 		finally {

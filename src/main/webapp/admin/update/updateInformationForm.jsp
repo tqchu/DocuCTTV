@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Title</title>
+    <title>Cập nhật thông tin</title>
     <link rel="shortcut icon" href="${context}/favicon.ico" />
 
     <link rel="stylesheet" href="${context}/css/base.css">
