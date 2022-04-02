@@ -96,18 +96,21 @@
                                 <label for="gender">Giới tính</label>
                                 <div class="user__manage-account__gender-option" style="margin-left: 4px;">
                                     <label for="male">Nam</label>
-                                    <input type="radio" name="gender" id="male" value="male">
+                                    <input type="radio" name="gender" id="male"
+                                           value="male" ${customer.gender eq 'MALE'? 'checked':''}>
+
                                 </div>
                                 <div class="user__manage-account__gender-option">
                                     <label for="female">Nữ</label>
-                                    <input type="radio" name="gender" id="female" value="female"
-                                           >
+                                    <input type="radio" name="gender" id="female"
+                                           value="female" ${customer.gender eq 'FEMALE'? 'checked':''}>
+
                                 </div>
 
                                 <div class="user__manage-account__gender-option">
                                     <label for="undefined">Khác</label>
                                     <input type="radio" name="gender" id="undefined"
-                                           value="undefined" >
+                                           value="undefined" ${customer.gender eq 'OTHER'? 'checked':''}>
                                 </div>
 
                             </div>

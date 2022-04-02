@@ -49,8 +49,12 @@ public class CustomerAccountController
 	}
 
 	private void changePassword(HttpServletRequest request, HttpServletResponse response) {
+		String oldPassword = request.getParameter("oldPassword");
+		String newPassword = request.getParameter("password");
+		String confirmedPassword = request.getParameter("confirmedPassword");
 	}
 
 	private void updateProfile(HttpServletRequest request, HttpServletResponse response) {
+
 	}
 }
