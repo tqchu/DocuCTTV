@@ -34,7 +34,7 @@
             <div class="col-2">
                 <div class="user__manage-account__menu ">
                     <div class="user__manage-account__menu__heading">
-                        Trương Quang Chứ
+                        ${customer.fullName}
                     </div>
                     <div class="user__manage-account__menu-list">
                         <div class="user__manage-account__menu-item ">
@@ -83,11 +83,13 @@
                         <form action="" class="" method="post">
                             <div class="user__manage-account__profile-form-group">
                                 <label for="fullName">Họ tên</label>
-                                <input type="text" name="fullName" id="fullName">
+                                <input type="text" name="fullName" id="fullName"
+                                       value = ${customer.fullName}>
                             </div>
                             <div class="user__manage-account__profile-form-group">
                                 <label for="phoneNumber">Số điện thoại</label>
-                                <input type="text" name="phoneNumber" id="phoneNumber">
+                                <input type="text" name="phoneNumber" id="phoneNumber"
+                                       value = ${customer.phoneNumber}>
                                 <a href="" class="user__manage-account__change-recipient-phone">Đổi SDT</a>
                             </div>
                             <div class="user__manage-account__gender-group user__manage-account__profile-form-group"
