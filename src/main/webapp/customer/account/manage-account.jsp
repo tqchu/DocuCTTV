@@ -6,6 +6,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
+    <link rel="shortcut icon" href="${context}/favicon.ico" />
+
     <link rel="stylesheet" href="${context}/css/base.css">
 
     <link rel="stylesheet" href="${context}/css/style.css">
@@ -35,27 +37,39 @@
                         Trương Quang Chứ
                     </div>
                     <div class="user__manage-account__menu-list">
-                        <div class="user__manage-account__menu-item">
+                        <div class="user__manage-account__menu-item ">
                             <i class="las la-user-alt"></i>
-                            <a href="" class="user__manage-account__menu-item__text">
+                            <a href="" class="user__manage-account__menu-item__text user__manage-account__menu-tab">
                                 Tài khoản của tôi
                             </a>
                             <div class="user__manage-account__profile-list">
-                                <a href="" class="user__manage-account__profile-item">Hồ sơ</a>
-                                <a href="" class="user__manage-account__profile-item">Đổi mật khẩu</a>
-                                <a href="" class="user__manage-account__profile-item">Địa chỉ</a>
+                                <a href="${context}/user/account?tab=profile"
+                                   class="user__manage-account__profile-item user__manage-account__menu-tab
+                                   ${tab=="profile"?'active':''}">Hồ
+                                    sơ</a>
+                                <a href="${context}/user/account?tab=password"
+                                   class="user__manage-account__profile-item user__manage-account__menu-tab
+                                   ${tab=="password"?'active':''}">Đổi mật khẩu</a>
+                                <a href="${context}/user/account?tab=address"
+                                   class="user__manage-account__profile-item user__manage-account__menu-tab
+                                   ${tab=="address"?'active':''}">Địa
+                                    chỉ</a>
                             </div>
                         </div>
-                        <div class="user__manage-account__menu-item">
+                        <div class="user__manage-account__menu-item ">
                             <i class="las la-shopping-bag"></i>
-                            <a href="" class="user__manage-account__menu-item__text">Đơn mua</a>
+                            <a href="${context}/user/account?tab=purchase"
+                               class="user__manage-account__menu-item__text user__manage-account__menu-tab
+                               ${tab=="purchase"?'active':''}">Đơn mua</a>
 
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-10">
+                <c:choose>
                     <%-- PROFILE--%>
+                <c:when test="${tab=='profile'}">
                 <div class="user__manage-account__content">
                     <div class="user__manage-account__content__header">
                         <div class="user__manage-account__content__text-heading">
@@ -64,7 +78,6 @@
                         <div class="user__manage-account__content__text-description">
                             Quản lý thông tin hồ sơ để bảo mật tài khoản
                         </div>
-
                     </div>
                     <div class="user__manage-account__content__main">
                         <form action="" class="" method="post">
@@ -107,93 +120,110 @@
                             />
                         </form>
                     </div>
-                    <%-- CHANGE PASSWORD--%>
-                    <%--<div class="user__manage-account__content__header">
-                        <div class="user__manage-account__content__text-heading">
-                            Đổi Mật Khẩu
+
+                    </c:when>
+
+                        <%-- CHANGE PASSWORD--%>
+                    <c:when test="${tab=='password'}">
+
+                        <div class="user__manage-account__content">
+                            <div class="user__manage-account__content__header">
+                                <div class="user__manage-account__content__text-heading">
+                                    Đổi Mật Khẩu
+                                </div>
+                                <div class="user__manage-account__content__text-description">
+                                    Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác
+                                </div>
+
+                            </div>
+                            <div class="user__manage-account__content__main">
+                                <form action="" class="" method="post">
+                                    <div class="user__manage-account__profile-form-group">
+                                        <label for="oldPassword">Mật Khẩu Hiện Tại</label>
+                                        <input type="text" name="oldPassword" id="oldPassword">
+                                        <a href="" class="user__manage-account__forgot-password">Quên mật khẩu?</a>
+                                    </div>
+                                    <div class="user__manage-account__profile-form-group">
+                                        <label for="password">Mật Khẩu Mới</label>
+                                        <input type="text" name="password" id="password">
+                                    </div>
+
+                                    <div class="user__manage-account__profile-form-group">
+                                        <label for="confirmedPassword">Xác Nhận Mật Khẩu</label>
+                                        <input type="text" name="confirmedPassword" id="confirmedPassword">
+                                    </div>
+                                    <input type="submit"
+                                           class="btn btn-md btn-primary user__manage-account__profile__submit-btn"
+                                           value="Xác nhận"
+                                    />
+                                </form>
+                            </div>
                         </div>
-                        <div class="user__manage-account__content__text-description">
-                            Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác
+                    </c:when>
+                        <%--ADDRESS--%>
+                    <c:when test="${tab=='address'}">
+                        <div class="user__manage-account__content">
+                            <div class="user__manage-account__content__header">
+                                <div class="user__manage-account__content__text-heading">
+                                    Địa chỉ
+                                </div>
+                                <div class="user__manage-account__content__text-description">
+                                    Cập nhật thông tin nhận hàng ở đây
+                                </div>
+
+                            </div>
+                            <div class="user__manage-account__content__main">
+                                <form action="" class="" method="post">
+                                    <div class="user__manage-account__profile-form-group">
+                                        <label for="recipientName">Tên người nhận</label>
+                                        <input type="text" name="recipientName" id="recipientName">
+                                    </div>
+                                    <div class="user__manage-account__profile-form-group">
+                                        <label for="recipientPhoneNumber">Số điện thoại</label>
+                                        <input type="text" name="recipientPhoneNumber" id="recipientPhoneNumber">
+                                        <a href="" class="user__manage-account__change-recipient-phone">Đổi SDT</a>
+                                    </div>
+
+                                    <div class="user__manage-account__profile-form-group">
+                                        <label for="address">Địa chỉ</label>
+                                        <input type="text" name="address" id="address">
+                                    </div>
+                                    <input type="submit"
+                                           class="btn btn-md btn-primary user__manage-account__profile__submit-btn"
+                                           value="Xác nhận"
+                                    />
+                                </form>
+                            </div>
+
                         </div>
+                    </c:when>
+                    <c:when test="${tab=='purchase'}">
+                        <div class="user__manage-account__purchase-content">
+                            <div class="user__manage-account__purchase-bar">
+                                <a href="" class="user__manage-account__purchase-item">
+                                    Chờ xác nhận
+                                </a>
+                                <a href="" class="user__manage-account__purchase-item">
+                                    Đang giao
+                                </a>
+                                <a href="" class="user__manage-account__purchase-item">
+                                    Đã giao
+                                </a>
+                                <a href="" class="user__manage-account__purchase-item">
+                                    Đã hủy
+                                </a>
+                            </div>
+                            <div class="user__manage-account__purchase-list">
 
-                    </div>
-                    <div class="user__manage-account__content__main">
-                        <form action="" class="" method="post">
-                            <div class="user__manage-account__profile-form-group">
-                                <label for="oldPassword">Mật Khẩu Hiện Tại</label>
-                                <input type="text" name="oldPassword" id="oldPassword">
-                                <a href="" class="user__manage-account__forgot-password">Quên mật khẩu?</a>
                             </div>
-                            <div class="user__manage-account__profile-form-group">
-                                <label for="password">Mật Khẩu Mới</label>
-                                <input type="text" name="password" id="password">
-                            </div>
-
-                            <div class="user__manage-account__profile-form-group">
-                                <label for="confirmedPassword">Xác Nhận Mật Khẩu</label>
-                                <input type="date" name="confirmedPassword" id="confirmedPassword">
-                            </div>
-                            <input type="submit"
-                                   class="btn btn-md btn-primary user__manage-account__profile__submit-btn"
-                                   value="Xác nhận"
-                            />
-                        </form>
-                    </div>--%>
-                    <%--ADDRESS--%>
-                    <%--<div class="user__manage-account__content__header">
-                        <div class="user__manage-account__content__text-heading">
-                            Địa chỉ
                         </div>
-                        <div class="user__manage-account__content__text-description">
-                            Cập nhật thông tin nhận hàng ở đây
-                        </div>
-
-                    </div>
-                    <div class="user__manage-account__content__main">
-                        <form action="" class="" method="post">
-                            <div class="user__manage-account__profile-form-group">
-                                <label for="recipientName">Tên người nhận</label>
-                                <input type="text" name="recipientName" id="recipientName">
-                            </div>
-                            <div class="user__manage-account__profile-form-group">
-                                <label for="recipientPhoneNumber">Số điện thoại</label>
-                                <input type="text" name="recipientPhoneNumber" id="recipientPhoneNumber">
-                                <a href="" class="user__manage-account__change-recipient-phone">Đổi SDT</a>
-                            </div>
-
-                            <div class="user__manage-account__profile-form-group">
-                                <label for="address">Địa chỉ</label>
-                                <input type="text" name="address" id="address">
-                            </div>
-                            <input type="submit"
-                                   class="btn btn-md btn-primary user__manage-account__profile__submit-btn"
-                                   value="Xác nhận"
-                            />
-                        </form>
-                    </div>--%>
-                    <%--<div class="user__manage-account__purchase-bar">
-                        <a href="" class="user__manage-account__purchase-item">
-                            Chờ xác nhận
-                        </a>
-                        <a href="" class="user__manage-account__purchase-item">
-                            Đang giao
-                        </a>
-                        <a href="" class="user__manage-account__purchase-item">
-                            Đã giao
-                        </a>
-                        <a href="" class="user__manage-account__purchase-item">
-                        Đã hủy
-                        </a>
-                    </div>
-                    <div class="user__manage-account__purchase-list">
-
-                    </div>--%>
+                    </c:when>
+                    </c:choose>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<jsp:include page="../../common/footer.jsp"/>
+    <jsp:include page="../../common/footer.jsp"/>
 
 
 </body>

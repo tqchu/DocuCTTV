@@ -30,7 +30,7 @@
             </span>
             <div class="user__information__popover">
                 <a href="${context}/user/account" class="user__information__popover-item">Tài khoản của tôi</a>
-                <a href="${context}/user/purchase" class="user__information__popover-item">Đơn hàng</a>
+                <a href="${context}/user/account?tab=purchase" class="user__information__popover-item">Đơn hàng</a>
                 <a href="${context}/logout" class="user__information__popover-item">Đăng xuất</a>
             </div>
         </div>

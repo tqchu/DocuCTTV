@@ -3,6 +3,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Title</title>
+    <link rel="shortcut icon" href="${context}/favicon.ico" />
+
     <link rel="stylesheet" href="${context}/css/style.css">
 
     <!-- RESET CSS -->
