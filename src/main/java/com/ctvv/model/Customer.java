@@ -2,8 +2,8 @@ package com.ctvv.model;
 import java.time.LocalDate;
 public class Customer {
     public enum Gender{
-        MALE,
         FEMALE,
+        MALE,
         OTHER
     }
     private int userId;
@@ -12,14 +12,25 @@ public class Customer {
     private String fullName;
     private String phoneNumber;
     private LocalDate dateOfBirth;
+    ShippingAddress address;
 
-    public Customer(int user_id, String password, String fullName, String phoneNumber, Gender gender, LocalDate DoB) {
+    public ShippingAddress getAddress() {
+        return address;
+    }
+
+    public void setAddress(ShippingAddress address) {
+        this.address = address;
+    }
+
+    public Customer(int user_id, String password, String fullName, String phoneNumber, Gender gender, LocalDate DoB,
+                    ShippingAddress address) {
         this.userId = user_id;
         this.password = password;
         this.fullName = fullName;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
         this.dateOfBirth = DoB;
+        this.address=address;
     }
 
     public Customer(int user_id, String password) {

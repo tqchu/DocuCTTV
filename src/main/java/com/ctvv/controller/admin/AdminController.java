@@ -56,7 +56,6 @@ public class AdminController
             HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         session = request.getSession();
         authenticate(request, response);
-
     }
 
     private void authenticate(HttpServletRequest request, HttpServletResponse response) throws ServletException {
@@ -89,7 +88,6 @@ public class AdminController
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
     }
 

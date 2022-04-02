@@ -5,7 +5,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
+    <title>Quản lý tài khoản</title>
     <link rel="shortcut icon" href="${context}/favicon.ico" />
 
     <link rel="stylesheet" href="${context}/css/base.css">
@@ -80,16 +80,15 @@
                         </div>
                     </div>
                     <div class="user__manage-account__content__main">
-                        <form action="" class="" method="post">
+                        <form action="${context}/user/account" class="" method="post">
                             <div class="user__manage-account__profile-form-group">
                                 <label for="fullName">Họ tên</label>
-                                <input type="text" name="fullName" id="fullName"
-                                       value = ${customer.fullName}>
+                                <input type="text" name="fullName" id="fullName" value="${customer.fullName}">
                             </div>
                             <div class="user__manage-account__profile-form-group">
                                 <label for="phoneNumber">Số điện thoại</label>
-                                <input type="text" name="phoneNumber" id="phoneNumber"
-                                       value = ${customer.phoneNumber}>
+                                <input type="text" name="phoneNumber" id="phoneNumber" value="${customer.phoneNumber}"
+                                       disabled>
                                 <a href="" class="user__manage-account__change-recipient-phone">Đổi SDT</a>
                             </div>
                             <div class="user__manage-account__gender-group user__manage-account__profile-form-group"
@@ -101,13 +100,14 @@
                                 </div>
                                 <div class="user__manage-account__gender-option">
                                     <label for="female">Nữ</label>
-                                    <input type="radio" name="gender" id="female" value="female">
+                                    <input type="radio" name="gender" id="female" value="female"
+                                           >
                                 </div>
 
                                 <div class="user__manage-account__gender-option">
                                     <label for="undefined">Khác</label>
                                     <input type="radio" name="gender" id="undefined"
-                                           value="undefined">
+                                           value="undefined" >
                                 </div>
 
                             </div>
@@ -178,17 +178,20 @@
                                 <form action="" class="" method="post">
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="recipientName">Tên người nhận</label>
-                                        <input type="text" name="recipientName" id="recipientName">
+                                        <input type="text" name="recipientName" id="recipientName"
+                                               value="${customer.address.recipientName}">
                                     </div>
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="recipientPhoneNumber">Số điện thoại</label>
-                                        <input type="text" name="recipientPhoneNumber" id="recipientPhoneNumber">
+                                        <input type="text" name="recipientPhoneNumber" id="recipientPhoneNumber"
+                                               value="${customer.address.phoneNumber}" disabled>
                                         <a href="" class="user__manage-account__change-recipient-phone">Đổi SDT</a>
                                     </div>
 
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="address">Địa chỉ</label>
-                                        <input type="text" name="address" id="address">
+                                        <input type="text" name="address" id="address"
+                                               value="${customer.address.address}">
                                     </div>
                                     <input type="submit"
                                            class="btn btn-md btn-primary user__manage-account__profile__submit-btn"
