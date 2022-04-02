@@ -366,10 +366,9 @@
 }
 
 .user__manage-account__content {
-
     padding: 16px 24px 120px;
+    margin-left: 24px;
     background-color: #fff;
-
 }
 
 .user__manage-account__content__header {
@@ -448,6 +447,32 @@
 }
 .user__manage-account__change-recipient-phone, .user__manage-account__forgot-password{
     margin-left: 20px;
+}
+.user__manage-account__menu-tab.active{
+    color: #ee4d2d;
+}
+/*USER PURCHASE*/
+.user__manage-account__purchase-content{
+    padding: 0 24px 20px;
+    margin-top: 10px;
+
+}
+.user__manage-account__purchase-bar{
+    background-color: #fff;
+    padding: 14px;
+    display: flex;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.user__manage-account__purchase-item{
+    width: 25%;
+    text-align: center;
+    color: #000;
+    text-decoration: none;
+}
+
+.user__manage-account__purchase-list{
+    margin-top: 12px;
+    background-color: #fff;
 }
 
 
