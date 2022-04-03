@@ -38,14 +38,13 @@ public class CustomerDAO {
 				String fullName = resultSet.getString("fullname");
 				String passWord = resultSet.getString("password");
 				String pNumber = resultSet.getString("phoneNumber");
-				Customer.Gender gender= Customer.Gender.values()[resultSet.getByte("gender")];
+				Customer.Gender gender = Customer.Gender.values()[resultSet.getByte("gender")];
 				LocalDate dateOfBirth = resultSet.getDate("date_of_birth").toLocalDate();
-				ShippingAddressDAO addressDAO=new ShippingAddressDAO(dataSource);
-				ShippingAddress address= addressDAO.getAddress(userId);
-				authenticatedCustomer= new Customer(userId, password,fullName, pNumber, gender,dateOfBirth,address);
+				ShippingAddressDAO addressDAO = new ShippingAddressDAO(dataSource);
+				ShippingAddress address = addressDAO.getAddress(userId);
+				authenticatedCustomer = new Customer(userId, password, fullName, pNumber, gender, dateOfBirth, address);
 			}
-		}
-		finally {
+		} finally {
 			if (resultSet != null) resultSet.close();
 			if (statement != null) statement.close();
 			if (connection != null) connection.close();
@@ -54,7 +53,6 @@ public class CustomerDAO {
 
 		return authenticatedCustomer;
 	}
-
 	public Customer update_Profile(Customer customer) throws SQLException{
 		String fullName = customer.getFullName();
 		String phoneNumber = customer.getPhoneNumber();
