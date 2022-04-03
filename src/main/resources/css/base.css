@@ -1,11 +1,13 @@
 :root {
   --btn-color: #37BDDB;
-
+  --bg-color: #F5F5F5;
 }
 .btn.btn-primary{
   background-color: var(--btn-color) !important;
 }
-
+.btn-md{
+  width: 100px;
+}
 .btn-lg{
   width: 160px;
   font-size: 16px !important;

@@ -1,54 +1,61 @@
 package com.ctvv.dao;
 
-import com.ctvv.model.Admin;
+import com.ctvv.model.Customer;
+import com.ctvv.model.ShippingAddress;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 
-public class AdminDAO {
+public class CustomerDAO {
 
 	private final DataSource dataSource;
 
-	public AdminDAO(DataSource dataSource) {
+	public CustomerDAO(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
 
-	public Admin validate(Admin admin) throws SQLException {
+	public Customer validate(Customer customer) throws SQLException {
 		// Tạo connection
-		Admin authenticatedAdmin = null;
-		String username = admin.getUsername();
-		String password = admin.getPassword();
-		String sql = "SELECT * FROM admin WHERE (username=?) and (password=?) LIMIT 1";
+		Customer authenticatedCustomer = null;
+		String phoneNumber = customer.getPhoneNumber();
+		String password = customer.getPassword();
+		String sql = "SELECT * FROM customer WHERE (phonenumber=?) and (password=?) LIMIT 1";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(sql);
-			statement.setString(1, username);
+			statement.setString(1, phoneNumber);
 			statement.setString(2, password);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				int userId = resultSet.getInt("user_id");
 				String fullName = resultSet.getString("fullname");
-				String userName = resultSet.getString("username");
 				String passWord = resultSet.getString("password");
-				String role = resultSet.getString("role");
-				authenticatedAdmin = new Admin(userId, username, passWord, fullName, role);
+				String pNumber = resultSet.getString("phoneNumber");
+				Customer.Gender gender= Customer.Gender.values()[resultSet.getByte("gender")];
+				LocalDate dateOfBirth = resultSet.getDate("date_of_birth").toLocalDate();
+				ShippingAddressDAO addressDAO=new ShippingAddressDAO(dataSource);
+				ShippingAddress address= addressDAO.getAddress(userId);
+				authenticatedCustomer= new Customer(userId, password,fullName, pNumber, gender,dateOfBirth,address);
 			}
-		} finally {
+		}
+		finally {
 			if (resultSet != null) resultSet.close();
 			if (statement != null) statement.close();
 			if (connection != null) connection.close();
 		}
 
 
-		return authenticatedAdmin;
+		return authenticatedCustomer;
 	}
-
-	public Admin update(Admin admin) throws SQLException {
+/*
+	public Customer update(Customer admin) throws SQLException {
 		String fullName = admin.getFullName();
 		String username = admin.getUsername();
 		String password = admin.getPassword();
@@ -71,6 +78,7 @@ public class AdminDAO {
 			if (connection != null) connection.close();
 		}
 		return admin;
-	}
+	}*/
+
 
 }

@@ -4,7 +4,9 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Title</title>
+    <title>Cập nhật thông tin</title>
+    <link rel="shortcut icon" href="${context}/favicon.ico" />
+
     <link rel="stylesheet" href="${context}/css/base.css">
     <link rel="stylesheet" href="${context}/css/style.css">
     <!-- RESET CSS -->
@@ -30,7 +32,6 @@
 
     <form action="${context}/admin/update" method="post" class="admin__update-form">
 
-        <%--    <input type="hidden" name="userId" value="${admin.user_id}">--%>
         <div class="admin__update__form-group form-floating">
             <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Tên"
                    value="${admin.fullName}">
