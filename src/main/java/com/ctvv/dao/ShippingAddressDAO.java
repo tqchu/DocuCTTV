@@ -17,7 +17,7 @@ public class ShippingAddressDAO {
 	public ShippingAddress getAddress(int userId) throws SQLException {
 		Connection connection = dataSource.getConnection();
 		ShippingAddress shippingAddress = null;
-		String sql = "SELECT * FROM shipping_address WHERE user_id=?";
+		String sql = "SELECT * FROM shipping_address WHERE user_id=? LIMIT 1";
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setInt(1, userId);
 		ResultSet resultSet;

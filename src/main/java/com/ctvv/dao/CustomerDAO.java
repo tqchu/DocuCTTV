@@ -23,7 +23,7 @@ public class CustomerDAO {
 		Customer authenticatedCustomer = null;
 		String phoneNumber = customer.getPhoneNumber();
 		String password = customer.getPassword();
-		String sql = "SELECT * FROM customer WHERE (phonenumber=?) and (password=?)";
+		String sql = "SELECT * FROM customer WHERE (phonenumber=?) and (password=?) LIMIT 1";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;

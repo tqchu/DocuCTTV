@@ -6,7 +6,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quản lý tài khoản</title>
-    <link rel="shortcut icon" href="${context}/favicon.ico" />
+    <link rel="shortcut icon" href="${context}/favicon.ico"/>
 
     <link rel="stylesheet" href="${context}/css/base.css">
 
@@ -81,6 +81,7 @@
                     </div>
                     <div class="user__manage-account__content__main">
                         <form action="${context}/user/account" class="" method="post">
+                            <input type="hidden" name="action" value="updateProfile">
                             <div class="user__manage-account__profile-form-group">
                                 <label for="fullName">Họ tên</label>
                                 <input type="text" name="fullName" id="fullName" value="${customer.fullName}">
@@ -96,24 +97,27 @@
                                 <label for="gender">Giới tính</label>
                                 <div class="user__manage-account__gender-option" style="margin-left: 4px;">
                                     <label for="male">Nam</label>
-                                    <input type="radio" name="gender" id="male" value="male">
+                                    <input type="radio" name="gender" id="male" value="male" ${customer.gender eq
+                                            'MALE'? 'checked':''}>
                                 </div>
                                 <div class="user__manage-account__gender-option">
                                     <label for="female">Nữ</label>
                                     <input type="radio" name="gender" id="female" value="female"
-                                           >
+                                        ${customer.gender eq
+                                                'FEMALE'? 'checked':''} >
                                 </div>
 
                                 <div class="user__manage-account__gender-option">
                                     <label for="undefined">Khác</label>
                                     <input type="radio" name="gender" id="undefined"
-                                           value="undefined" >
+                                           value="undefined" ${customer.gender eq
+                                            'OTHER'? 'checked':''}>
                                 </div>
 
                             </div>
                             <div class="user__manage-account__profile-form-group">
-                                <label for="birthday">Ngày sinh</label>
-                                <input type="date" name="birthday" id="birthday">
+                                <label for="dateOfBirth">Ngày sinh</label>
+                                <input type="date" name="dateOfBirth" id="dateOfBirth" value="${customer.dateOfBirth}">
                             </div>
 
                             <input type="submit"
@@ -140,6 +144,8 @@
                             </div>
                             <div class="user__manage-account__content__main">
                                 <form action="" class="" method="post">
+                                    <input type="hidden" name="action" value="changePassword">
+
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="oldPassword">Mật Khẩu Hiện Tại</label>
                                         <input type="text" name="oldPassword" id="oldPassword">
@@ -174,8 +180,17 @@
                                 </div>
 
                             </div>
+
+
                             <div class="user__manage-account__content__main">
+                                <c:if test="${empty customer.address.address}">
+                                    <div class="user__manage-account__add-address">
+                                        Bạn chưa có địa chỉ nhận hàng, vui lòng thêm địa chỉ nhận hàng.
+                                    </div>
+                                </c:if>
                                 <form action="" class="" method="post">
+                                    <input type="hidden" name="action" value="updateAddress">
+
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="recipientName">Tên người nhận</label>
                                         <input type="text" name="recipientName" id="recipientName"
@@ -185,7 +200,8 @@
                                         <label for="recipientPhoneNumber">Số điện thoại</label>
                                         <input type="text" name="recipientPhoneNumber" id="recipientPhoneNumber"
                                                value="${customer.address.phoneNumber}" disabled>
-                                        <a href="" class="user__manage-account__change-recipient-phone">Đổi SDT</a>
+                                        <a href="" class="user__manage-account__change-recipient-phone">Đổi
+                                            SDT</a>
                                     </div>
 
                                     <div class="user__manage-account__profile-form-group">
@@ -199,6 +215,7 @@
                                     />
                                 </form>
                             </div>
+
 
                         </div>
                     </c:when>

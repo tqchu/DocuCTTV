@@ -451,6 +451,12 @@
 .user__manage-account__menu-tab.active{
     color: #ee4d2d;
 }
+.user__manage-account__add-address {
+    margin-bottom: 16px;
+    margin-top: 32px;
+    margin-left: 164px;
+    font-size: 16px;
+}
 /*USER PURCHASE*/
 .user__manage-account__purchase-content{
     padding: 0 24px 20px;

@@ -27,15 +27,12 @@ public class CustomerAccountController
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-
 		String action= request.getParameter("action");
 		switch (action){
-			case "profile":
+			case "updateProfile":
 				updateProfile(request,response);
 			case "changePassword":
 				changePassword(request,response);
-			case "addAddress":
-				addAddress(request,response);
 			case "updateAddress":
 				updateAddress(request,response);
 		}
