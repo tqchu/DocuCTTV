@@ -54,6 +54,35 @@ public class CustomerDAO {
 
 		return authenticatedCustomer;
 	}
+
+	public Customer update_Profile(Customer customer) throws SQLException{
+		String fullName = customer.getFullName();
+		String phoneNumber = customer.getPhoneNumber();
+		Customer.Gender gender = customer.getGender();
+		LocalDate date_of_birth = customer.getDateOfBirth();
+		int id = customer.getUserId();
+
+		String sql = "UPDATE customer SET fullname=?, phonenumber=?, gender=?, date_of_birth=? WHERE user_id=? ";
+		Connection connection = null;
+		PreparedStatement statement = null;
+
+		try{
+			connection = dataSource.getConnection();
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, fullName);
+			statement.setString(2,phoneNumber);
+			statement.setString(3, String.valueOf(gender));
+			statement.setString(4, String.valueOf(date_of_birth));
+			statement.setInt(5, id);
+			statement.execute();
+		}
+		finally {
+			if (statement != null) statement.close();
+			if (connection != null) connection.close();
+		}
+		return customer;
+
+	}
 /*
 	public Customer update(Customer admin) throws SQLException {
 		String fullName = admin.getFullName();
