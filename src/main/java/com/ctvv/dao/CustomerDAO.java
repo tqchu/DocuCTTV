@@ -4,10 +4,7 @@ import com.ctvv.model.Customer;
 import com.ctvv.model.ShippingAddress;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 
 public class CustomerDAO {
@@ -53,11 +50,11 @@ public class CustomerDAO {
 
 		return authenticatedCustomer;
 	}
-	public Customer update_Profile(Customer customer) throws SQLException{
+	public Customer updateProfile(Customer customer) throws SQLException{
 		String fullName = customer.getFullName();
 		String phoneNumber = customer.getPhoneNumber();
 		Customer.Gender gender = customer.getGender();
-		LocalDate date_of_birth = customer.getDateOfBirth();
+		LocalDate dateOfBirth = customer.getDateOfBirth();
 		int id = customer.getUserId();
 
 		String sql = "UPDATE customer SET fullname=?, phonenumber=?, gender=?, date_of_birth=? WHERE user_id=? ";
@@ -69,8 +66,8 @@ public class CustomerDAO {
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, fullName);
 			statement.setString(2,phoneNumber);
-			statement.setString(3, String.valueOf(gender));
-			statement.setString(4, String.valueOf(date_of_birth));
+			statement.setInt(3, gender.getValue());
+			statement.setDate(4, Date.valueOf(dateOfBirth));
 			statement.setInt(5, id);
 			statement.execute();
 		}

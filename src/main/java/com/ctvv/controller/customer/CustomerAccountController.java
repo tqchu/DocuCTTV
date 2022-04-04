@@ -13,8 +13,9 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
+
+
 
 @WebServlet(name = "CustomerAccountController", value = "/user/account")
 public class CustomerAccountController
@@ -27,6 +28,7 @@ public class CustomerAccountController
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String tab= request.getParameter("tab");
+
 		if (tab==null){
 			response.sendRedirect(request.getContextPath()+"/user/account?tab=profile");
 		}
@@ -66,19 +68,23 @@ public class CustomerAccountController
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+
 		session = request.getSession();
 		Customer customer = (Customer) session.getAttribute("customer");
 
-		String fullName = request.getParameter("fullname");
-		String phoneNumber = request.getParameter("phonenumber");
-
+		String fullName = request.getParameter("fullName");
+		String phoneNumber = request.getParameter("phoneNumber");
+		Customer.Gender gender = Customer.Gender.valueOf(request.getParameter("gender"));
+		LocalDate date_of_birth = LocalDate.parse(request.getParameter("dateOfBirth"));
 
 		Customer updateProfile = new Customer(customer);
 		updateProfile.setFullName(fullName);
 		updateProfile.setPhoneNumber(phoneNumber);
+		updateProfile.setGender(gender);
+		updateProfile.setDateOfBirth(date_of_birth);
 
 		try {
-			updateProfile = customerDAO.update_Profile(updateProfile);
+			updateProfile = customerDAO.updateProfile(updateProfile);
 			session.setAttribute("customer", updateProfile);
 			request.setAttribute("successMessage", "Cap nhat thanh cong");
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/home.jsp");
@@ -95,18 +101,18 @@ public class CustomerAccountController
 	}
 	public void init() throws ServletException {
 		super.init();
+		Context context = null;
 		try {
-
-			Context context = new InitialContext();
-
+			context = new InitialContext();
 			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
 			customerDAO = new CustomerDAO(dataSource);
 
 		} catch (NamingException e) {
-			// Chưa tìm ra cách xử lý hợp lý
 			e.printStackTrace();
 		}
 	}
+
+
 
 
 

@@ -4,7 +4,13 @@ public class Customer {
     public enum Gender{
         FEMALE,
         MALE,
-        OTHER
+        OTHER;
+        public int getValue()
+        {
+            if (this == FEMALE) return 0;
+            else if (this == MALE) return 1;
+            else return 2;
+        }
     }
     private int userId;
     private String password;

@@ -89,7 +89,7 @@
                             <div class="user__manage-account__profile-form-group">
                                 <label for="phoneNumber">Số điện thoại</label>
                                 <input type="text" name="phoneNumber" id="phoneNumber" value="${customer.phoneNumber}"
-                                       disabled>
+                                       readonly>
                                 <a href="" class="user__manage-account__change-recipient-phone">Đổi SDT</a>
                             </div>
                             <div class="user__manage-account__gender-group user__manage-account__profile-form-group"
@@ -97,12 +97,12 @@
                                 <label for="gender">Giới tính</label>
                                 <div class="user__manage-account__gender-option" style="margin-left: 4px;">
                                     <label for="male">Nam</label>
-                                    <input type="radio" name="gender" id="male" value="male" ${customer.gender eq
+                                    <input type="radio" name="gender" id="male" value="MALE" ${customer.gender eq
                                             'MALE'? 'checked':''}>
                                 </div>
                                 <div class="user__manage-account__gender-option">
                                     <label for="female">Nữ</label>
-                                    <input type="radio" name="gender" id="female" value="female"
+                                    <input type="radio" name="gender" id="female" value="FEMALE"
                                         ${customer.gender eq
                                                 'FEMALE'? 'checked':''} >
                                 </div>
@@ -110,7 +110,7 @@
                                 <div class="user__manage-account__gender-option">
                                     <label for="undefined">Khác</label>
                                     <input type="radio" name="gender" id="undefined"
-                                           value="undefined" ${customer.gender eq
+                                           value="OTHER" ${customer.gender eq
                                             'OTHER'? 'checked':''}>
                                 </div>
 
@@ -199,7 +199,7 @@
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="recipientPhoneNumber">Số điện thoại</label>
                                         <input type="text" name="recipientPhoneNumber" id="recipientPhoneNumber"
-                                               value="${customer.address.phoneNumber}" disabled>
+                                               value="${customer.address.phoneNumber}" readonly>
                                         <a href="" class="user__manage-account__change-recipient-phone">Đổi
                                             SDT</a>
                                     </div>
