@@ -80,7 +80,8 @@
                         </div>
                     </div>
                     <div class="user__manage-account__content__main">
-                        <form action="${context}/user/account" class="" method="post">
+                        <form action="" class="" method="post">
+                            <input type="hidden" name="action" value="updateProfile">
                             <div class="user__manage-account__profile-form-group">
                                 <label for="fullName">Họ tên</label>
                                 <input type="text" name="fullName" id="fullName" value="${customer.fullName}">
@@ -139,23 +140,38 @@
                                 <div class="user__manage-account__content__text-description">
                                     Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác
                                 </div>
-
                             </div>
                             <div class="user__manage-account__content__main">
+                                <c:if test="${not empty successMessage}">
+                                    <div class="user__manage-account__add-address__message user__manage-account__add-address__message--success">
+                                            ${successMessage}
+                                    </div>
+                                </c:if>
+                                <c:if test="${not empty notMatchNewPassword}">
+                                    <div class="user__manage-account__change-password__message user__manage-account__change-password__message--notMatch">
+                                        ${notMatchNewPassword}
+                                    </div>
+                                </c:if>
+                                <c:if test="${not empty wrongOldPassword}">
+                                    <div class="user__manage-account__change-password__message user__manage-account__change-password__message--wrongPassword">
+                                            ${wrongOldPassword}
+                                    </div>
+                                </c:if>
                                 <form action="" class="" method="post">
+                                    <input type="hidden" name="action" value="changePassword">
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="oldPassword">Mật Khẩu Hiện Tại</label>
-                                        <input type="text" name="oldPassword" id="oldPassword">
+                                        <input type="password" name="oldPassword" id="oldPassword">
                                         <a href="" class="user__manage-account__forgot-password">Quên mật khẩu?</a>
                                     </div>
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="password">Mật Khẩu Mới</label>
-                                        <input type="text" name="password" id="password">
+                                        <input type="password" name="password" id="password">
                                     </div>
 
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="confirmedPassword">Xác Nhận Mật Khẩu</label>
-                                        <input type="text" name="confirmedPassword" id="confirmedPassword">
+                                        <input type="password" name="confirmedPassword" id="confirmedPassword">
                                     </div>
                                     <input type="submit"
                                            class="btn btn-md btn-primary user__manage-account__profile__submit-btn"
@@ -179,6 +195,7 @@
                             </div>
                             <div class="user__manage-account__content__main">
                                 <form action="" class="" method="post">
+                                    <input type="hidden" name="action" value="addAddress">
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="recipientName">Tên người nhận</label>
                                         <input type="text" name="recipientName" id="recipientName"

@@ -474,5 +474,22 @@
     margin-top: 12px;
     background-color: #fff;
 }
-
+.user__password__changing__success-message{
+    margin-top: 40px;
+    margin-left: 164px;
+    padding: 4px 0;
+    font-size: 15px;
+}
+.user__wrong__confirmed__password-message{
+    margin-top: 40px;
+    margin-left: 164px;
+    padding: 4px 0;
+    font-size: 15px;
+}
+.user__wrong__old__password-message{
+    margin-top: 40px;
+    margin-left: 164px;
+    padding: 4px 0;
+    font-size: 15px;
+}
 

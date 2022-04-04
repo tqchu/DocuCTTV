@@ -62,7 +62,7 @@ public class AdminUpdateController
 		updatedAdmin.setPassword(password);
 		try {
 			updatedAdmin = adminDAO.update(updatedAdmin);
-			// Thành công
+			// Thành côngs
 			// Gán admin trong session bằng admin vừa được câp nhật nếu không có exception xảy ra.
 			session.setAttribute("admin", updatedAdmin);
 			// Đặt tin nhắn thành công
