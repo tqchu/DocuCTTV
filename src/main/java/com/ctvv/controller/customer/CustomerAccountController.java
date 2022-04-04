@@ -39,6 +39,12 @@ public class CustomerAccountController
     @Override
     protected void doPost(
             HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Đặt charaterEncoding của request param thành UTF-8
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         String action = request.getParameter("action");
         switch (action) {
@@ -52,15 +58,8 @@ public class CustomerAccountController
     }
 
     private void updateAddress(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        // Đặt charaterEncoding của request param thành UTF-8
-        try {
-            request.setCharacterEncoding("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
 
         request.setAttribute("tab", "address");
-
         session = request.getSession();
         Customer customer = (Customer) session.getAttribute("customer");
         ShippingAddress shippingAddress = customer.getAddress();
