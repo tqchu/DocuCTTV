@@ -43,8 +43,6 @@ public class AdminDAO {
 			if (statement != null) statement.close();
 			if (connection != null) connection.close();
 		}
-
-
 		return authenticatedAdmin;
 	}
 

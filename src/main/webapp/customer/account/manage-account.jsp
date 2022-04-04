@@ -89,7 +89,7 @@
                             <div class="user__manage-account__profile-form-group">
                                 <label for="phoneNumber">Số điện thoại</label>
                                 <input type="text" name="phoneNumber" id="phoneNumber" value="${customer.phoneNumber}"
-                                       disabled>
+                                       readonly class="disabled-input">
                                 <a href="" class="user__manage-account__change-recipient-phone">Đổi SDT</a>
                             </div>
                             <div class="user__manage-account__gender-group user__manage-account__profile-form-group"
@@ -188,6 +188,11 @@
                                         Bạn chưa có địa chỉ nhận hàng, vui lòng thêm địa chỉ nhận hàng.
                                     </div>
                                 </c:if>
+                                <c:if test="${not empty successMessage}">
+                                    <div class="user__manage-account__add-address__message user__manage-account__add-address__message--success">
+                                            ${successMessage}
+                                    </div>
+                                </c:if>
                                 <form action="" class="" method="post">
                                     <input type="hidden" name="action" value="updateAddress">
 
@@ -199,7 +204,7 @@
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="recipientPhoneNumber">Số điện thoại</label>
                                         <input type="text" name="recipientPhoneNumber" id="recipientPhoneNumber"
-                                               value="${customer.address.phoneNumber}" disabled>
+                                               value="${customer.address.phoneNumber}" readonly class="disabled-input">
                                         <a href="" class="user__manage-account__change-recipient-phone">Đổi
                                             SDT</a>
                                     </div>
