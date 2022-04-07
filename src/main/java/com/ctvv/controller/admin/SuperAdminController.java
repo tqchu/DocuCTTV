@@ -41,6 +41,11 @@ public class SuperAdminController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         String action = request.getParameter("action");
         switch(action){
             case "create":
@@ -49,14 +54,14 @@ public class SuperAdminController extends HttpServlet {
             case "update":
                 updateAdmin(request,response);
                 break;
-
         }
     }
     private void createAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String fullname = request.getParameter("fullName");
-        Admin admin = new Admin(fullname,username,password);
+        String role = request.getParameter("role");
+        Admin admin = new Admin(fullname,username,password,role);
         try {
             adminDAO.createAdmin(admin);
             request.setAttribute("successMessage", "Thêm thành công");
@@ -76,7 +81,6 @@ public class SuperAdminController extends HttpServlet {
         }
     }
     private void updateAdmin(HttpServletRequest request, HttpServletResponse response){
-
     }
     @Override
     public void init() throws ServletException {

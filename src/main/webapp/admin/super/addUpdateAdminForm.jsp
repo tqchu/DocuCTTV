@@ -23,6 +23,9 @@
     <%-- APP--%>
     <link rel="stylesheet" href="${context}/css/base.css">
     <link rel="stylesheet" href="${context}/css/style.css">
+    <div class = "pop-up__message">
+
+    </div>
 </head>
 <body>
 <jsp:include page="../common/header.jsp"/>
@@ -35,7 +38,6 @@
             Thay đổi thông tin quản trị viên
         </c:if>
     </div>
-
     <form action="${context}/admin/manage-admin" method="post" class="create-admin-form form" autocomplete="off">
         <input type="hidden" name="action" value="${action}">
         <div class="form-group form-floating">

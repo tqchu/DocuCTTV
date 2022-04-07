@@ -33,6 +33,12 @@ public class Admin {
 		this.username = username;
 		this.fullName = fullName;
 	}
+	public Admin(String fullName, String username, String password, String role){
+		this.fullName = fullName;
+		this.username=username;
+		this.password=password;
+		this.role=role;
+	}
 
 	public Admin(int id, String username, String fullName, String role) {
 		this.userId = id;
