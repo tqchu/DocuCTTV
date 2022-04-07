@@ -55,10 +55,15 @@ public class CustomerAccountController
 		switch (action) {
 			case "updateProfile":
 				updateProfile(request, response);
+				break;
 			case "changePassword":
 				changePassword(request, response);
+				break;
+
 			case "updateAddress":
 				updateAddress(request, response);
+				break;
+
 		}
 	}
 
@@ -69,14 +74,12 @@ public class CustomerAccountController
 		session = request.getSession();
 
 		String fullName = request.getParameter("fullName");
-		String phoneNumber = request.getParameter("phoneNumber");
 		Customer.Gender gender = Customer.Gender.valueOf(request.getParameter("gender"));
 		LocalDate date_of_birth = LocalDate.parse(request.getParameter("dateOfBirth"));
 
 		Customer customer = (Customer) session.getAttribute("customer");
 		Customer updatedCustomer = new Customer(customer);
 		updatedCustomer.setFullName(fullName);
-		updatedCustomer.setPhoneNumber(phoneNumber);
 		updatedCustomer.setGender(gender);
 		updatedCustomer.setDateOfBirth(date_of_birth);
 
@@ -97,11 +100,36 @@ public class CustomerAccountController
 
 	}
 
-	private void changePassword(HttpServletRequest request, HttpServletResponse response) {
+	private void changePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                             IOException {
 
-		session = request.getSession();
+		request.setAttribute("tab", "password");
+		session  = request.getSession();
 		Customer customer = (Customer) session.getAttribute("customer");
 
+		String oldPassword = request.getParameter("oldPassword");
+		String newPassword = request.getParameter("password");
+		String confirmedPassword = request.getParameter("confirmedPassword");
+
+
+		try {
+			if (oldPassword.equals(customer.getPassword())){
+				//đổi mật khẩu trong database
+				customer.setPassword(newPassword);
+				customer = customerDAO.updatePassword(customer);
+				//đổi mật khẩu cho session hien tai
+				session.setAttribute("customer",customer);
+				request.setAttribute("successMessage","Đổi mật khẩu thành công");
+			}
+			else {
+				request.setAttribute("wrongOldPasswordMessage","Sai mật khẩu cũ");
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
+		dispatcher.forward(request, response);
 
 	}
 
@@ -115,12 +143,10 @@ public class CustomerAccountController
 		// Lấy dữ liệu từ form
 		String recipient_name = request.getParameter("recipientName");
 		String address = request.getParameter("address");
-		String phone_number = request.getParameter("recipientPhoneNumber");
 
 		// Tạo 1 bản sao của shippingAddress (session)
 		ShippingAddress updatedShippingAddress = new ShippingAddress(shippingAddress);
 		updatedShippingAddress.setRecipientName(recipient_name);
-		updatedShippingAddress.setPhoneNumber(phone_number);
 		updatedShippingAddress.setAddress(address);
 
 		try {
@@ -134,7 +160,9 @@ public class CustomerAccountController
 		catch (IOException | SQLException e) {
 			e.printStackTrace();
 		}
+
 	}
+
 
 	@Override
 	public void init() throws ServletException {

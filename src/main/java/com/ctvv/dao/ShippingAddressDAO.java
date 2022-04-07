@@ -43,23 +43,15 @@ public class ShippingAddressDAO {
 
 		String recipient_name = shippingAddress.getRecipientName();
 		String address = shippingAddress.getAddress();
-		String phone_number = shippingAddress.getPhoneNumber();
 
 		int id = shippingAddress.getCustomerId();
-		String sql = "UPDATE shipping_address SET recipient_name=?, phone_number=?, address=? WHERE user_id=?";
-		Connection connection = null;
-		PreparedStatement statement = null;
-		try{
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(sql);
+		String sql = "UPDATE shipping_address SET recipient_name=?,  address=? WHERE user_id=?";
+		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+				connection.prepareStatement(sql)) {
 			statement.setString(1, recipient_name);
-			statement.setString(2, phone_number);
-			statement.setString(3, address);
-			statement.setInt(4, id);
+			statement.setString(2, address);
+			statement.setInt(3, id);
 			statement.execute();
-		} finally {
-			if (statement != null) statement.close();
-			if (connection != null) connection.close();
 		}
 		return shippingAddress;
 	}

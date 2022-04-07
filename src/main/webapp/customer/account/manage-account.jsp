@@ -95,7 +95,7 @@
                             <div class="user__manage-account__profile-form-group">
                                 <label for="phoneNumber">Số điện thoại</label>
                                 <input type="text" name="phoneNumber" id="phoneNumber" value="${customer.phoneNumber}"
-                                       readonly class="disabled-input">
+                                       disabled class="disabled-input">
                                 <a href="" class="user__manage-account__change-recipient-phone">Đổi SDT</a>
                             </div>
                             <div class="user__manage-account__gender-group user__manage-account__profile-form-group"
@@ -149,22 +149,34 @@
 
                             </div>
                             <div class="user__manage-account__content__main">
-                                <form action="" class="" method="post">
+                                <c:if test="${not empty wrongOldPasswordMessage}">
+                                    <div
+                                            class="user__manage-account__update__message user__manage-account__update__message--fail">
+                                            ${wrongOldPasswordMessage}
+                                    </div>
+                                </c:if>
+                                <c:if test="${not empty successMessage}">
+                                    <div
+                                            class="user__manage-account__update__message user__manage-account__update__message--success">
+                                            ${successMessage}
+                                    </div>
+                                </c:if>
+                                <form action="${context}/user/account" class="" method="post">
                                     <input type="hidden" name="action" value="changePassword">
 
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="oldPassword">Mật Khẩu Hiện Tại</label>
-                                        <input type="text" name="oldPassword" id="oldPassword">
+                                        <input type="password" name="oldPassword" id="oldPassword">
                                         <a href="" class="user__manage-account__forgot-password">Quên mật khẩu?</a>
                                     </div>
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="password">Mật Khẩu Mới</label>
-                                        <input type="text" name="password" id="password">
+                                        <input type="password" name="password" id="password">
                                     </div>
 
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="confirmedPassword">Xác Nhận Mật Khẩu</label>
-                                        <input type="text" name="confirmedPassword" id="confirmedPassword">
+                                        <input type="password" name="confirmedPassword" id="confirmedPassword">
                                     </div>
                                     <input type="submit"
                                            class="btn btn-md btn-primary user__manage-account__profile__submit-btn"
@@ -211,7 +223,7 @@
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="recipientPhoneNumber">Số điện thoại</label>
                                         <input type="text" name="recipientPhoneNumber" id="recipientPhoneNumber"
-                                               value="${customer.address.phoneNumber}" readonly class="disabled-input">
+                                               value="${customer.address.phoneNumber}" disabled class="disabled-input">
                                         <a href="" class="user__manage-account__change-recipient-phone">Đổi
                                             SDT</a>
                                     </div>
