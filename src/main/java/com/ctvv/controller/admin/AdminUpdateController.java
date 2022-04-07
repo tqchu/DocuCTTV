@@ -52,7 +52,6 @@ public class AdminUpdateController
 		session = request.getSession();
 		Admin admin = (Admin) session.getAttribute("admin");
 
-		// Lấy dữ liệu từ form
 		String fullName = request.getParameter("fullName");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
