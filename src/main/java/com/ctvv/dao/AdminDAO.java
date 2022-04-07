@@ -2,9 +2,13 @@ package com.ctvv.dao;
 
 import com.ctvv.model.Admin;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.*;
 
 public class AdminDAO {
@@ -69,6 +73,32 @@ public class AdminDAO {
 			if (connection != null) connection.close();
 		}
 		return admin;
+	}
+	public void createAdmin(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String fullname = request.getParameter("fullname");
+		Connection connection = null;
+		String sql = "INSERT INTO admin(username, password, fullname)  VALUES(?, ?, ?)";
+		PreparedStatement statement = null;
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.prepareStatement(sql);
+			statement.setString(1,username);
+			statement.setString(2,password);
+			statement.setString(3,fullname);
+			statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (statement != null) statement.close();
+			if (connection != null) connection.close();
+		}
 	}
 
 }
