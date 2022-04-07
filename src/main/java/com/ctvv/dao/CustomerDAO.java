@@ -69,25 +69,7 @@ public class CustomerDAO {
 		return customer;
 
 	}
-	public Customer updatePassword(Customer customer) throws SQLException{
-		int userId = customer.getUserId();
-		String newPassword = customer.getPassword();
-		Connection connection = null;
-		String sql = "UPDATE customer SET password = ? WHERE user_id = ?";
-		PreparedStatement statement = null;
-		try{
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(sql);
-			statement.setString(1,newPassword);
-			statement.setInt(2,userId);
-			statement.execute();
-		}
-		finally {
-			if (statement != null) statement.close();
-			if (connection != null) connection.close();
-		}
-		return customer;
-	}
+
 /*
 	public Customer update(Customer admin) throws SQLException {
 		String fullName = admin.getFullName();
