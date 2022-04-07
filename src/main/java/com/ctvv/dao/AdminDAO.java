@@ -75,24 +75,16 @@ public class AdminDAO {
 		}
 		return admin;
 	}
-	public void createAdmin(HttpServletRequest request, HttpServletResponse response) throws SQLException {
-		try {
-			request.setCharacterEncoding("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		String fullname = request.getParameter("fullName");
+	public void createAdmin(Admin admin) throws SQLException {
 		Connection connection = null;
 		String sql = "INSERT INTO admin(username, password, fullname)  VALUES(?, ?, ?)";
 		PreparedStatement statement = null;
 		try {
 			connection = dataSource.getConnection();
 			statement = connection.prepareStatement(sql);
-			statement.setString(1,username);
-			statement.setString(2,password);
-			statement.setString(3,fullname);
+			statement.setString(1,admin.getUsername());
+			statement.setString(2,admin.getPassword());
+			statement.setString(3,admin.getFullName());
 			statement.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();

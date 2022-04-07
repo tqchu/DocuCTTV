@@ -1,6 +1,7 @@
 package com.ctvv.controller.admin;
 
 import com.ctvv.dao.AdminDAO;
+import com.ctvv.model.Admin;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -16,7 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
-@WebServlet(name = "SuperAdminController", value = "/SuperAdminController")
+@WebServlet(name = "SuperAdminController", value = "/admin/manage-admin")
 public class SuperAdminController extends HttpServlet {
     private AdminDAO adminDAO;
     @Override
@@ -43,27 +44,35 @@ public class SuperAdminController extends HttpServlet {
         String action = request.getParameter("action");
         switch(action){
             case "create":
-                try {
-                    adminDAO.createAdmin(request,response);
-                    request.setAttribute("successMessage", "Thêm thành công");
-                    RequestDispatcher dispatcher=request.getRequestDispatcher("/admin/super/home.jsp");
-                } catch (SQLException e) {
-                    if (e instanceof SQLIntegrityConstraintViolationException){
-                        request.setAttribute("errorMessage","Tên đăng nhập đã tồn tại, vui lòng chọn tên khác");
-                        RequestDispatcher dispatcher=request.getRequestDispatcher("/admin/super/addUpdateAdminForm.jsp");
-                        try {
-                            dispatcher.forward(request, response);
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                    else throw new ServletException();
-                }
+                createAdmin(request,response);
                 break;
             case "update":
                 updateAdmin(request,response);
                 break;
 
+        }
+    }
+    private void createAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String fullname = request.getParameter("fullName");
+        Admin admin = new Admin(fullname,username,password);
+        try {
+            adminDAO.createAdmin(admin);
+            request.setAttribute("successMessage", "Thêm thành công");
+            //release_a_success_message_box syntax
+            RequestDispatcher dispatcher=request.getRequestDispatcher("/admin/super/home.jsp");
+        } catch (SQLException e) {
+            if (e instanceof SQLIntegrityConstraintViolationException){
+                request.setAttribute("errorMessage","Tên đăng nhập đã tồn tại, vui lòng chọn tên khác");
+                RequestDispatcher dispatcher=request.getRequestDispatcher("/admin/super/addUpdateAdminForm.jsp");
+                try {
+                    dispatcher.forward(request, response);
+                } catch (IOException | ServletException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            else throw new ServletException();
         }
     }
     private void updateAdmin(HttpServletRequest request, HttpServletResponse response){
