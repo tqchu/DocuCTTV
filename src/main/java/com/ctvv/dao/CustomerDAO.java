@@ -75,7 +75,7 @@ public class CustomerDAO {
 		String fullName = admin.getFullName();
 		String username = admin.getUsername();
 		String password = admin.getPassword();
-		int id = admin.getUser_id();
+		int id = admin.getUserId();
 
 		String sql = "UPDATE admin SET fullname=?, username=?, password=? WHERE user_id=?";
 		Connection connection = null;

@@ -1,10 +1,8 @@
 package com.ctvv.dao;
 
-import com.ctvv.model.Customer;
 import com.ctvv.model.ShippingAddress;
 
 import javax.sql.DataSource;
-import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
