@@ -12,6 +12,8 @@ import javax.servlet.annotation.*;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @WebServlet(name = "AdminController", value = "/admin")
@@ -39,9 +41,7 @@ public class AdminController
             String role = admin.getRole();
             // TH1: role == super
             if (role.equals("super")) {
-                //
-                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/admin/super/home.jsp");
-                requestDispatcher.forward(request, response);
+                listAdmin(request,response);
 
             } else {
                 RequestDispatcher requestDispatcher = request.getRequestDispatcher("/admin/admin/home.jsp");
@@ -50,6 +50,23 @@ public class AdminController
         }
 
     }
+
+    private void listAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+                                                                                            IOException {
+        List<Admin> adminList = new ArrayList<>();
+        try {
+            adminList = adminDAO.getAdminList();
+        }
+        // exception này không thể xảy ra nếu test kĩ sau khi code
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        request.setAttribute("adminList", adminList);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/super/home.jsp");
+        dispatcher.forward(request, response);
+
+    }
+
 
     @Override
     protected void doPost(

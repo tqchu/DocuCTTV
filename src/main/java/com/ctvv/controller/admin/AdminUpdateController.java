@@ -29,35 +29,35 @@ public class AdminUpdateController
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setAttribute("headerAction","Thay đổi thông tin");
-		RequestDispatcher dispatcher= request.getRequestDispatcher("/admin/update/updateInformationForm.jsp");
+		request.setAttribute("headerAction", "Thay đổi thông tin");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/update/updateInformationForm.jsp");
 		dispatcher.forward(request, response);
 	}
 
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		update(request, response);
-	}
-
-	private void update(HttpServletRequest request, HttpServletResponse response) throws  ServletException {
 		// Đặt charaterEncoding của request param thành UTF-8
 		try {
 			request.setCharacterEncoding("UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+		update(request, response);
+	}
 
-		session= request.getSession();
-		Admin admin= (Admin) session.getAttribute("admin");
+	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+
+
+		session = request.getSession();
+		Admin admin = (Admin) session.getAttribute("admin");
 
 		// Lấy dữ liệu từ form
 		String fullName = request.getParameter("fullName");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		// Tạo 1 bản sao của admin (session)
-		Admin updatedAdmin= new Admin(admin);
+		Admin updatedAdmin = new Admin(admin);
 		updatedAdmin.setFullName(fullName);
 		updatedAdmin.setUsername(username);
 		updatedAdmin.setPassword(password);
@@ -68,7 +68,7 @@ public class AdminUpdateController
 			session.setAttribute("admin", updatedAdmin);
 			// Đặt tin nhắn thành công
 			request.setAttribute("successMessage", "Cập nhật thành công!");
-			RequestDispatcher dispatcher=request.getRequestDispatcher("/admin/update/updateInformationForm.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/update/updateInformationForm.jsp");
 			try {
 				dispatcher.forward(request, response);
 			} catch (IOException e) {
@@ -77,12 +77,12 @@ public class AdminUpdateController
 
 		}
 		// Catch tất cả exception của SQLException
-		catch (SQLException e){
+		catch (SQLException e) {
 			// Trường hợp username đã tồn tại
-			if (e instanceof SQLIntegrityConstraintViolationException){
-				request.setAttribute("errorMessage","Tên đăng nhập đã tồn tại, vui lòng chọn tên khác");
+			if (e instanceof SQLIntegrityConstraintViolationException) {
+				request.setAttribute("errorMessage", "Tên đăng nhập đã tồn tại, vui lòng chọn tên khác");
 				// Dispatch về form cập nhật
-				RequestDispatcher dispatcher=request.getRequestDispatcher("/admin/update/updateInformationForm.jsp");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/update/updateInformationForm.jsp");
 				try {
 					dispatcher.forward(request, response);
 				} catch (IOException ex) {

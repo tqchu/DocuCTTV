@@ -6,10 +6,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Đăng nhập</title>
-    <link rel="stylesheet" href="${context}/css/base.css">
     <link rel="shortcut icon" href="${context}/favicon.ico" />
 
-    <link rel="stylesheet" href="${context}/css/style.css">
     <!-- RESET CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
           integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
@@ -22,16 +20,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
           rel="stylesheet">
-
+    <%-- APP--%>
+    <link rel="stylesheet" href="${context}/css/base.css">
+    <link rel="stylesheet" href="${context}/css/style.css">
 </head>
 <body>
 <jsp:include page="../common/header.jsp"/>
 <div class="login-box">
-    <div class="login__heading-text">Đăng nhập</div>
+    <div class="form__heading-text">Đăng nhập</div>
     <c:if test="${loginMessage!=null}">
         <div class="login__fail-message">${loginMessage}</div>
     </c:if>
-    <form action="${context}/admin" method="post" class="login-form" autocomplete="off">
+    <form action="${context}/admin" method="post" class="login-form form" autocomplete="off">
         <div class="form-group form-floating">
             <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập">
             <label for="username" class="form-label">Tên đăng nhập</label>

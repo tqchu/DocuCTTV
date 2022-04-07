@@ -1,14 +1,14 @@
 package com.ctvv.model;
 
 public class Admin {
-	private int user_id;
+	private int userId;
 	private String username;
 	private String password;
 	private String fullName;
 	private String role;
 
 	public Admin(int user_id, String username, String password, String fullName, String role) {
-		this.user_id = user_id;
+		this.userId = user_id;
 		this.username = username;
 		this.password = password;
 		this.fullName = fullName;
@@ -16,7 +16,7 @@ public class Admin {
 	}
 
 	public Admin(Admin admin) {
-		this.user_id = admin.user_id;
+		this.userId = admin.userId;
 		this.username = admin.username;
 		this.password = admin.password;
 		this.fullName = admin.fullName;
@@ -34,19 +34,19 @@ public class Admin {
 		this.fullName = fullName;
 	}
 
-	public Admin(int id, String fullName, String username, String password) {
-		this.user_id = id;
-		this.password = password;
+	public Admin(int id, String username, String fullName, String role) {
+		this.userId = id;
+		this.role=role;
 		this.username = username;
 		this.fullName = fullName;
 	}
 
-	public int getUser_id() {
-		return user_id;
+	public int getUserId() {
+		return userId;
 	}
 
-	public void setUser_id(int user_id) {
-		this.user_id = user_id;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 
 	public String getUsername() {

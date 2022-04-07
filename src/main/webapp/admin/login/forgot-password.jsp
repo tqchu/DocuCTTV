@@ -6,11 +6,8 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quên mật khẩu</title>
-    <link rel="shortcut icon" href="${context}/favicon.ico" />
+    <link rel="shortcut icon" href="${context}/favicon.ico"/>
 
-    <link rel="stylesheet" href="${context}/css/base.css">
-
-    <link rel="stylesheet" href="${context}/css/style.css">
     <!-- RESET CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
           integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
@@ -21,15 +18,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
           rel="stylesheet">
+    <%-- APP--%>
+    <link rel="stylesheet" href="${context}/css/base.css">
+    <link rel="stylesheet" href="${context}/css/style.css">
 
 </head>
 <body>
 <jsp:include page="../common/header.jsp"/>
 
-    <div class="admin__forgot-password-message">
-        Vui lòng liên hệ quản trị viên để được cấp lại mật khẩu.<br>
-        Xin cảm ơn
-    </div>
+<div class="admin__forgot-password-message">
+    Vui lòng liên hệ quản trị viên để được cấp lại mật khẩu.<br>
+    Xin cảm ơn
+</div>
 <jsp:include page="../../common/footer.jsp"/>
 
 

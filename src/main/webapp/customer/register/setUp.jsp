@@ -6,9 +6,6 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
-    <link rel="stylesheet" href="${context}/css/base.css">
-
-    <link rel="stylesheet" href="${context}/css/style.css">
     <!-- RESET CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
           integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
@@ -20,15 +17,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
           rel="stylesheet">
-
+    <%-- APP --%>
+    <link rel="stylesheet" href="${context}/css/base.css">
+    <link rel="stylesheet" href="${context}/css/style.css">
 </head>
 <body>
 <jsp:include page="../common/search-header.jsp"/>
 
 <div class="register-box">
-    <div class="register__heading-text">Thiết lập tài khoản</div>
+    <div class="form__heading-text">Thiết lập tài khoản</div>
 
-    <form action="${context}" method="post" class="register-form" autocomplete="off">
+    <form action="${context}" method="post" class="register-form form" autocomplete="off">
         <div class="form-group form-floating">
             <input type="text" class="form-control" id="password" name="password" placeholder="Mật khẩu">
             <label for="password" class="form-label">Mật khẩu</label>
@@ -73,7 +72,8 @@
         </div>
         <div class="form-group register__accept-policy">
             <input type="checkbox" id="accept-policy" name="accept-policy" value="accept">
-            <label for="accept-policy" class="accept-policy">Tôi đồng ý với các <a href="" style="color: #f03a0a">điều khoản sử
+            <label for="accept-policy" class="accept-policy">Tôi đồng ý với các <a href="" style="color: #f03a0a">điều
+                khoản sử
                 dụng</a> của
                 CTVV.</label>
         </div>
