@@ -89,7 +89,6 @@ public class AdminUpdateController
 					ex.printStackTrace();
 				}
 			}
-			// Trường là exception vì lỗi nào đó
 			else throw new ServletException();
 		}
 	}
