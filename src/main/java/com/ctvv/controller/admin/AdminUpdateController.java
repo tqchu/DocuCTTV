@@ -52,7 +52,6 @@ public class AdminUpdateController
 		session = request.getSession();
 		Admin admin = (Admin) session.getAttribute("admin");
 
-		// Lấy dữ liệu từ form
 		String fullName = request.getParameter("fullName");
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -63,7 +62,7 @@ public class AdminUpdateController
 		updatedAdmin.setPassword(password);
 		try {
 			updatedAdmin = adminDAO.update(updatedAdmin);
-			// Thành công
+			// Thành côngs
 			// Gán admin trong session bằng admin vừa được câp nhật nếu không có exception xảy ra.
 			session.setAttribute("admin", updatedAdmin);
 			// Đặt tin nhắn thành công
@@ -89,7 +88,6 @@ public class AdminUpdateController
 					ex.printStackTrace();
 				}
 			}
-			// Trường là exception vì lỗi nào đó
 			else throw new ServletException();
 		}
 	}
