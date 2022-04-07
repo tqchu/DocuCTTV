@@ -20,7 +20,7 @@ public class AdminDAO {
 		Admin authenticatedAdmin = null;
 		String username = admin.getUsername();
 		String password = admin.getPassword();
-		String sql = "SELECT * FROM admin WHERE (username=?) and (password=?)";
+		String sql = "SELECT * FROM admin WHERE (username=?) and (password=?) LIMIT 1";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -43,8 +43,6 @@ public class AdminDAO {
 			if (statement != null) statement.close();
 			if (connection != null) connection.close();
 		}
-
-
 		return authenticatedAdmin;
 	}
 

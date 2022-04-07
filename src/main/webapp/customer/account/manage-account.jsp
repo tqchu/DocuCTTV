@@ -6,7 +6,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Quản lý tài khoản</title>
-    <link rel="shortcut icon" href="${context}/favicon.ico" />
+    <link rel="shortcut icon" href="${context}/favicon.ico"/>
 
     <link rel="stylesheet" href="${context}/css/base.css">
 
@@ -80,7 +80,13 @@
                         </div>
                     </div>
                     <div class="user__manage-account__content__main">
-                        <form action="" class="" method="post">
+                        <c:if test="${not empty successMessage}">
+                            <div
+                                    class="user__manage-account__update__message user__manage-account__update__message--success">
+                                    ${successMessage}
+                            </div>
+                        </c:if>
+                        <form action="${context}/user/account" class="" method="post">
                             <input type="hidden" name="action" value="updateProfile">
                             <div class="user__manage-account__profile-form-group">
                                 <label for="fullName">Họ tên</label>
@@ -89,7 +95,7 @@
                             <div class="user__manage-account__profile-form-group">
                                 <label for="phoneNumber">Số điện thoại</label>
                                 <input type="text" name="phoneNumber" id="phoneNumber" value="${customer.phoneNumber}"
-                                       disabled>
+                                       disabled class="disabled-input">
                                 <a href="" class="user__manage-account__change-recipient-phone">Đổi SDT</a>
                             </div>
                             <div class="user__manage-account__gender-group user__manage-account__profile-form-group"
@@ -97,27 +103,27 @@
                                 <label for="gender">Giới tính</label>
                                 <div class="user__manage-account__gender-option" style="margin-left: 4px;">
                                     <label for="male">Nam</label>
-                                    <input type="radio" name="gender" id="male"
-                                           value="male" ${customer.gender eq 'MALE'? 'checked':''}>
-
+                                    <input type="radio" name="gender" id="male" value="MALE" ${customer.gender eq
+                                            'MALE'? 'checked':''}>
                                 </div>
                                 <div class="user__manage-account__gender-option">
                                     <label for="female">Nữ</label>
-                                    <input type="radio" name="gender" id="female"
-                                           value="female" ${customer.gender eq 'FEMALE'? 'checked':''}>
-
+                                    <input type="radio" name="gender" id="female" value="FEMALE"
+                                        ${customer.gender eq
+                                                'FEMALE'? 'checked':''} >
                                 </div>
 
                                 <div class="user__manage-account__gender-option">
                                     <label for="undefined">Khác</label>
                                     <input type="radio" name="gender" id="undefined"
-                                           value="undefined" ${customer.gender eq 'OTHER'? 'checked':''}>
+                                           value="OTHER" ${customer.gender eq
+                                            'OTHER'? 'checked':''}>
                                 </div>
 
                             </div>
                             <div class="user__manage-account__profile-form-group">
-                                <label for="birthday">Ngày sinh</label>
-                                <input type="date" name="birthday" id="birthday">
+                                <label for="dateOfBirth">Ngày sinh</label>
+                                <input type="date" name="dateOfBirth" id="dateOfBirth" value="${customer.dateOfBirth}">
                             </div>
 
                             <input type="submit"
@@ -140,25 +146,24 @@
                                 <div class="user__manage-account__content__text-description">
                                     Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác
                                 </div>
+
                             </div>
                             <div class="user__manage-account__content__main">
+                                <c:if test="${not empty wrongOldPasswordMessage}">
+                                    <div
+                                            class="user__manage-account__update__message user__manage-account__update__message--fail">
+                                            ${wrongOldPasswordMessage}
+                                    </div>
+                                </c:if>
                                 <c:if test="${not empty successMessage}">
-                                    <div class="user__manage-account__add-address__message user__manage-account__add-address__message--success">
+                                    <div
+                                            class="user__manage-account__update__message user__manage-account__update__message--success">
                                             ${successMessage}
                                     </div>
                                 </c:if>
-                                <c:if test="${not empty notMatchNewPassword}">
-                                    <div class="user__manage-account__change-password__message user__manage-account__change-password__message--notMatch">
-                                        ${notMatchNewPassword}
-                                    </div>
-                                </c:if>
-                                <c:if test="${not empty wrongOldPassword}">
-                                    <div class="user__manage-account__change-password__message user__manage-account__change-password__message--wrongPassword">
-                                            ${wrongOldPassword}
-                                    </div>
-                                </c:if>
-                                <form action="" class="" method="post">
+                                <form action="${context}/user/account" class="" method="post">
                                     <input type="hidden" name="action" value="changePassword">
+
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="oldPassword">Mật Khẩu Hiện Tại</label>
                                         <input type="password" name="oldPassword" id="oldPassword">
@@ -193,9 +198,23 @@
                                 </div>
 
                             </div>
+
+
                             <div class="user__manage-account__content__main">
+                                <c:if test="${empty customer.address.address}">
+                                    <div class="user__manage-account__add-address">
+                                        Bạn chưa có địa chỉ nhận hàng, vui lòng thêm địa chỉ nhận hàng.
+                                    </div>
+                                </c:if>
+                                <c:if test="${not empty successMessage}">
+                                    <div
+                                            class="user__manage-account__update__message user__manage-account__update__message--success">
+                                            ${successMessage}
+                                    </div>
+                                </c:if>
                                 <form action="" class="" method="post">
-                                    <input type="hidden" name="action" value="addAddress">
+                                    <input type="hidden" name="action" value="updateAddress">
+
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="recipientName">Tên người nhận</label>
                                         <input type="text" name="recipientName" id="recipientName"
@@ -204,8 +223,9 @@
                                     <div class="user__manage-account__profile-form-group">
                                         <label for="recipientPhoneNumber">Số điện thoại</label>
                                         <input type="text" name="recipientPhoneNumber" id="recipientPhoneNumber"
-                                               value="${customer.address.phoneNumber}" disabled>
-                                        <a href="" class="user__manage-account__change-recipient-phone">Đổi SDT</a>
+                                               value="${customer.address.phoneNumber}" disabled class="disabled-input">
+                                        <a href="" class="user__manage-account__change-recipient-phone">Đổi
+                                            SDT</a>
                                     </div>
 
                                     <div class="user__manage-account__profile-form-group">
@@ -219,6 +239,7 @@
                                     />
                                 </form>
                             </div>
+
 
                         </div>
                     </c:when>

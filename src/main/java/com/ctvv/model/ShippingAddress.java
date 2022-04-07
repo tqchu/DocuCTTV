@@ -1,9 +1,32 @@
 package com.ctvv.model;
 
 public class ShippingAddress {
-    String recipientName;
-    String phoneNumber;
-    String address;
+    private int customerId;
+    private String recipientName;
+    private String phoneNumber;
+    private String address;
+
+    public ShippingAddress(int customerId, String recipientName, String phoneNumber, String address) {
+        this.customerId = customerId;
+        this.recipientName = recipientName;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
+
+    public ShippingAddress(ShippingAddress shippingAddress) {
+        this.customerId = shippingAddress.customerId;
+        this.recipientName = shippingAddress.recipientName;
+        this.phoneNumber = shippingAddress.phoneNumber;
+        this.address = shippingAddress.address;
+    }
+
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
 
     public String getRecipientName() {
         return recipientName;
@@ -28,12 +51,4 @@ public class ShippingAddress {
     public void setAddress(String address) {
         this.address = address;
     }
-
-    public ShippingAddress(String recipientName, String phoneNumber, String address) {
-        this.recipientName = recipientName;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-    }
-
-
 }

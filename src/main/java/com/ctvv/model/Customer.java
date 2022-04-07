@@ -4,7 +4,13 @@ public class Customer {
     public enum Gender{
         FEMALE,
         MALE,
-        OTHER
+        OTHER;
+        public int getValue()
+        {
+            if (this == FEMALE) return 0;
+            else if (this == MALE) return 1;
+            else return 2;
+        }
     }
     private int userId;
     private String password;
@@ -50,6 +56,7 @@ public class Customer {
         this.phoneNumber = customer.phoneNumber;
         this.gender = customer.gender;
         this.dateOfBirth = customer.dateOfBirth;
+        this.address=new ShippingAddress(customer.address);
     }
 
     public int getUserId() {
@@ -59,8 +66,6 @@ public class Customer {
     public void setUserId(int userId) {
         this.userId = userId;
     }
-
-
 
     public String getPassword() {
         return this.password;

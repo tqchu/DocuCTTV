@@ -28,14 +28,4 @@ public class CustomerSignUpController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
-    private void newAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        try {
-            request.setCharacterEncoding("UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        HttpSession session = request.getSession();
-        Customer customer = (Customer) session.getAttribute("customer");
-        String password = request.getParameter("password");
-    }
 }

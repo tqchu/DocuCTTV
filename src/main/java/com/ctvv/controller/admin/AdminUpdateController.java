@@ -48,6 +48,7 @@ public class AdminUpdateController
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+
 		session= request.getSession();
 		Admin admin= (Admin) session.getAttribute("admin");
 
