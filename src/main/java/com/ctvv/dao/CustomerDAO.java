@@ -16,7 +16,6 @@ public class CustomerDAO {
 	}
 
 	public Customer validate(Customer customer) throws SQLException {
-		// Tạo connection
 		Customer authenticatedCustomer = null;
 		String phoneNumber = customer.getPhoneNumber();
 		String password = customer.getPassword();
