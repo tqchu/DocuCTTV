@@ -39,7 +39,7 @@ public class SuperAdminController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         String action = request.getParameter("action");
         switch(action){
             case "create":

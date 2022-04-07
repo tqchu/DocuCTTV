@@ -54,7 +54,7 @@ public class AdminDAO {
 		String fullName = admin.getFullName();
 		String username = admin.getUsername();
 		String password = admin.getPassword();
-		int id = admin.getUser_id();
+		int id = admin.getUserId();
 
 		String sql = "UPDATE admin SET fullname=?, username=?, password=? WHERE user_id=?";
 		Connection connection = null;
@@ -82,7 +82,7 @@ public class AdminDAO {
 		}
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
-		String fullname = request.getParameter("fullname");
+		String fullname = request.getParameter("fullName");
 		Connection connection = null;
 		String sql = "INSERT INTO admin(username, password, fullname)  VALUES(?, ?, ?)";
 		PreparedStatement statement = null;
