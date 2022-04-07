@@ -51,6 +51,7 @@ public class AdminDAO {
 	}
 
 	public Admin update(Admin admin) throws SQLException {
+
 		String fullName = admin.getFullName();
 		String username = admin.getUsername();
 		String password = admin.getPassword();
