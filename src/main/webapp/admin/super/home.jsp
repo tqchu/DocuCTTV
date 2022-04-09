@@ -33,7 +33,7 @@
     <a href="${context}/admin/manage-admin?action=create" class="super-admin-search-header__add-btn">
         Thêm quản trị viên
     </a>
-    <form action="" class="super-admin-search-header" method="get">
+    <form action="" class="super-admin-search-header-form" method="get">
         <input type="search" name="keyword" id="keyword" class="super-admin-search-header__search-input"/>
         <span class="super-admin-search-header__selections">
 
@@ -46,32 +46,45 @@
 
 </div>
 <div class="super-admin-content">
-    <table class="super-admin-content__table">
+    <table class="super-admin-content__table table table-hover table-bordered">
+        <thead>
         <tr>
             <th>STT</th>
             <th>Họ và tên</th>
             <th>Tên đăng nhập</th>
+            <th>Email</th>
             <th>Vai trò</th>
             <th></th>
             <th></th>
         </tr>
+        </thead>
+        <tbody>
         <c:if test="${not empty adminList}">
-            <c:forEach items="${adminList}" var="admin">
+            <c:forEach items="${adminList}" var="currentAdmin" varStatus="loop">
                 <tr>
-                    <th>${admin.userId}</th>
-                    <th>${admin.fullName}</th>
-                    <th>${admin.username}</th>
-                    <th>${admin.role}</th>
-                    <th><a href="${context}/admin/manage-admin?action=update&id=${admin.userId}"
+                    <td>${loop.count}</td>
+                    <td>${currentAdmin.fullName}</td>
+                    <td>${currentAdmin.username}</td>
+                    <td>${currentAdmin.email}</td>
+                    <td>
+                        <c:if test="${currentAdmin.role=='admin'}">
+                            Nhân viên
+                        </c:if>
+                        <c:if test="${currentAdmin.role=='super'}">
+                            Quản lý
+                        </c:if>
+                    </td>
+                    <td><a href="${context}/admin/manage-admin?action=update&id=${currentAdmin.userId}"
                            class="super-admin-content__table__action super-admin-content__table__edit-action">Chỉnh
-                        sửa</a></th>
-                    <th>
-                        <a href="${context}/admin/manage-admin?action=delete&id=${admin.userId}"
+                        sửa</a></td>
+                    <td>
+                        <a href="${context}/admin/manage-admin?action=delete&id=${currentAdmin.userId}"
                            class="super-admin-content__table__action super-admin-content__table__delete-action">Xóa</a>
-                    </th>
+                    </td>
                 </tr>
             </c:forEach>
         </c:if>
+        </tbody>
 
     </table>
 </div>

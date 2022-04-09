@@ -97,7 +97,9 @@ input {
   width: 2.4rem;
   height: 2.4rem;
 }
-
+table th{
+  font-weight: 600;
+}
 /* GRID */
 .row.sm-gutter .col {
   padding: 0px 5px;

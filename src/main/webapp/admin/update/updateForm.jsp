@@ -28,11 +28,9 @@
     <c:if test="${errorMessage!=null}">
         <div class="admin__update__error-message">${errorMessage}</div>
     </c:if> <c:if test="${successMessage!=null}">
-    <div class="admin__update__success-message">${successMessage}</div>
+    <div class="success-message">${successMessage}</div>
 </c:if>
-
     <form action="${context}/admin/update" method="post" class="admin__update-form form">
-
         <div class="admin__update__form-group form-floating">
             <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Tên"
                    value="${admin.fullName}">
@@ -44,8 +42,12 @@
             <label for="username" class="">Tên đăng nhập</label>
         </div>
         <div class="admin__update__form-group form-floating">
-            <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu"
-                   value="${admin.password}">
+            <input type="text" class="form-control" id="email" name="email" placeholder="Email"
+                   value="${admin.email}">
+            <label for="username" class="">Email</label>
+        </div>
+        <div class="admin__update__form-group form-floating">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">
             <label for="password" class="">Mật khẩu</label>
         </div>
         <button type="submit" class="btn btn-lg btn-primary admin__update__btn">Lưu</button>

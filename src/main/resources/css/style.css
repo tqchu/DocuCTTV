@@ -86,7 +86,7 @@
     flex-direction: column;
 }
 
-.form{
+.form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -115,7 +115,7 @@
     text-decoration: none;
 }
 
-.login__fail-message {
+.error-message {
     color: red;
     margin-left: 20px;
     margin-bottom: 20px;
@@ -146,7 +146,7 @@
     margin-top: 16px;
 }
 
-.admin__update__error-message {
+.error-message {
     color: red;
     margin-left: 22px;
     margin-bottom: 20px;
@@ -160,7 +160,7 @@
     color: green;
 }
 
-.admin__update__success-message {
+.success-message {
     color: green;
     margin-bottom: 20px;
     font-size: 18px;
@@ -507,6 +507,7 @@
     align-items: center;
     padding: 0 12px;
     margin-top: 10px;
+    flex: 1;
 }
 
 .super-admin-search-header__add-btn {
@@ -516,16 +517,54 @@
     border-radius: 4px;
     text-decoration: none;
 }
-.super-admin-search-header__add-btn:hover{
+
+.super-admin-search-header__add-btn:hover {
     color: var(--text-hover-color);
 }
+
 .super-admin-content__table {
     width: 100%;
 }
+
 .super-admin-content {
     padding: 0 12px;
+    margin-top: 40px;
 }
+
 .create-admin-form__select {
     width: 280px;
     padding: 15px;
+}
+
+.super-admin-search-header-form {
+    margin-left: 40px;
+    width: 400px;
+    display: flex;
+}
+
+.super-admin-search-header__search-input {
+    margin-left: 40px;
+    width: 400px;
+    border-color: rgba(0, 0, 0, 0.1);
+    border-width: 1px;
+    border-radius: 4px;
+    padding: 6px 10px;
+    font-size: 14px;
+    margin-right: 4px;
+}
+
+.super-admin-search-header__search-icon {
+    background-color: var(--btn-color);
+    color: #fff;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 4px;
+}
+
+.super-admin-content__table__edit-action {
+    color: var(--btn-color);
+}
+
+.super-admin-content__table__delete-action {
+    color: #f53a0ce0;
 }

@@ -30,7 +30,7 @@
 <div class="login-box">
     <div class="form__heading-text">Đăng nhập</div>
     <c:if test="${loginMessage!=null}">
-        <div class="login__fail-message">${loginMessage}</div>
+        <div class="error-message">${loginMessage}</div>
     </c:if>
     <form action="${context}/" method="post" class="login-form form" autocomplete="off">
         <div class="form-group form-floating">

@@ -61,6 +61,7 @@ public class AdminController
         catch (SQLException e) {
             e.printStackTrace();
         }
+        adminList.remove(session.getAttribute("admin"));
         request.setAttribute("adminList", adminList);
         RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/super/home.jsp");
         dispatcher.forward(request, response);
@@ -76,9 +77,9 @@ public class AdminController
     }
 
     private void authenticate(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        String username = request.getParameter("username");
+        String usernameOrEmail = request.getParameter("usernameOrEmail");
         String password = request.getParameter("password");
-        Admin admin = new Admin(password, username);
+        Admin admin = new Admin(usernameOrEmail, password);
         Admin authenticatedAdmin;
         // TH1: validate thành công
         try {

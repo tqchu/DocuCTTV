@@ -30,7 +30,7 @@ public class AdminUpdateController
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("headerAction", "Thay đổi thông tin");
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/update/updateInformationForm.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/update/updateForm.jsp");
 		dispatcher.forward(request, response);
 	}
 
@@ -54,12 +54,14 @@ public class AdminUpdateController
 
 		String fullName = request.getParameter("fullName");
 		String username = request.getParameter("username");
+		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		// Tạo 1 bản sao của admin (session)
 		Admin updatedAdmin = new Admin(admin);
 		updatedAdmin.setFullName(fullName);
 		updatedAdmin.setUsername(username);
 		updatedAdmin.setPassword(password);
+		updatedAdmin.setEmail(email);
 		try {
 			updatedAdmin = adminDAO.update(updatedAdmin);
 			// Thành côngs
@@ -67,7 +69,7 @@ public class AdminUpdateController
 			session.setAttribute("admin", updatedAdmin);
 			// Đặt tin nhắn thành công
 			request.setAttribute("successMessage", "Cập nhật thành công!");
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/update/updateInformationForm.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/update/updateForm.jsp");
 			try {
 				dispatcher.forward(request, response);
 			} catch (IOException e) {
@@ -81,7 +83,7 @@ public class AdminUpdateController
 			if (e instanceof SQLIntegrityConstraintViolationException) {
 				request.setAttribute("errorMessage", "Tên đăng nhập đã tồn tại, vui lòng chọn tên khác");
 				// Dispatch về form cập nhật
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/update/updateInformationForm.jsp");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/update/updateForm.jsp");
 				try {
 					dispatcher.forward(request, response);
 				} catch (IOException ex) {

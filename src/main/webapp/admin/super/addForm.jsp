@@ -28,33 +28,42 @@
 <jsp:include page="../common/header.jsp"/>
 <div class="create-admin__form-box">
     <div class="form__heading-text">
-        <c:if test="${action=='create'}">
-            Thêm quản trị viên
-        </c:if>
-        <c:if test="${action=='update'}">
-            Thay đổi thông tin quản trị viên
-        </c:if>
+        Thêm quản trị viên
     </div>
-
+    <c:if test="${successMessage!=null}">
+        <div class="success-message">
+                ${successMessage}
+        </div>
+    </c:if>
+    <c:if test="${errorMessage!=null}">
+        <div class="error-message">
+                ${errorMessage}
+        </div>
+    </c:if>
     <form action="${context}/admin/manage-admin" method="post" class="create-admin-form form" autocomplete="off">
-        <input type="hidden" name="action" value="${action}">
+        <input type="hidden" name="action" value="create">
         <div class="form-group form-floating">
             <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Tên đăng nhập"
                    >
             <label for="fullName" class="form-label">Họ và tên</label>
         </div>
         <div class="form-group form-floating">
-            <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập">
+            <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập"
+                   >
             <label for="username" class="form-label">Tên đăng nhập</label>
+        </div>
+        <div class="form-group form-floating">
+            <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+            <label for="email" class="form-label">Email</label>
         </div>
         <div class="form-group form-floating">
             <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">
             <label for="password" class="form-label">Mật khẩu</label>
         </div>
-        <%-- SELECT ROLE--%>
+        <%-- SELECT ROLE --%>
         <select class="form-select  create-admin-form__select" name="role">
-            <option value="admin" selected>Admin</option>
-            <option value="super">Super admin</option>
+            <option value="admin">Nhân viên</option>
+            <option value="super">Quản lý</option>
         </select>
         <button type="submit" class="btn submit-btn">Thêm</button>
     </form>
