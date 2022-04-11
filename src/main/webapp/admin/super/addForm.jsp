@@ -35,21 +35,26 @@
                 ${successMessage}
         </div>
     </c:if>
-    <c:if test="${errorMessage!=null}">
+    <c:if test="${usernameErrorMessage!=null}">
         <div class="error-message">
-                ${errorMessage}
+                ${usernameErrorMessage}
         </div>
-    </c:if>
+    </c:if><c:if test="${emailErrorMessage!=null}">
+    <div class="error-message">
+            ${emailErrorMessage}
+    </div>
+</c:if>
     <form action="${context}/admin/manage-admin" method="post" class="create-admin-form form" autocomplete="off">
-        <input type="hidden" name="action" value="create">
+        <input
+            type="hidden" name="action" value="create">
         <div class="form-group form-floating">
             <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Tên đăng nhập"
-                   >
+            >
             <label for="fullName" class="form-label">Họ và tên</label>
         </div>
         <div class="form-group form-floating">
             <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập"
-                   >
+            >
             <label for="username" class="form-label">Tên đăng nhập</label>
         </div>
         <div class="form-group form-floating">

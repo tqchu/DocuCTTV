@@ -28,20 +28,6 @@ public class SuperAdminController
 		RequestDispatcher dispatcher;
 		switch (action) {
 			case "create":
-				request.setAttribute("action", "create");
-				dispatcher = request.getRequestDispatcher("/admin/super/addForm.jsp");
-				dispatcher.forward(request, response);
-				break;
-
-			case "update":
-				int id = Integer.parseInt(request.getParameter("id"));
-				try {
-					Admin admin = adminDAO.get(id);
-					request.setAttribute("changeAdmin", admin);
-				} catch (SQLException e) {
-					throw new ServletException();
-				}
-				request.setAttribute("action", "update");
 				dispatcher = request.getRequestDispatcher("/admin/super/addForm.jsp");
 				dispatcher.forward(request, response);
 				break;
@@ -62,22 +48,9 @@ public class SuperAdminController
 				createAdmin(request, response);
 				break;
 			case "update":
-//				updateAdmin(request, response);
+				updateAdmin(request, response);
 				break;
 
-		}
-	}
-
-	private void deleteAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-		try {
-			adminDAO.delete(Integer.parseInt(request.getParameter("id")));
-			try {
-				response.sendRedirect(request.getContextPath()+"/admin");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} catch (SQLException e) {
-			throw  new ServletException();
 		}
 	}
 
@@ -87,8 +60,9 @@ public class SuperAdminController
 		String email = request.getParameter("email");
 		String fullName = request.getParameter("fullName");
 		String role = request.getParameter("role");
-		Admin admin = new Admin(username, email, fullName, password, role);
-		try {
+
+		if ((adminDAO.findByUsername(username) == null) && (adminDAO.findByEmail(email) == null)) {
+			Admin admin = new Admin(username, email, fullName, password, role);
 			adminDAO.createAdmin(admin);
 			request.setAttribute("successMessage", "Thêm thành công");
 			try {
@@ -96,18 +70,35 @@ public class SuperAdminController
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			if (e instanceof SQLIntegrityConstraintViolationException) {
-				request.setAttribute("errorMessage", "Tên đăng nhập đã tồn tại, vui lòng chọn tên khác");
-				request.setAttribute("action", "create");
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/super/addForm.jsp");
-				try {
-					dispatcher.forward(request, response);
-				} catch (IOException | ServletException ex) {
-					ex.printStackTrace();
-				}
-			} else throw new ServletException();
+		} else {
+			if (adminDAO.findByUsername(username) != null) {
+				request.setAttribute("usernameErrorMessage", "Tên đăng nhập đã tồn tại, vui lòng chọn tên khác");
+			}
+			if (adminDAO.findByEmail(email) != null) {
+				request.setAttribute("emailErrorMessage", "Email đã tồn tại, vui lòng chọn tên khác");
+			}
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/super/addForm.jsp");
+			try {
+				dispatcher.forward(request, response);
+			} catch (IOException | ServletException ex) {
+				ex.printStackTrace();
+			}
 		}
+
+
+	}
+
+	private void updateAdmin(HttpServletRequest request, HttpServletResponse response) {
+		int id = Integer.parseInt(request.getParameter("id"));
+		String role = request.getParameter("role");
+		adminDAO.updateRole(role, id);
+		request.setAttribute("actionMessage", "Cập nhật thành công");
+		try {
+			response.sendRedirect(request.getContextPath() + "/admin");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 /*
 
@@ -160,6 +151,15 @@ public class SuperAdminController
 		}
 	}
 */
+
+	private void deleteAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+		adminDAO.delete(Integer.parseInt(request.getParameter("id")));
+		try {
+			response.sendRedirect(request.getContextPath() + "/admin");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void init() throws ServletException {

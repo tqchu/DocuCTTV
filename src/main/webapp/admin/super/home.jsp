@@ -54,7 +54,7 @@
             <th>Tên đăng nhập</th>
             <th>Email</th>
             <th>Vai trò</th>
-            <th></th>
+
             <th></th>
         </tr>
         </thead>
@@ -67,16 +67,24 @@
                     <td>${currentAdmin.username}</td>
                     <td>${currentAdmin.email}</td>
                     <td>
-                        <c:if test="${currentAdmin.role=='admin'}">
-                            Nhân viên
-                        </c:if>
-                        <c:if test="${currentAdmin.role=='super'}">
-                            Quản lý
-                        </c:if>
+                        <form action="${context}/admin/manage-admin" method="post">
+                            <input
+                                    type="hidden" name="action" value="update">
+                            <input type="hidden" name="id" value="${currentAdmin.userId}">
+                            <select class="form-select" name="role">
+                                <option value="admin" ${currentAdmin.role=='admin'?'selected':''}>Nhân
+                                    viên
+                                </option>
+                                <option value="super"
+                                    ${currentAdmin.role=='super'?'selected':''}>Quản lý
+                                </option>
+                            </select>
+                            <button type="submit" class="super-admin-content__table__save-btn">Lưu</button>
+                        </form>
+
                     </td>
-                    <td><a href="${context}/admin/manage-admin?action=update&id=${currentAdmin.userId}"
-                           class="super-admin-content__table__action super-admin-content__table__edit-action">Chỉnh
-                        sửa</a></td>
+
+
                     <td>
                         <a href="${context}/admin/manage-admin?action=delete&id=${currentAdmin.userId}"
                            class="super-admin-content__table__action super-admin-content__table__delete-action">Xóa</a>
