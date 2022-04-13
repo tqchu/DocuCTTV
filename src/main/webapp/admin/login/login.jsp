@@ -33,8 +33,8 @@
     </c:if>
     <form action="${context}/admin" method="post" class="login-form form" autocomplete="off">
         <div class="form-group form-floating">
-            <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập">
-            <label for="username" class="form-label">Tên đăng nhập</label>
+            <input type="text" class="form-control" id="usernameOrEmail" name="usernameOrEmail" placeholder="Tên đăng nhập">
+            <label for="usernameOrEmail" class="form-label">Email hoặc tên đăng nhập</label>
         </div>
         <div class="form-group form-floating">
             <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">

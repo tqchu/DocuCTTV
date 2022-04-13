@@ -1,6 +1,6 @@
 :root {
   --btn-color: #37BDDB;
-  --bg-color: #F5F5F5;
+  --bg-color: #37BDDB;
   --text-hover-color: rgba(255,255,255,0.8);
 }
 
@@ -97,7 +97,9 @@ input {
   width: 2.4rem;
   height: 2.4rem;
 }
-
+table th{
+  font-weight: 600;
+}
 /* GRID */
 .row.sm-gutter .col {
   padding: 0px 5px;

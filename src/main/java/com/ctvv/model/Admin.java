@@ -1,50 +1,54 @@
 package com.ctvv.model;
 
+import java.util.Objects;
+
 public class Admin {
 	private int userId;
 	private String username;
+	private String email;
 	private String password;
 	private String fullName;
 	private String role;
 
-	public Admin(int user_id, String username, String password, String fullName, String role) {
-		this.userId = user_id;
+	public Admin() {
+	}
+	public Admin(Admin admin){
+		this.userId=admin.getUserId();
+		this.username =admin.getUsername();
+		this.email=admin.getEmail();
+		this.password=admin.getPassword();
+		this.role=admin.getRole();
+	}
+	public Admin(int userId, String username, String email, String password, String fullName, String role) {
+		this.userId = userId;
 		this.username = username;
+		this.email = email;
 		this.password = password;
 		this.fullName = fullName;
 		this.role = role;
 	}
 
-	public Admin(Admin admin) {
-		this.userId = admin.userId;
-		this.username = admin.username;
-		this.password = admin.password;
-		this.fullName = admin.fullName;
-		this.role = admin.role;
+	public Admin(String usernameOrEmail, String password) {
+		this.username = usernameOrEmail;
+		this.email = usernameOrEmail;
+		this.password = password;
 	}
 
-	public Admin(String password, String username) {
-		this.password = password;
-		this.username = username;
-	}
-
-	public Admin(String fullName, String username, String password) {
-		this.password = password;
-		this.username = username;
-		this.fullName = fullName;
-	}
-	public Admin(String fullName, String username, String password, String role){
-		this.fullName = fullName;
+	public Admin(int id, String username, String email, String fullName, String role) {
+		this.userId=id;
 		this.username=username;
+		this.email=email;
+		this.fullName=fullName;
+		this.role=role;
+	}
+
+	public Admin(String username, String email, String fullName, String password, String role) {
+		this.username=username;
+		this.email=email;
+		this.fullName=fullName;
 		this.password=password;
 		this.role=role;
-	}
 
-	public Admin(int id, String username, String fullName, String role) {
-		this.userId = id;
-		this.role=role;
-		this.username = username;
-		this.fullName = fullName;
 	}
 
 	public int getUserId() {
@@ -85,5 +89,26 @@ public class Admin {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(userId);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Admin admin = (Admin) o;
+		return userId == admin.userId;
 	}
 }

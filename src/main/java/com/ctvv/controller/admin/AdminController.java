@@ -18,109 +18,110 @@ import java.util.Objects;
 
 @WebServlet(name = "AdminController", value = "/admin")
 public class AdminController
-        extends HttpServlet {
+		extends HttpServlet {
 
-    HttpSession session;
-    private AdminDAO adminDAO;
+	HttpSession session;
+	private AdminDAO adminDAO;
 
-    @Override
-    protected void doGet(
-            HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	protected void doGet(
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        session = request.getSession();
-        Admin admin = (Admin) session.getAttribute("admin");
-        // Chuyển sang trang đăng nhập
-        if (admin == null) {
-            // Đặt headerAction là đăng nhập
-            request.setAttribute("headerAction", "Đăng nhập");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/login/login.jsp");
-            dispatcher.forward(request, response);
-        }
-        //
-        else {
-            String role = admin.getRole();
-            // TH1: role == super
-            if (role.equals("super")) {
-                listAdmin(request,response);
+		session = request.getSession();
+		Admin admin = (Admin) session.getAttribute("admin");
+		// Chuyển sang trang đăng nhập
+		if (admin == null) {
+			// Đặt headerAction là đăng nhập
+			request.setAttribute("headerAction", "Đăng nhập");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/login/login.jsp");
+			dispatcher.forward(request, response);
+		}
+		//
+		else {
+			String role = admin.getRole();
+			// TH1: role == super
+			if (role.equals("super")) {
+				listAdmin(request, response);
 
-            } else {
-                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/admin/admin/home.jsp");
-                requestDispatcher.forward(request, response);
-            }
-        }
+			} else {
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("/admin/admin/home.jsp");
+				requestDispatcher.forward(request, response);
+			}
+		}
 
-    }
+	}
 
-    private void listAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-                                                                                            IOException {
-        List<Admin> adminList = new ArrayList<>();
-        try {
-            adminList = adminDAO.getAdminList();
-        }
-        // exception này không thể xảy ra nếu test kĩ sau khi code
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        request.setAttribute("adminList", adminList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/super/home.jsp");
-        dispatcher.forward(request, response);
+	private void listAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                        IOException {
+		List<Admin> adminList = new ArrayList<>();
+		try {
+			adminList = adminDAO.getAdminList();
+		}
+		// exception này không thể xảy ra nếu test kĩ sau khi code
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		adminList.remove(session.getAttribute("admin"));
+		request.setAttribute("adminList", adminList);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/super/home.jsp");
+		dispatcher.forward(request, response);
 
-    }
+	}
 
 
-    @Override
-    protected void doPost(
-            HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        session = request.getSession();
-        authenticate(request, response);
-    }
+	@Override
+	protected void doPost(
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession();
+		authenticate(request, response);
+	}
 
-    private void authenticate(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        Admin admin = new Admin(password, username);
-        Admin authenticatedAdmin;
-        // TH1: validate thành công
-        try {
-            authenticatedAdmin = adminDAO.validate(admin);
-        } catch (SQLException e) {
-            throw new ServletException();
-        }
-        if (authenticatedAdmin != null) {
+	private void authenticate(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+		String usernameOrEmail = request.getParameter("usernameOrEmail");
+		String password = request.getParameter("password");
+		Admin admin = new Admin(usernameOrEmail, password);
+		Admin authenticatedAdmin;
+		// TH1: validate thành công
+		try {
+			authenticatedAdmin = adminDAO.validate(admin);
+		} catch (SQLException e) {
+			throw new ServletException();
+		}
+		if (authenticatedAdmin != null) {
 
-            session.setAttribute("admin", authenticatedAdmin);
-            // Chuyển về lại trang home (/admin)
-            try {
-                response.sendRedirect(request.getContextPath() + "/admin"); // contextPath: link web
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+			session.setAttribute("admin", authenticatedAdmin);
+			// Chuyển về lại trang home (/admin)
+			try {
+				response.sendRedirect(request.getContextPath() + "/admin"); // contextPath: link web
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
-        } else {
+		} else {
 
-            request.setAttribute("loginMessage", "Sai tài khoản hoặc mật khẩu");
-            try {
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/login/login.jsp");
-                dispatcher.forward(request, response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+			request.setAttribute("loginMessage", "Sai tài khoản hoặc mật khẩu");
+			try {
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/login/login.jsp");
+				dispatcher.forward(request, response);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        // Khởi tạo dataSource cho adminDao
-        try {
-            // Dòng bắt buộc để tạo dataSource
-            Context context = new InitialContext();
-            // Tạo và gán dataSource cho adminDAO
-            DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-            adminDAO = new AdminDAO(dataSource);
-        } catch (NamingException e) {
-            // Chưa tìm ra cách xử lý hợp lý
-            e.printStackTrace();
-        }
-    }
+	@Override
+	public void init() throws ServletException {
+		super.init();
+		// Khởi tạo dataSource cho adminDao
+		try {
+			// Dòng bắt buộc để tạo dataSource
+			Context context = new InitialContext();
+			// Tạo và gán dataSource cho adminDAO
+			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
+			adminDAO = new AdminDAO(dataSource);
+		} catch (NamingException e) {
+			// Chưa tìm ra cách xử lý hợp lý
+			e.printStackTrace();
+		}
+	}
 }
