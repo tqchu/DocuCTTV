@@ -6,13 +6,15 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Trang chủ</title>
-    <link rel="shortcut icon" href="${context}/favicon.ico" />
+    <link rel="shortcut icon" href="${context}/favicon.ico"/>
 
     <!-- RESET CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
           integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
+    <!-- BOOSTRAP CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FONT   -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,10 +23,198 @@
     <%-- APP--%>
     <link rel="stylesheet" href="${context}/css/base.css">
     <link rel="stylesheet" href="${context}/css/style.css">
+    <link rel="stylesheet" href="${context}/css/customer/home.css">
 </head>
 <body>
 <jsp:include page="../common/header.jsp"/>
-CUSTOMER HOME
+<jsp:include page="../common/search-header.jsp"/>
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col col-2-4">
+                <div class="category-wrapper">
+                    <div class="category__header">
+                        <i class="las la-bars category__header__menu-icon"></i>
+                        <span class="category__header__text">
+Doanh mục</span>
+                    </div>
+                    <div class="category-list">
+                        <a href="" class="category-item">
+                            Bàn
+                        </a>
+                        <a href="" class="category-item">
+                            Ghế
+                        </a>
+                        <a href="" class="category-item">
+                            Giường ngủ
+                        </a>
+                        <a href="" class="category-item">
+                            Tủ và kệ
+                        </a>
+                        <a href="" class="category-item">
+                            Hàng trang trí
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col col-9-6">
+                <div class="products-wrapper">
+                    <div class="products__sort-selection">
+                        <div class="products__sort-selection__heading-text">
+                            Sắp xếp theo
+                        </div>
+                        <div class="products__sort-selection__item">
+                            Mới nhất
+                        </div>
+                        <div class="products__sort-selection__price products__sort-selection__item">
+                            <div class="products__sort-selection__price__selected">
+                                <span class="products__sort-selection__price__selected__text">Giá</span>
+                                <i class="las la-angle-down products__sort-selection__price__selected__icon">
+                                </i>
+                            </div>
+                            <div class="products__sort-selection__price__popover">
+                                <a href="" class="products__sort-selection__price-item">
+                                    Giá: Thấp đến cao
+                                </a>
+                                <a href="" class="products__sort-selection__price-item">
+                                    Giá: Cao đến thấp
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="products">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col col-3">
+                                    <a href="" class="product">
+                                        <div class="product__image" style="background-image:
+                                                url('${context}/images/products/ban-an-roma-1.jpg');">
+                                        </div>
+                                        <div class="product__name">
+                                            Bàn ăn Roma 6 chỗ
+                                        </div>
+                                        <div class="product__price">9,720,000</div>
+                                    </a>
+                                </div>
+                                <div class="col col-3">
+                                    <a href="" class="product">
+                                        <div class="product__image" style="background-image:
+                                                url('${context}/images/products/ban-an-bridge-1.jpg');">
+                                        </div>
+                                        <div class="product__name">
+                                            Bàn ăn Bridge 6 chỗ
+                                        </div>
+                                        <div class="product__price">8,720,000</div>
+                                    </a>
+                                </div>
+                                <div class="col col-3">
+                                    <a href="" class="product">
+                                        <div class="product__image" style="background-image:
+                                                url('${context}/images/products/ban-an-soul-1.jpg');">
+                                        </div>
+                                        <div class="product__name">
+                                            Bàn ăn Soul
+                                        </div>
+                                        <div class="product__price">7,720,000</div>
+                                    </a>
+                                </div>
+                                <div class="col col-3">
+                                    <a href="" class="product">
+                                        <div class="product__image" style="background-image:
+                                                url('${context}/images/products/giuong-iris-1.jpg');">
+                                        </div>
+                                        <div class="product__name">
+                                            Giường ngủ Iris
+                                        </div>
+                                        <div class="product__price">79,720,000</div>
+                                    </a>
+                                </div>
+                                <div class="col col-3">
+                                    <a href="" class="product">
+                                        <div class="product__image" style="background-image:
+                                                url('${context}/images/products/giuong-lac-vien-1.jpg');">
+                                        </div>
+                                        <div class="product__name">
+                                            Giường ngủ lạc viên
+                                        </div>
+                                        <div class="product__price">89,720,000</div>
+                                    </a>
+                                </div>
+                                <div class="col col-3">
+                                    <a href="" class="product">
+                                        <div class="product__image" style="background-image:
+                                                url('${context}/images/products/ban-an-roma-1.jpg');">
+                                        </div>
+                                        <div class="product__name">
+                                            Bàn ăn Roma 6 chỗ
+                                        </div>
+                                        <div class="product__price">9,720,000</div>
+                                    </a>
+                                </div>
+                                <div class="col col-3">
+                                    <a href="" class="product">
+                                        <div class="product__image" style="background-image:
+                                                url('${context}/images/products/ban-an-roma-1.jpg');">
+                                        </div>
+                                        <div class="product__name">
+                                            Bàn ăn Roma 6 chỗ
+                                        </div>
+                                        <div class="product__price">9,720,000</div>
+                                    </a>
+                                </div>
+                                <div class="col col-3">
+                                    <a href="" class="product">
+                                        <div class="product__image" style="background-image:
+                                                url('${context}/images/products/ban-an-roma-1.jpg');">
+                                        </div>
+                                        <div class="product__name">
+                                            Bàn ăn Roma 6 chỗ
+                                        </div>
+                                        <div class="product__price">9,720,000</div>
+                                    </a>
+                                </div>
+                                <div class="col col-3">
+                                    <a href="" class="product">
+                                        <div class="product__image" style="background-image:
+                                                url('${context}/images/products/ban-an-roma-1.jpg');">
+                                        </div>
+                                        <div class="product__name">
+                                            Bàn ăn Roma 6 chỗ
+                                        </div>
+                                        <div class="product__price">9,720,000</div>
+                                    </a>
+                                </div>
+                                <div class="col col-3">
+                                    <a href="" class="product">
+                                        <div class="product__image" style="background-image:
+                                                url('${context}/images/products/ban-an-roma-1.jpg');">
+                                        </div>
+                                        <div class="product__name">
+                                            Bàn ăn Roma 6 chỗ
+                                        </div>
+                                        <div class="product__price">9,720,000</div>
+                                    </a>
+                                </div>
+                                <div class="col col-3">
+                                    <a href="" class="product">
+                                        <div class="product__image" style="background-image:
+                                                url('${context}/images/products/ban-an-roma-1.jpg');">
+                                        </div>
+                                        <div class="product__name">
+                                            Bàn ăn Roma 6 chỗ
+                                        </div>
+                                        <div class="product__price">9,720,000</div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <jsp:include page="../../common/footer.jsp"/>
 
 

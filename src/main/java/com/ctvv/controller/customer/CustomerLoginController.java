@@ -73,9 +73,8 @@ public class CustomerLoginController extends HttpServlet {
 
             session.setAttribute("customer", authenticatedCustomer);
 
-            RequestDispatcher dispatcher=request.getRequestDispatcher("/customer/home/home.jsp");
             try {
-                dispatcher.forward(request, response);
+                response.sendRedirect(request.getContextPath());
             } catch (IOException e) {
                 e.printStackTrace();
             }

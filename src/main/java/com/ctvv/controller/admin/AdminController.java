@@ -43,9 +43,9 @@ public class AdminController
 			if (role.equals("super")) {
 				listAdmin(request, response);
 
-			} else {
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("/admin/admin/home.jsp");
-				requestDispatcher.forward(request, response);
+			}else {
+				// Chuyển tới quản lý sản phẩm
+				response.sendRedirect(request.getContextPath()+"/admin/products");
 			}
 		}
 
