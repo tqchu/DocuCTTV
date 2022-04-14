@@ -14,6 +14,10 @@ public class Category {
 		this.categoryName = categoryName;
 	}
 
+	public Category(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
