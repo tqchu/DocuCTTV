@@ -1,31 +1,50 @@
 package com.ctvv.model;
 
+import java.util.Objects;
+
 public class Category {
-    private int categoryID;
-    private String categoryName;
+	private int categoryId;
+	private String categoryName;
 
-    public int getCategoryID() {
-        return categoryID;
-    }
+	public Category() {
+	}
 
-    public void setCategoryID(int categoryID) {
-        this.categoryID = categoryID;
-    }
+	public Category(int categoryId, String categoryName) {
+		this.categoryId = categoryId;
+		this.categoryName = categoryName;
+	}
 
-    public String getCategoryName() {
-        return categoryName;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Category category = (Category) o;
+		return categoryId == category.categoryId && categoryName.equals(category.categoryName);
+	}
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(categoryId, categoryName);
+	}
 
-    public Category(int categoryID, String categoryName) {
-        this.categoryID = categoryID;
-        this.categoryName = categoryName;
-    }
+	public Category(Category category) {
+		this.categoryId= category.categoryId;
+		this.categoryName=category.categoryName;
+	}
 
-    public Category(String categoryName) {
-        this.categoryName = categoryName;
-    }
+	public int getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
 }
