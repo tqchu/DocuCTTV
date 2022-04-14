@@ -1,7 +1,6 @@
 package com.ctvv.dao;
 
 import com.ctvv.model.Category;
-import com.ctvv.model.Category;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -13,8 +12,12 @@ import java.util.List;
 
 public class CategoryDAO
 		extends GenericDAO<Category> {
-	public CategoryDAO(DataSource dataSource) {
+
+	private final DataSource dataSource;
+
+	public CategoryDAO(DataSource dataSource, DataSource dataSource1) {
 		super(dataSource);
+		this.dataSource = dataSource1;
 	}
 
 	@Override
@@ -57,7 +60,25 @@ public class CategoryDAO
 
 	@Override
 	public void create(Category category) {
-
+		Connection connection = null;
+		String sql = "INSERT INTO category(category_name) VALUES (?)";
+		PreparedStatement statement = null;
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, category.getCategoryName());
+			statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			try{
+				if(statement != null) statement.close();
+				if(connection != null)	statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
