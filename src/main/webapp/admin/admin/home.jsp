@@ -142,7 +142,16 @@
                                     <th></th>
                                 </tr>
                                 </thead>
-
+                                <tbody>
+                                <c:if test="${not empty categoryList}">
+                                    <c:forEach items="${categoryList}" var="currentCategory" varStatus="loop">
+                                        <tr>
+                                            <td>${loop.count}</td>
+                                            <td>${currentCategory.categoryName}</td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:if>
+                                </tbody>
                             </table>
                         </div>
                     </div>

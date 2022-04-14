@@ -42,7 +42,6 @@ public class AdminController
 			// TH1: role == super
 			if (role.equals("super")) {
 				listAdmin(request, response);
-
 			}else {
 				// Chuyển tới quản lý sản phẩm
 				response.sendRedirect(request.getContextPath()+"/admin/products");

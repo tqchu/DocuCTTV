@@ -12,8 +12,10 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(name = "ManageCategoryController", value = "/admin/categories")
 public class ManageCategoryController
@@ -25,19 +27,37 @@ public class ManageCategoryController
 		RequestDispatcher dispatcher= request.getRequestDispatcher("/admin/admin/home.jsp");
 		request.setAttribute("tab", "categories");
 		dispatcher.forward(request, response);
+		listCategory(request, response);
 	}
 
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		String action = request.getParameter("action");
 		switch(action){
 			case "create":
 				create(request, response);
 				break;
+				//more service here such as delete or update
 		}
 	}
+	private void listCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		List<Category> categoryList = new ArrayList<>();
+		categoryList = categoryDAO.getAll();
+		request.setAttribute("categoryList",categoryList);
+		response.sendRedirect(request.getContextPath() + "/admin/categories");
+	}
 	private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		String categoryName = request.getParameter("categoryName");
 		if (categoryDAO.find(categoryName)==null){
 			Category category = new Category(categoryName);
@@ -50,8 +70,8 @@ public class ManageCategoryController
 			}
 		}
 		else {
-			request.setAttribute("emailErrorMessage", "Tên doanh mục đã tồn tại");
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/admin/");
+			request.setAttribute("errorMessage", "Tên doanh mục đã tồn tại");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/admin/home.jsp");
 			try {
 				dispatcher.forward(request, response);
 			} catch (IOException | ServletException ex) {
