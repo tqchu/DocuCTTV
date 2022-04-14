@@ -23,12 +23,13 @@ public class Category {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Category category = (Category) o;
-		return categoryId == category.categoryId && categoryName.equals(category.categoryName);
+		return categoryName.equals(category.categoryName);
+
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(categoryId, categoryName);
+		return Objects.hash(categoryName);
 	}
 
 	public Category(Category category) {
