@@ -100,12 +100,12 @@
 
                             </form>
                             <a href="" class="search__add-btn btn btn-primary"
-                               title="Thêm doanh mục"  data-bs-toggle="modal" data-bs-target="#addModal"><i
+                               title="Thêm doanh mục" data-bs-toggle="modal" data-bs-target="#addModal"><i
                                     class="las la-plus"></i></a>
                             <!-- MODAL CONTENT -->
                             <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="modalLabel"
                                  aria-hidden="true">
-                                <div class="modal-dialog">
+                                <div class="modal-dialog modal-dialog-centered">
 
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -116,11 +116,12 @@
                                                     aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <form action="${context}/admin/categories" method="post" >
+                                            <form action="${context}/admin/categories" method="post"
+                                                  class="d-flex align-items-center flex-column">
                                                 <input type="hidden" value="create" name="action">
                                                 <div class="form-group form-floating">
                                                     <input type="text" name="categoryName" id="categoryName"
-                                                           class="form-control" placeholder="Tên doanh mục">
+                                                           class="form-control" placeholder="Tên doanh mục" autofocus>
                                                     <label for="categoryName" class="form-label">Tên doanh mục</label>
                                                 </div>
 
@@ -132,8 +133,37 @@
                                 </div>
                             </div>
                         </div>
+                        <c:if test="${successMessage!=null}">
+                            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="toast-body">
+                                        ${successMessage}
+                                    <div class="mt-2 pt-2 border-top">
+                                        <button type="button" class="btn btn-primary btn-sm">Take action</button>
+                                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="toast">
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <c:remove var="successMessage" scope="session"/>
+                        </c:if>
+                        <c:if test="${errorMessage!=null}">
+                            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="toast-body">
+                                        ${errorMessage}
+                                    <div class="mt-2 pt-2 border-top">
+                                        <button type="button" class="btn btn-primary btn-sm">Take action</button>
+                                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="toast">
+                                            Close
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <c:remove var="errorMessage" scope="session"/>
+
+                        </c:if>
                         <div class="list">
-                            <table class=" table table-hover table-bordered">
+                            <table class=" table table-hover table-bordered ">
                                 <thead>
                                 <tr>
                                     <th>STT</th>
@@ -142,7 +172,18 @@
                                     <th></th>
                                 </tr>
                                 </thead>
-
+                                <tbody>
+                                <c:if test="${not empty list}">
+                                    <c:forEach items="${list}" var="currentRow" varStatus="loop">
+                                        <tr>
+                                            <th>${loop.count}</th>
+                                            <th>${currentRow.categoryName}</th>
+                                            <th>Chỉnh sửa</th>
+                                            <th>Xóa</th>
+                                        </tr>
+                                    </c:forEach>
+                                </c:if>
+                                </tbody>
                             </table>
                         </div>
                     </div>

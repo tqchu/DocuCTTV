@@ -57,27 +57,35 @@ public class CategoryDAO
 
 	@Override
 	public void create(Category category) {
-		Connection connection = null;
-		String sql = "INSERT INTO category(category_name) VALUES (?)";
-		PreparedStatement statement = null;
-		try {
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(sql);
+		String sql = "INSERT INTO category(category_name) VALUES(?)";
+		try (Connection connection = dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, category.getCategoryName());
 			statement.execute();
-		} catch (SQLException e) {
+		}
+		catch(SQLException e){
 			e.printStackTrace();
 		}
-		finally {
-			try{
-				if(statement != null) statement.close();
-				if(connection != null)	statement.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
 	}
-
+	public Category find(String categoryName) {
+		String sql = "SELECT * FROM category WHERE category_name = ?";
+		Category category = null;
+		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+				connection.prepareStatement(sql); ) {
+			ResultSet resultSet;
+			statement.setString(1,categoryName);
+			resultSet=statement.executeQuery();
+			while(resultSet.next()){
+				String category_name = resultSet.getString("category_name");
+				category = new Category(category_name);
+			}
+			resultSet.close();
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return category;
+	}
 	@Override
 	public Category update(Category category) {
 		return null;
