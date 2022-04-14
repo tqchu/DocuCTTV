@@ -13,11 +13,8 @@ import java.util.List;
 public class CategoryDAO
 		extends GenericDAO<Category> {
 
-	private final DataSource dataSource;
-
-	public CategoryDAO(DataSource dataSource, DataSource dataSource1) {
+	public CategoryDAO(DataSource dataSource) {
 		super(dataSource);
-		this.dataSource = dataSource1;
 	}
 
 	@Override
