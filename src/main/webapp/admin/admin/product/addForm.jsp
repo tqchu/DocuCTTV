@@ -82,7 +82,6 @@
 
     <div class="form-group">
         <span class="form-group__label">Thời gian bảo hành</span>
-
         <input type="number" name="warrantyPeriod">
         <span class="warranty-period-unit">tháng</span>
     </div>

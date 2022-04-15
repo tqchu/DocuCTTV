@@ -52,6 +52,45 @@ public class ManageCategoryController
 			case "create":
 				create(request, response);
 				break;
+			case "update":
+				update(request,response);
+				break;
+			case "delete":
+				delete(request,response);
+		}
+	}
+
+	private void delete(HttpServletRequest request, HttpServletResponse response) {
+		int categoryId= Integer.parseInt(request.getParameter("categoryId"));
+
+		categoryDAO.delete(categoryId);
+		session=request.getSession();
+		session.setAttribute("successMessage", "Xóa doanh mục thành công");
+		try {
+			response.sendRedirect(request.getContextPath() + "/admin/categories");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void update(HttpServletRequest request, HttpServletResponse response) {
+		String categoryName = request.getParameter("categoryName");
+		int categoryId = Integer.parseInt(request.getParameter("categoryId"));
+		session= request.getSession();
+
+		if (categoryDAO.find(categoryName) == null) {
+			Category category = new Category(categoryId, categoryName);
+			categoryDAO.update(category);
+			session.setAttribute("successMessage", "Sửa doanh mục thành công");
+
+		} else {
+			session.setAttribute("errorMessage", "Tên doanh mục đã tồn tại");
+		}
+		try {
+			response.sendRedirect(request.getContextPath() + "/admin/categories");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
