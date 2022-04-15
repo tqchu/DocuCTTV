@@ -63,8 +63,8 @@ public class SuperAdminController
 
 		if ((adminDAO.findByUsername(username) == null) && (adminDAO.findByEmail(email) == null)) {
 			Admin admin = new Admin(username, email, fullName, password, role);
-			adminDAO.createAdmin(admin);
 			request.setAttribute("successMessage", "Thêm thành công");
+			adminDAO.createAdmin(admin);
 			try {
 				response.sendRedirect(request.getContextPath() + "/admin");
 			} catch (IOException e) {
