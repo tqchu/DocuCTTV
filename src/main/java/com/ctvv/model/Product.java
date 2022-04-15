@@ -37,6 +37,8 @@ public class Product {
 	List<Dimension> dimensionList;
 	List<Material> materialList;
 	List<ImagePath> imagePathList;
+	private int price;
+	private boolean status;
 
 	public Product() {
 	}
@@ -46,6 +48,8 @@ public class Product {
 		this.warrantyPeriod = product.warrantyPeriod;
 		this.quantity = product.quantity;
 		this.description = product.description;
+		this.price= product.price;
+		this.status=product.status;
 		this.category = new Category(product.category);
 		this.dimensionList = new ArrayList<>(product.dimensionList);
 		this.materialList = new ArrayList<>(product.materialList);
@@ -53,13 +57,16 @@ public class Product {
 	}
 
 	public Product(int id,
-			String name, int warrantyPeriod, int quantity, String description, Category category,
+			String name, int warrantyPeriod, int quantity, String description, int price, boolean status,
+			       Category category,
 			List<Dimension> dimensionList, List<Material> materialList, List<ImagePath> imagePathList) {
 		this.productId=id;
 		this.name = name;
 		this.warrantyPeriod = warrantyPeriod;
 		this.quantity = quantity;
 		this.description = description;
+		this.price= price;
+		this.status=status;
 		this.category = new Category(category);
 		this.dimensionList = new ArrayList<>(dimensionList);
 		this.materialList = new ArrayList<>(materialList);
@@ -112,5 +119,21 @@ public class Product {
 
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 }

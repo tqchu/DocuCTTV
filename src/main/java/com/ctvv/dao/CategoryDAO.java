@@ -88,11 +88,32 @@ public class CategoryDAO
 	}
 	@Override
 	public Category update(Category category) {
-		return null;
+		String categoryName = category.getCategoryName();
+		int categoryId = category.getCategoryId();
+
+		String sql = "UPDATE category SET category_name=? WHERE category_id=?";
+		try( Connection connection = dataSource.getConnection();
+		     PreparedStatement statement =connection.prepareStatement(sql)) {
+			statement.setString(1, categoryName);
+			statement.setInt(2,categoryId);
+			statement.execute();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return category;
 	}
 
 	@Override
 	public void delete(int id) {
-
+		String sql = "DELETE  FROM category WHERE category_id=?";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, id);
+			statement.execute();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 }
