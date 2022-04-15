@@ -30,7 +30,16 @@ public class ImagePathDAO extends GenericDAO<ImagePath> {
 
 	@Override
 	public void create(ImagePath imagePath) {
-
+		String sql = "INSERT INTO image VALUES(?,?)";
+		try(Connection connection = dataSource.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setInt(1,imagePath.getProductId());
+			statement.setString(2,imagePath.getPath());
+			statement.execute();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 
 	@Override

@@ -47,10 +47,30 @@ public class MaterialDAO extends GenericDAO<Material>{
 	public List<Material> getAll() {
 		return null;
 	}
-
+	public int getLastId(){
+		String sql = "SELECT LAST_INSERT_ID() AS lastId FROM material";
+		int lastId = 0;
+		try(Connection connection = dataSource.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql)){
+			ResultSet resultSet = statement.executeQuery();
+			lastId = resultSet.getInt("lastId");
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return lastId;
+	}
 	@Override
 	public void create(Material material) {
-
+		String sql = "INSERT INTO material(material_name) VALUES(?)";
+		try(Connection connection = dataSource.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setString(1,material.getMaterialName());
+			statement.execute();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 
 	@Override

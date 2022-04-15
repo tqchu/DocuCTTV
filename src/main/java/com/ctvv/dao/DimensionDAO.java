@@ -52,10 +52,32 @@ public class DimensionDAO
 	public List<Dimension> getAll() {
 		return null;
 	}
-
+	public int getLastId(){
+		String sql = "SELECT LAST_INSERT_ID() AS lastId FROM dimension";
+		int lastId = 0;
+		try(Connection connection = dataSource.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql)){
+			ResultSet resultSet = statement.executeQuery();
+			lastId = resultSet.getInt("lastId");
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return lastId;
+	}
 	@Override
 	public void create(Dimension dimension) {
-
+		String sql = "INSERT INTO dimension(length, width, height) VALUES(?,?,?)";
+		try(Connection connection = dataSource.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setDouble(1,dimension.getLength());
+			statement.setDouble(2,dimension.getWidth());
+			statement.setDouble(3,dimension.getHeight());
+			statement.execute();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 
 	@Override
