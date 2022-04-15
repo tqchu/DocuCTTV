@@ -53,8 +53,8 @@ public class Product {
 	}
 
 	public Product(int id,
-				   String name, int warrantyPeriod, int quantity, String description, Category category,
-				   List<Dimension> dimensionList, List<Material> materialList, List<ImagePath> imagePathList) {
+			String name, int warrantyPeriod, int quantity, String description, Category category,
+			List<Dimension> dimensionList, List<Material> materialList, List<ImagePath> imagePathList) {
 		this.productId=id;
 		this.name = name;
 		this.warrantyPeriod = warrantyPeriod;

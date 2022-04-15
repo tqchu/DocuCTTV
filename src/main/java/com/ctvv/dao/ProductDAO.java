@@ -1,62 +1,104 @@
 package com.ctvv.dao;
 
-import com.ctvv.model.Product;
-import com.ctvv.model.Dimension;
-import
+import com.ctvv.model.*;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ProductDAO extends GenericDAO<Product>{
-    private CategoryDAO categoryDAO;
-    DimensionDAO dimensionDAO;
-    MaterialDAO materialDAO;
-    ImagePathDAO imagePathDAO;
+public class ProductDAO extends GenericDAO<Product> {
+	private CategoryDAO categoryDAO;
+	DimensionDAO dimensionDAO;
+	MaterialDAO materialDAO;
+	ImagePathDAO imagePathDAO;
 
-    public ProductDAO(DataSource dataSource) {
-        super(dataSource);
-    }
+	public ProductDAO(DataSource dataSource) {
+		super(dataSource);
+		categoryDAO = new CategoryDAO(dataSource);
+		dimensionDAO = new DimensionDAO(dataSource);
+		materialDAO = new MaterialDAO(dataSource);
+		imagePathDAO = new ImagePathDAO(dataSource);
+	}
 
-    @Override
-    public Product get(int id) {
-        return null;
-    }
+	@Override
+	public Product get(int id) {
+		String sql = "SELECT * FROM product LIMIT 1";
+		try(Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement =
+				connection.prepareStatement(sql);){
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()){
+				int productId = resultSet.getInt("product_id");
+				String productName= resultSet.getString("product_name");
+				int warrantyPeriod = resultSet.getInt("warranty_period");
+				int quantity = resultSet.getInt("quantity");
+				String description = resultSet.getString("description");
+				int categoryId = resultSet.getInt("category_id");
 
-    @Override
-    public List<Product> getAll() {
-        return null;
-    }
+				Category category = categoryDAO.get(categoryId);
+				List<Dimension> dimensionList = dimensionDAO.getGroup(productId);
+				List<Material> materialList = materialDAO.getGroup(productId);
+				List<ImagePath> imagePathList = imagePathDAO.getGroup(productId);
+				return  new Product(id, productName, warrantyPeriod, quantity, description, category, dimensionList,
+						materialList, imagePathList);
 
-    @Override
-    public void create(Product product) throws SQLException {
-        String sql = "INSERT INTO product(product_name, warranty_period, quantity, description, category_id) VALUES(?,?,?,?,?)";
-        try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
-                connection.prepareStatement(sql)) {
-            statement.setString(1, product.getName());
-            statement.setInt(2, product.getWarrantyPeriod());
-            statement.setInt(3, product.getQuantity());
-            statement.setString(4, product.getDescription());
-            statement.setInt(5, product.getCategory().getCategoryId());
-            statement.execute();
-            List<Dimension> dimensionList = product.getDimensionList();
-            for (int i = 0;i< dimensionList.size();i++){
-                dimensionDAO.create(dimensionList.get(i));
+			}
 
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    @Override
-    public Product update(Product product) {
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return  null;
+	}
 
-    }
+	@Override
+	public List<Product> getAll() {
+		List<Product> productList = new ArrayList<>();
+		String sql = "SELECT * FROM product";
+		try(Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement =
+				connection.prepareStatement(sql);){
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()){
+				int productId = resultSet.getInt("product_id");
+				String productName= resultSet.getString("product_name");
+				int warrantyPeriod = resultSet.getInt("warranty_period");
+				int quantity = resultSet.getInt("quantity");
+				String description = resultSet.getString("description");
+				int categoryId = resultSet.getInt("category_id");
 
-    @Override
-    public void delete(int id) {
+				Category category = categoryDAO.get(categoryId);
+				List<Dimension> dimensionList = dimensionDAO.getGroup(productId);
+				List<Material> materialList = materialDAO.getGroup(productId);
+				List<ImagePath> imagePathList = imagePathDAO.getGroup(productId);
+				productList.add(new Product(productId, productName, warrantyPeriod, quantity, description, category,
+						dimensionList,
+						materialList, imagePathList));
 
-    }
+			}
+
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return  productList;
+	}
+
+	@Override
+	public void create(Product product) {
+
+	}
+
+	@Override
+	public Product update(Product product) {
+		return null;
+	}
+
+	@Override
+	public void delete(int id) {
+
+	}
+
 }

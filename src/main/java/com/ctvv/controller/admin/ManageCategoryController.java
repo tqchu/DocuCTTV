@@ -1,83 +1,80 @@
 package com.ctvv.controller.admin;
 
-import com.ctvv.dao.AdminDAO;
 import com.ctvv.dao.CategoryDAO;
 import com.ctvv.model.Category;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "ManageCategoryController", value = "/admin/categories")
 public class ManageCategoryController
 		extends HttpServlet {
 	private CategoryDAO categoryDAO;
+	private HttpSession session;
+
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		listCategory(request, response);
+		listCategory(request,response);
+	}
+
+	private void listCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                           IOException {
+		List<Category> categoryList = categoryDAO.getAll();
+		request.setAttribute("list", categoryList);
+		goHome(request,response);
+
+	}
+
+	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("tab", "categories");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/admin/home.jsp");
+		dispatcher.forward(request, response);
 	}
 
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
-			request.setCharacterEncoding("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		request.setCharacterEncoding("UTF-8");
 		String action = request.getParameter("action");
-		switch(action){
+		switch (action) {
 			case "create":
 				create(request, response);
 				break;
-				//more service here such as delete or update
 		}
 	}
-	private void listCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<Category> categoryList = new ArrayList<>();
-		categoryList = categoryDAO.getAll();
-		request.setAttribute("categoryList",categoryList);
-		request.setAttribute("tab","categories");
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/admin/home.jsp");
-		dispatcher.forward(request,response);
-	}
-	private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-		try {
-			request.setCharacterEncoding("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+
+	private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String categoryName = request.getParameter("categoryName");
-		if (categoryDAO.find(categoryName)==null){
+		session= request.getSession();
+
+		if (categoryDAO.find(categoryName) == null) {
 			Category category = new Category(categoryName);
 			categoryDAO.create(category);
-			request.setAttribute("successMessage","Thêm thành công");
-			try {
-				response.sendRedirect(request.getContextPath() + "/admin/categories");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			session.setAttribute("successMessage", "Thêm doanh mục thành công");
+
+		} else {
+			session.setAttribute("errorMessage", "Tên doanh mục đã tồn tại");
+
 		}
-		else {
-			request.setAttribute("errorMessage", "Tên doanh mục đã tồn tại");
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/admin/home.jsp");
-			try {
-				dispatcher.forward(request, response);
-			} catch (IOException | ServletException ex) {
-				ex.printStackTrace();
-			}
+		try {
+			response.sendRedirect(request.getContextPath() + "/admin/categories");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
+
 	@Override
 	public void init() throws ServletException {
 		super.init();
