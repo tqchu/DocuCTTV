@@ -24,9 +24,6 @@ public class ManageCategoryController
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher dispatcher= request.getRequestDispatcher("/admin/admin/home.jsp");
-		request.setAttribute("tab", "categories");
-		dispatcher.forward(request, response);
 		listCategory(request, response);
 	}
 
@@ -50,7 +47,9 @@ public class ManageCategoryController
 		List<Category> categoryList = new ArrayList<>();
 		categoryList = categoryDAO.getAll();
 		request.setAttribute("categoryList",categoryList);
-		response.sendRedirect(request.getContextPath() + "/admin/categories");
+		request.setAttribute("tab","categories");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/admin/home.jsp");
+		dispatcher.forward(request,response);
 	}
 	private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		try {
