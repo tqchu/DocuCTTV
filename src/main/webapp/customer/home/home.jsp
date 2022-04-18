@@ -39,7 +39,7 @@
                     <div class="category__header">
                         <i class="las la-bars category__header__menu-icon"></i>
                         <span class="category__header__text">
-Doanh mục</span>
+Danh mục</span>
                     </div>
                     <div class="category-list">
                         <c:forEach items="${categoryList}" var="category">

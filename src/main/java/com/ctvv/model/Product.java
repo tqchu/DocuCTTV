@@ -67,6 +67,7 @@ public class Product {
 		this.description = description;
 		this.price= price;
 		this.status=status;
+		if (category!=null)
 		this.category = new Category(category);
 		this.dimensionList = new ArrayList<>(dimensionList);
 		this.materialList = new ArrayList<>(materialList);

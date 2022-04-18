@@ -58,7 +58,7 @@
                         <a href="${context}/admin/categories" class="navbar__tab ${tab=='categories'?'active':''}">
                             <span class="navbar__tab__icon"><i class="las la-wallet"></i></span>
 
-                            <span class="navbar__tab__text-description">Doanh mục</span>
+                            <span class="navbar__tab__text-description">Danh mục</span>
                         </a>
                         <a href="${context}/admin/orders" class="navbar__tab ${tab=='orders'?'active':''}">
                         <span class="navbar__tab__icon">

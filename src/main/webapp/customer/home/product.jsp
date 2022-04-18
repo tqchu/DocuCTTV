@@ -67,11 +67,20 @@
                             </div>
                             <div class="product__category">
                                 <span class="product__category__text-heading">
-                                   Doanh mục
+                                   Danh mục
                                 </span>
-                                <a href="" class="product__category_text-description">
-                                    ${product.category.categoryName}
-                                </a>
+                                <c:choose>
+                                    <c:when test="${empty product.category}">
+                                        Chưa phân loại
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="" class="product__category_text-description">
+                                                ${product.category.categoryName}
+                                        </a>
+                                    </c:otherwise>
+                                </c:choose>
+
+
                             </div>
                         </div>
                     </div>

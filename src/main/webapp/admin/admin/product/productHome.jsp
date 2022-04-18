@@ -88,7 +88,19 @@
                                           currencySymbol="đ" type="CURRENCY" maxFractionDigits="0"/>
                     </td>
                     <td class="product__quantity">${product.quantity}</td>
-                    <td class="product__category">${product.category.categoryName}</td>
+                    <td class="product__category">
+                        <c:choose>
+                            <c:when test="${product.category==null}">
+                                <span class="product__no-category">
+                                    Chưa phân loại
+                                </span>
+                            </c:when>
+                            <c:otherwise>
+                                ${product.category.categoryName}
+                            </c:otherwise>
+                        </c:choose>
+
+                    </td>
                     <td class="product__rating">-</td>
                     <td>
                         <a href="${context}/admin/products?action=update"
