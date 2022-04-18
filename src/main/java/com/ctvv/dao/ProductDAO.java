@@ -100,9 +100,68 @@ public class ProductDAO
 		return productList;
 	}
 
+	public int getLastId(){
+		int lastId = 0;
+		String sql ="SELECT LAST_INSERT_ID() AS lastId FROM product";
+		try(Connection connection = dataSource.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql);
+		){
+			ResultSet resultSet = statement.executeQuery();
+			lastId = resultSet.getInt("lastId");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lastId;
+	}
 	@Override
-	public void create(Product product) {
-
+	public void create(Product product) throws SQLException {
+		String sql = "INSERT INTO product(product_name, warranty_period, quantity, description, category_id,price,product_status) VALUES(?,?,?,?,?,?,?)";
+		Connection connection = dataSource.getConnection();
+		PreparedStatement statement = null;
+		try
+		{
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, product.getName());
+			statement.setInt(2, product.getWarrantyPeriod());
+			statement.setInt(3, product.getQuantity());
+			statement.setString(4, product.getDescription());
+			statement.setInt(5, product.getCategory().getCategoryId());
+			statement.setDouble(6,product.getPrice());
+			statement.setBoolean(7,product.isStatus());
+			statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		int lastProductId = this.getLastId();
+		try{
+			List<Dimension> dimensionList = product.getDimensionList();
+			List<Material> materialList = product.getMaterialList();
+			List<ImagePath> imagePathList = product.getImagePathList();
+			int lastDimensionId = dimensionDAO.getLastId();
+			int lastMaterialId = materialDAO.getLastId();
+			for (int i = 0; i < dimensionList.size(); i++) {
+				dimensionDAO.create(dimensionList.get(i));
+				statement = connection.prepareStatement("INSERT INTO product_dimension VALUES(?,?)");
+				statement.setInt(1, lastProductId);
+				statement.setInt(2, lastDimensionId+1);
+				statement.execute();
+			}
+			for (int i = 0; i< materialList.size();i++){
+				materialDAO.create(materialList.get(i));
+				statement = connection.prepareStatement("INSERT INTO product_material VALUES(?,?)");
+				statement.setInt(1,lastProductId);
+				statement.setInt(2,lastMaterialId+1);
+				statement.execute();
+			}
+			for (int i = 0; i<imagePathList.size();i++){
+				String imagePath = imagePathList.get(i).getPath();
+				imagePathList.set(i,new ImagePath(lastProductId,imagePath));
+				imagePathDAO.create(imagePathList.get(i));
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 
 	@Override

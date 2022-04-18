@@ -35,6 +35,14 @@ public class ManageProductsController
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/admin/product/addForm.jsp");
+		dispatcher.forward(request,response);
+	}
+	private void create(HttpServletRequest request, HttpServletResponse response){
+		String productName = request.getParameter("productName");
+		String description = request.getParameter("description");
+		int warrantyPeriod = Integer.parseInt(request.getParameter("warrantyPeriod"));
+		String doanhmuc = request.getParameter("categoryId");
 
 	}
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,7 +60,6 @@ public class ManageProductsController
 			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
 			productDAO = new ProductDAO(dataSource);
 		} catch (NamingException e) {
-
 			e.printStackTrace();
 		}
 	}
