@@ -304,8 +304,6 @@
                                                                         <label class="form-label">Tên
                                                                             doanh mục</label>
                                                                     </div>
-
-
                                                                     <button type="submit"
                                                                             class="btn btn-primary save-btn">
                                                                         Lưu
@@ -368,8 +366,6 @@
                         </div>
                     </div>
                 </c:if>
-
-
             </div>
         </div>
     </div>
