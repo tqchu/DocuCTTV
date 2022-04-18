@@ -18,13 +18,9 @@ public class Category {
 		this.categoryName = categoryName;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Category category = (Category) o;
-		return categoryName.equals(category.categoryName);
-
+	public Category(Category category) {
+		this.categoryId = category.categoryId;
+		this.categoryName = category.categoryName;
 	}
 
 	@Override
@@ -32,9 +28,13 @@ public class Category {
 		return Objects.hash(categoryName);
 	}
 
-	public Category(Category category) {
-		this.categoryId= category.categoryId;
-		this.categoryName=category.categoryName;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Category category = (Category) o;
+		return categoryName.equals(category.categoryName);
+
 	}
 
 	public int getCategoryId() {

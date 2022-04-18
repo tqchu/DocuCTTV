@@ -2,6 +2,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%-- set context path--%>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
+<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %></c:set>
+
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">

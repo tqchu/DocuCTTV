@@ -1,4 +1,5 @@
 $(function () {
+    // INPUT SPINNER
     var config = {
         groupClass: "input-spinner-wrapper",
         // the template of the input
@@ -10,4 +11,6 @@ $(function () {
             "</span>"
     };
     $("input[type='number']").inputSpinner(config);
+
+
 });

@@ -43,9 +43,10 @@ public class ProductDAO
 					String description = resultSet.getString("description");
 					int price = resultSet.getInt("price");
 
+					// Nullable
 					int categoryId = resultSet.getInt("category_id");
-
 					Category category = categoryDAO.get(categoryId);
+
 					List<Dimension> dimensionList = dimensionDAO.getGroup(productId);
 					List<Material> materialList = materialDAO.getGroup(productId);
 					List<ImagePath> imagePathList = imagePathDAO.getGroup(productId);
@@ -80,6 +81,7 @@ public class ProductDAO
 					int price = resultSet.getInt("price");
 					String description = resultSet.getString("description");
 					int categoryId = resultSet.getInt("category_id");
+
 
 					Category category = categoryDAO.get(categoryId);
 					List<Dimension> dimensionList = dimensionDAO.getGroup(productId);

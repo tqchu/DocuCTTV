@@ -1,7 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%-- set context path--%>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
+<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %></c:set>
+
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,9 +24,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
           rel="stylesheet">
     <%-- APP--%>
-    <link rel="stylesheet" href="${context}/css/base.css">
-    <link rel="stylesheet" href="${context}/css/style.css">
-    <link rel="stylesheet" href="${context}/css/customer/home.css">
+    <link rel="stylesheet" href="${context}/css/base.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/customer/home.css?rd=${rand}">
 </head>
 <body>
 <jsp:include page="../common/header.jsp"/>
@@ -36,24 +39,15 @@
                     <div class="category__header">
                         <i class="las la-bars category__header__menu-icon"></i>
                         <span class="category__header__text">
-Doanh mục</span>
+Danh mục</span>
                     </div>
                     <div class="category-list">
-                        <a href="" class="category-item">
-                            Bàn
-                        </a>
-                        <a href="" class="category-item">
-                            Ghế
-                        </a>
-                        <a href="" class="category-item">
-                            Giường ngủ
-                        </a>
-                        <a href="" class="category-item">
-                            Tủ và kệ
-                        </a>
-                        <a href="" class="category-item">
-                            Hàng trang trí
-                        </a>
+                        <c:forEach items="${categoryList}" var="category">
+                            <a href="" class="category-item">
+                                ${category.categoryName}
+                            </a>
+                        </c:forEach>
+
 
                     </div>
                 </div>
@@ -86,7 +80,25 @@ Doanh mục</span>
                     <div class="products">
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col col-3">
+                                <c:forEach items="${productList}" var="product">
+                                    <div class="col col-3">
+
+                                        <a href="${context}/product?id=${product.productId}" class="product">
+                                            <div class="product__image" style="background-image:
+                                                    url('${context}/${product.imagePathList[0].path}');">
+                                            </div>
+                                            <div class="product__name">
+                                                ${product.name}
+                                            </div>
+                                            <div class="product__price">
+                                                <fmt:formatNumber value="${product.price}"
+                                                                type="number" maxFractionDigits="0"/>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </c:forEach>
+                                <%--<div class="col col-3">
+
                                     <a href="" class="product">
                                         <div class="product__image" style="background-image:
                                                 url('${context}/images/products/ban-an-roma-1.jpg');">
@@ -206,7 +218,7 @@ Doanh mục</span>
                                         </div>
                                         <div class="product__price">9,720,000</div>
                                     </a>
-                                </div>
+                                </div>--%>
                             </div>
                         </div>
                     </div>

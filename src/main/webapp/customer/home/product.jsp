@@ -1,7 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%-- set context path--%>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
+<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %></c:set>
+
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,9 +26,9 @@
     <link rel="stylesheet"
           href="https://maxst.icons8.com/vue-static/landings/line-awesome/font-awesome-line-awesome/css/all.min.css">
     <!-- APP -->
-    <link rel="stylesheet" href="${context}/css/base.css">
-    <link rel="stylesheet" href="${context}/css/style.css">
-    <link rel="stylesheet" href="${context}/css/customer/product.css">
+    <link rel="stylesheet" href="${context}/css/base.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/customer/product.css?rd=${rand}">
 </head>
 <body>
 <jsp:include page="../common/header.jsp"/>
@@ -40,19 +43,13 @@
                             <div class="product__image">
                                 <div id="product-image-slide" class="carousel slide" data-bs-ride="carousel">
                                     <div class="carousel-inner">
-                                        <div class="carousel-item active">
-                                            <img src="${context}/images/products/ban-an-roma-1.jpg"
-                                                 class="d-block w-100">
-                                        </div>
-                                        <div class="carousel-item">
-                                            <img src="${context}/images/products/ban-an-roma-2.jpg"
-                                                 class="d-block w-100"
-                                            >
-                                        </div>
-                                        <div class="carousel-item">
-                                            <img src="${context}/images/products/ban-an-roma-3.jpg"
-                                                 class="d-block w-100">
-                                        </div>
+                                        <c:forEach items="${product.imagePathList}" var="path" varStatus="loop">
+                                            <div class="carousel-item ${loop.count==1?'active':''}">
+                                                <img src="${context}/${path.path}"
+                                                     class="d-block w-100">
+                                            </div>
+                                        </c:forEach>
+
                                     </div>
                                     <button class="carousel-control-prev" type="button"
                                             data-bs-target="#product-image-slide"
@@ -70,45 +67,67 @@
                             </div>
                             <div class="product__category">
                                 <span class="product__category__text-heading">
-                                    Doanh mục
+                                   Danh mục
                                 </span>
-                                <a href="" class="product__category_text-description">
-                                    Bàn ăn
-                                </a>
+                                <c:choose>
+                                    <c:when test="${empty product.category}">
+                                        Chưa phân loại
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="" class="product__category_text-description">
+                                                ${product.category.categoryName}
+                                        </a>
+                                    </c:otherwise>
+                                </c:choose>
+
+
                             </div>
                         </div>
                     </div>
                     <div class="col col-8">
                         <div class="product__description-and-action">
                             <div class="product__name">
-                                Bàn ăn Roma 6 chỗ
+                                ${product.name}
                             </div>
-                            <div class="product__price">9,720,000</div>
+                            <div class="product__price">
+                                <fmt:formatNumber type="number" maxFractionDigits="0"
+                                                  value="${product.price}"/>
+                            </div>
                             <div class="product__info">
                                 <span class="product__info__text-heading">
                                     Kích thước
                                 </span>
-                                <span class="product__info__text-content">D1800 -R900 - C750 mm</span>
+                                <ul class="dimension-group">
+                                    <c:forEach items="${product.dimensionList}" var="dimension">
+                                    <li class="product__info__text-content">
+                                        ${dimension.length}D x ${dimension.width}R x ${dimension.height}C (cm)
+                                    </li>
+                                    </c:forEach>
+                                </ul>
                             </div>
                             <div class="product__info">
 <span class="product__info__text-heading">
                                     Vật liệu
                                 </span>
-                                <span class="product__info__text-content">Gỗ tần bì (Ash)- MDF sơn trắng</span>
+                                <ul class="material-group">
+                                    <c:forEach items="${product.materialList}" var="material">
+                                        <li class="product__info__text-content">${material.materialName}</li>
+                                    </c:forEach>
+                                </ul>
                             </div>
                             <div class="product__info">
 <span class="product__info__text-heading">
                                     Bảo hành
                                 </span>
-                                <span class="product__info__text-content">6 tháng</span>
+                                <span class="product__info__text-content">${product.warrantyPeriod} tháng</span>
                             </div>
                             <div class="product__quantity">
                                 <span class="product__action__text-description">Số lượng</span>
                                 <div class="product__quantity__spinner">
-                                    <input type="number" value="1" min="1" max="71" step="1"/>
+                                    <input type="number" value="1" min="1" max="${product.quantity}" step="1"/>
                                 </div>
                                 <span class="product__quantity__stock">
-                                    71 Sản phẩm có sẵn
+                                    ${product.quantity} Sản phẩm có sẵn
                                 </span>
                             </div>
                             <div class="product__action">
@@ -133,9 +152,7 @@
             </div>
             <div class="product__meta-info__content">
                 <div class="product__meta-info__content-of-item product__meta-info__content__description">
-                    Bàn ăn Roma với sự kết hợp của chân gỗ tần bì và bề mặt sơn trắng được xử lý khéo léo, thiết kế tinh
-                    tế là tâm điểm nổi bật cho phòng ăn hiện đại. Không gian phòng ăn sẽ hoàn hảo hơn khi kết hợp bàn ăn
-                    với ghế ăn Roma cùng BST.
+                   ${product.description}
                 </div>
                 <div class="product__meta-info__content-of-item product__meta-info__content__reviews">
 
@@ -155,7 +172,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://shaack.com/projekte/bootstrap-input-spinner/src/bootstrap-input-spinner.js"></script>
-<script src="${context}/js/customer/product.js"></script>
+<script src="${context}/js/customer/product.js?rd=${rand}"></script>
 <jsp:include page="../../common/footer.jsp"/>
 
 
