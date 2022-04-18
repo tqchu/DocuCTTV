@@ -2,6 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%-- set context path--%>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
+<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %></c:set>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,9 +19,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
           rel="stylesheet">
     <!-- APP -->
-    <link rel="stylesheet" href="${context}/css/base.css">
-    <link rel="stylesheet" href="${context}/css/style.css">
-    <link rel="stylesheet" href="${context}/css/admin/addForm.css">
+    <link rel="stylesheet" href="${context}/css/base.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/admin/addForm.css?rd=${rand}">
 </head>
 <body>
 <jsp:include page="../../common/header.jsp"/>
@@ -111,7 +112,7 @@
 <%--<jsp:include page="../../common/footer.jsp"/>--%>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="${context}/js/admin/product/addProduct.js"></script>
+<script src="${context}/js/admin/product/addProduct.js?rd=${rand}"></script>
 
 </body>
 </html>

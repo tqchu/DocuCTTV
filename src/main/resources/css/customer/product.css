@@ -142,10 +142,15 @@ input[type="number"] {
 .product__meta-info__tab-item:not(:last-child){
     margin-right: 20px;
 }
+
+.product__meta-info__content-of-item.active {
+    display: block;
+}
 .product__meta-info__content__description {
     margin-right: 16px;
     margin-top: 20px;
     margin-left: auto;
+    display: none;
 }
 .product__action__add-to-cart__icon {
     font-size: 20px;
