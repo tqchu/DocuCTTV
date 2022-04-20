@@ -71,7 +71,9 @@
                                 </span>
                                 <c:choose>
                                     <c:when test="${empty product.category}">
-                                        Chưa phân loại
+                                        <span class="product__category__no-category">
+                                            Chưa phân loại
+                                        </span>
                                     </c:when>
                                     <c:otherwise>
                                         <a href="" class="product__category_text-description">

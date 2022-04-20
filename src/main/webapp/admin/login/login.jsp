@@ -34,6 +34,7 @@
         <div class="login__fail-message">${loginMessage}</div>
     </c:if>
     <form action="${context}/admin" method="post" class="login-form form" autocomplete="off">
+        <input type="hidden" name="from" value="${param.from}"/>
         <div class="form-group form-floating">
             <input type="text" class="form-control" id="usernameOrEmail" name="usernameOrEmail" placeholder="Tên đăng nhập">
             <label for="usernameOrEmail" class="form-label">Email hoặc tên đăng nhập</label>

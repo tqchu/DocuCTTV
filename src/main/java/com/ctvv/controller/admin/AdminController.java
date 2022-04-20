@@ -20,6 +20,7 @@ import java.util.Objects;
 public class AdminController
 		extends HttpServlet {
 
+	private final String HOME_SERVLET = "/admin";
 	HttpSession session;
 	private AdminDAO adminDAO;
 
@@ -38,36 +39,10 @@ public class AdminController
 		}
 		//
 		else {
-			String role = admin.getRole();
-			// TH1: role == super
-			if (role.equals("super")) {
-				listAdmin(request, response);
-
-			}else {
-				// Chuyển tới quản lý sản phẩm
-				response.sendRedirect(request.getContextPath()+"/admin/products");
-			}
+			response.sendRedirect(request.getContextPath() + "/admin/products");
 		}
 
 	}
-
-	private void listAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                        IOException {
-		List<Admin> adminList = new ArrayList<>();
-		try {
-			adminList = adminDAO.getAdminList();
-		}
-		// exception này không thể xảy ra nếu test kĩ sau khi code
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
-		adminList.remove(session.getAttribute("admin"));
-		request.setAttribute("adminList", adminList);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/super/home.jsp");
-		dispatcher.forward(request, response);
-
-	}
-
 
 	@Override
 	protected void doPost(
@@ -77,6 +52,10 @@ public class AdminController
 	}
 
 	private void authenticate(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+		String from = request.getParameter("from");
+		if (Objects.equals(from, "")) {
+			from = request.getContextPath() + HOME_SERVLET;
+		}
 		String usernameOrEmail = request.getParameter("usernameOrEmail");
 		String password = request.getParameter("password");
 		Admin admin = new Admin(usernameOrEmail, password);
@@ -92,7 +71,7 @@ public class AdminController
 			session.setAttribute("admin", authenticatedAdmin);
 			// Chuyển về lại trang home (/admin)
 			try {
-				response.sendRedirect(request.getContextPath() + "/admin"); // contextPath: link web
+				response.sendRedirect(from); // contextPath: link web
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

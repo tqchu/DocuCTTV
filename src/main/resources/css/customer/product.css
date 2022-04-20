@@ -211,3 +211,7 @@ input[type="number"] {
     font-size: 20px;
     font-weight: 500;
 }
+.product__category__no-category{
+    margin-left: 10px;
+    opacity: 0.6;
+}

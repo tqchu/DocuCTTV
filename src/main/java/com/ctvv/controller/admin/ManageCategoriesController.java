@@ -17,8 +17,8 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "ManageCategoryController", value = "/admin/categories")
-public class ManageCategoryController
+@WebServlet(name = "ManageCategoriesController", value = "/admin/categories")
+public class ManageCategoriesController
 		extends HttpServlet {
 	private CategoryDAO categoryDAO;
 	private HttpSession session;
@@ -39,7 +39,7 @@ public class ManageCategoryController
 
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("tab", "categories");
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/admin/home.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/manage/home.jsp");
 		dispatcher.forward(request, response);
 	}
 

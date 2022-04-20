@@ -12,30 +12,54 @@ import javax.servlet.annotation.*;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 
-@WebServlet(name = "SuperAdminController", value = "/admin/manage-admin")
-public class SuperAdminController
+@WebServlet(name = "ManageAdminsController", value = "/admin/admins")
+public class ManageAdminsController
 		extends HttpServlet {
 	HttpSession session;
 	private AdminDAO adminDAO;
-
+	private  final String HOME_SERVLET = "/admin/admins";
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session= request.getSession();
 		String action = request.getParameter("action");
 		RequestDispatcher dispatcher;
-		switch (action) {
-			case "create":
-				dispatcher = request.getRequestDispatcher("/admin/super/addForm.jsp");
-				dispatcher.forward(request, response);
-				break;
-			case "delete":
-				deleteAdmin(request, response);
-				break;
-
+		if (action == null) listAdmins(request, response);
+		else if ("create".equals(action)) {
+			dispatcher = request.getRequestDispatcher("/admin/manage/admins/addForm.jsp");
+			dispatcher.forward(request, response);
+		} else {
+			listAdmins(request, response);
 		}
+	}
+
+	private void listAdmins(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                         IOException {
+		List<Admin> adminList = adminDAO.getAdminList();
+		Admin i = (Admin) session.getAttribute("admin");
+		// Xóa bản thân ra khỏi danh sách
+		adminList.remove(i);
+		request.setAttribute("adminList", adminList);
+		goHome(request, response);
+	}
+
+	private void deleteAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+		adminDAO.delete(Integer.parseInt(request.getParameter("id")));
+		try {
+			response.sendRedirect( request.getContextPath()+HOME_SERVLET);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                     IOException {
+		request.setAttribute("tab", "admins");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/manage/home.jsp");
+		dispatcher.forward(request, response);
+
 	}
 
 	@Override
@@ -50,6 +74,8 @@ public class SuperAdminController
 			case "update":
 				updateAdmin(request, response);
 				break;
+			case "delete":
+				deleteAdmin(request, response);
 
 		}
 	}
@@ -77,7 +103,7 @@ public class SuperAdminController
 			if (adminDAO.findByEmail(email) != null) {
 				request.setAttribute("emailErrorMessage", "Email đã tồn tại, vui lòng chọn tên khác");
 			}
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/super/addForm.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/admins/addForm.jsp");
 			try {
 				dispatcher.forward(request, response);
 			} catch (IOException | ServletException ex) {
@@ -92,73 +118,14 @@ public class SuperAdminController
 		int id = Integer.parseInt(request.getParameter("id"));
 		String role = request.getParameter("role");
 		adminDAO.updateRole(role, id);
-		request.setAttribute("actionMessage", "Cập nhật thành công");
+		request.setAttribute("successMessage", "Cập nhật thành công");
 		try {
-			response.sendRedirect(request.getContextPath() + "/admin");
+			response.sendRedirect( request.getContextPath()+HOME_SERVLET);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-	}
-/*
-
-	private void updateAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-		session = request.getSession();
-		int id= Integer.parseInt(request.getParameter("id"));
-		Admin admin;
-		try {
-			admin = adminDAO.get(id);
-		} catch (SQLException e) {
-			throw new ServletException();
-		}
-		String fullName = request.getParameter("fullName");
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		String role = request.getParameter("role");
-
-		Admin updatedAdmin = new Admin(admin);
-		updatedAdmin.setFullName(fullName);
-		updatedAdmin.setUsername(username);
-		updatedAdmin.setPassword(password);
-		updatedAdmin.setRole(role);
-
-		try {
-			updatedAdmin = (Admin) adminDAO.updateSuper(admin);
-			request.setAttribute("changeAdmin", updatedAdmin);
-			request.setAttribute("successMessage", "Cập nhật thành công!");
-			request.setAttribute("action", "update");
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/super/addForm.jsp");
-			try {
-				dispatcher.forward(request,response);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		} catch (SQLException | ServletException e) {
-
-			if (e instanceof SQLIntegrityConstraintViolationException) {
-				request.setAttribute("errorMessage", "Tên đăng nhập đã tồn tại, vui lòng chọn tên khác");
-
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/super/addForm.jsp");
-				try {
-					dispatcher.forward(request, response);
-				} catch (IOException | ServletException ex) {
-					ex.printStackTrace();
-				}
-			}
-			else throw new ServletException();
-
-		}
-	}
-*/
-
-	private void deleteAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-		adminDAO.delete(Integer.parseInt(request.getParameter("id")));
-		try {
-			response.sendRedirect(request.getContextPath() + "/admin");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override

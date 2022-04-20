@@ -100,7 +100,7 @@ public class AdminDAO {
 			throwables.printStackTrace();
 		}
 	}
-	public List<Admin> getAdminList() throws SQLException {
+	public List<Admin> getAdminList() {
 		List<Admin> adminList = new ArrayList<>();
 		String sql = "SELECT * FROM admin";
 		try (Connection connection = dataSource.getConnection(); Statement statement = connection.createStatement();) {
@@ -115,6 +115,9 @@ public class AdminDAO {
 				Admin admin = new Admin(id, username, email, fullName, role);
 				adminList.add(admin);
 			}
+		}
+		catch (SQLException e){
+			e.printStackTrace();
 		}
 		return adminList;
 	}

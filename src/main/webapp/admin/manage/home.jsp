@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <c:set var="context" value="${pageContext.request.contextPath}" scope="request"/>
@@ -70,6 +70,12 @@
                             <span class="navbar__tab__icon"><i class="las la-wallet"></i></span>
                             <span class="navbar__tab__text-description">Thống kê</span>
                         </a>
+                       <c:if test="${admin.role=='super'}">
+                           <a href="${context}/admin/admins" class="navbar__tab ${tab=='admins'?'active':''}">
+                               <span class="navbar__tab__icon"><i class="las la-user-tie"></i></span>
+                               <span class="navbar__tab__text-description">Quản trị viên</span>
+                           </a>
+                       </c:if>
                     </div>
                 </div>
             </div>
@@ -80,7 +86,9 @@
                 <c:if test="${tab=='categories'}">
                     <jsp:include page="category/categoryHome.jsp"/>
                 </c:if>
-
+                <c:if test="${tab=='admins'}">
+                    <jsp:include page="admins/adminHome.jsp"/>
+                </c:if>
             </div>
         </div>
     </div>
