@@ -62,4 +62,9 @@ public class MaterialDAO extends GenericDAO<Material>{
 	public void delete(int id) {
 
 	}
+
+	@Override
+	public Material map(ResultSet resultSet) {
+		return null;
+	}
 }

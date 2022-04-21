@@ -25,11 +25,10 @@ public class CategoryDAO
 			statement.setInt(1, id);
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
-				String categoryName = resultSet.getString("category_name");
-				return new Category(id, categoryName);
+				return map(resultSet);
 			}
-		}
-		catch (SQLException e){
+			resultSet.close();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -44,12 +43,10 @@ public class CategoryDAO
 				connection.prepareStatement(sql);) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				int id = resultSet.getInt("category_id");
-				String categoryName = resultSet.getString("category_name");
-				categoryList.add(new Category(id, categoryName));
+				categoryList.add(map(resultSet));
 			}
-		}
-		catch (SQLException e){
+			resultSet.close();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return categoryList;
@@ -59,46 +56,26 @@ public class CategoryDAO
 	public void create(Category category) {
 		String sql = "INSERT INTO category(category_name) VALUES(?)";
 		try (Connection connection = dataSource.getConnection();
-		PreparedStatement statement = connection.prepareStatement(sql)) {
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, category.getCategoryName());
 			statement.execute();
-		}
-		catch(SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	public Category find(String categoryName) {
-		String sql = "SELECT * FROM category WHERE category_name = ?";
-		Category category = null;
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
-				connection.prepareStatement(sql); ) {
-			ResultSet resultSet;
-			statement.setString(1,categoryName);
-			resultSet=statement.executeQuery();
-			while(resultSet.next()){
-				String category_name = resultSet.getString("category_name");
-				category = new Category(category_name);
-			}
-			resultSet.close();
-		}
-		catch (SQLException e){
-			e.printStackTrace();
-		}
-		return category;
-	}
+
 	@Override
 	public Category update(Category category) {
 		String categoryName = category.getCategoryName();
 		int categoryId = category.getCategoryId();
 
 		String sql = "UPDATE category SET category_name=? WHERE category_id=?";
-		try( Connection connection = dataSource.getConnection();
-		     PreparedStatement statement =connection.prepareStatement(sql)) {
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, categoryName);
-			statement.setInt(2,categoryId);
+			statement.setInt(2, categoryId);
 			statement.execute();
-		} catch (SQLException e)
-		{
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return category;
@@ -111,9 +88,58 @@ public class CategoryDAO
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, id);
 			statement.execute();
-		}
-		catch(SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public Category map(ResultSet resultSet) {
+		Category category = new Category();
+		try {
+			int categoryId = resultSet.getInt("category_id");
+			String categoryName = resultSet.getString("category_name");
+			category.setCategoryId(categoryId);
+			category.setCategoryName(categoryName);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return category;
+	}
+
+	public Category find(String categoryName) {
+		String sql = "SELECT * FROM category WHERE category_name = ?";
+		Category category = null;
+		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+				connection.prepareStatement(sql);) {
+			ResultSet resultSet;
+			statement.setString(1, categoryName);
+			resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				category = map(resultSet);
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return category;
+	}
+
+	public List<Category> search(String keyword) {
+		List<Category> categoryList = new ArrayList<>();
+		String sql = "SELECT * FROM category WHERE category_name LIKE ?";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, "%"+keyword + "%");
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				categoryList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return categoryList;
+
 	}
 }

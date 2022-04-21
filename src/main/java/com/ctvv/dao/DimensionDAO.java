@@ -67,4 +67,9 @@ public class DimensionDAO
 	public void delete(int id) {
 
 	}
+
+	@Override
+	public Dimension map(ResultSet resultSet) {
+		return null;
+	}
 }

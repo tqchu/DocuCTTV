@@ -2,6 +2,7 @@ package com.ctvv.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Product {
 	public List<Dimension> getDimensionList() {
@@ -120,6 +121,19 @@ public class Product {
 
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Product product = (Product) o;
+		return productId == product.productId;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(productId);
 	}
 
 	public int getPrice() {

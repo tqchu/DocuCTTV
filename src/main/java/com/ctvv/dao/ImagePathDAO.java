@@ -42,6 +42,12 @@ public class ImagePathDAO extends GenericDAO<ImagePath> {
 	public void delete(int id) {
 
 	}
+
+	@Override
+	public ImagePath map(ResultSet resultSet) {
+		return null;
+	}
+
 	public List<ImagePath> getGroup(int productId) {
 		List<ImagePath> imagePathList = new ArrayList<>();
 		String sql = "SELECT * FROM image WHERE product_id=? ";

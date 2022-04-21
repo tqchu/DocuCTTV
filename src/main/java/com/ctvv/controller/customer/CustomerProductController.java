@@ -11,6 +11,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "CustomerProductController", value = "/product")
 public class CustomerProductController
@@ -23,6 +24,12 @@ public class CustomerProductController
 		int id = Integer.parseInt(request.getParameter("id"));
 		Product product = productDAO.get(id);
 		request.setAttribute("product", product);
+		if (product.getCategory()!=null)
+		{
+			List<Product> similarProducts = productDAO.search(product.getCategory().getCategoryId());
+			similarProducts.remove(product);
+			request.setAttribute("similarProducts", similarProducts);
+		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/product.jsp");
 		dispatcher.forward(request, response);
 	}

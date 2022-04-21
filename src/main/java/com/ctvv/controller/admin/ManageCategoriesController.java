@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "ManageCategoriesController", value = "/admin/categories")
+@WebServlet(name = "ManageCategoriesController", value = "/admin/categories/*")
 public class ManageCategoriesController
 		extends HttpServlet {
 	private CategoryDAO categoryDAO;
@@ -26,7 +26,19 @@ public class ManageCategoriesController
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String uri = request.getRequestURI();
+		if (uri.equals(request.getContextPath()+ "/admin/categories/search")){
+			search(request,response);
+		}
+		else
 		listCategory(request,response);
+	}
+
+	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String keyword = request.getParameter("keyword");
+		List<Category> categoryList = categoryDAO.search(keyword);
+		request.setAttribute("list", categoryList);
+		goHome(request, response);
 	}
 
 	private void listCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException,

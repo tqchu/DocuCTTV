@@ -180,3 +180,6 @@
     position: absolute;
 
 }
+.category-item.active{
+    color: red;
+}

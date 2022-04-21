@@ -27,32 +27,17 @@ public class ProductDAO
 
 	@Override
 	public Product get(int id) {
-		String sql = "SELECT * FROM product LIMIT 1";
+		String sql = "SELECT * FROM product WHERE product_id=?";
 		try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement =
 				connection.prepareStatement(sql);) {
+			preparedStatement.setInt(1, id);
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
 				boolean status = resultSet.getBoolean("status");
 				// Nếu sản phẩm còn sử dụng
 				if (status) {
-					int productId = resultSet.getInt("product_id");
-					String productName = resultSet.getString("product_name");
-					int warrantyPeriod = resultSet.getInt("warranty_period");
-					int quantity = resultSet.getInt("quantity");
-					String description = resultSet.getString("description");
-					int price = resultSet.getInt("price");
-
-					// Nullable
-					int categoryId = resultSet.getInt("category_id");
-					Category category = categoryDAO.get(categoryId);
-
-					List<Dimension> dimensionList = dimensionDAO.getGroup(productId);
-					List<Material> materialList = materialDAO.getGroup(productId);
-					List<ImagePath> imagePathList = imagePathDAO.getGroup(productId);
-					return new Product(id, productName, warrantyPeriod, quantity, description, price, true, category,
-							dimensionList,
-							materialList, imagePathList);
+					return map(resultSet);
 				}
 
 			}
@@ -74,24 +59,7 @@ public class ProductDAO
 				boolean status = resultSet.getBoolean("status");
 				// Sản phẩm còn kinh doanh
 				if (status) {
-					int productId = resultSet.getInt("product_id");
-					String productName = resultSet.getString("product_name");
-					int warrantyPeriod = resultSet.getInt("warranty_period");
-					int quantity = resultSet.getInt("quantity");
-					int price = resultSet.getInt("price");
-					String description = resultSet.getString("description");
-					int categoryId = resultSet.getInt("category_id");
-
-
-					Category category = categoryDAO.get(categoryId);
-					List<Dimension> dimensionList = dimensionDAO.getGroup(productId);
-					List<Material> materialList = materialDAO.getGroup(productId);
-					List<ImagePath> imagePathList = imagePathDAO.getGroup(productId);
-					productList.add(new Product(productId, productName, warrantyPeriod, quantity, description, price,
-							true,
-							category,
-							dimensionList,
-							materialList, imagePathList));
+					productList.add(map(resultSet));
 				}
 
 			}
@@ -117,4 +85,47 @@ public class ProductDAO
 
 		}
 
+	@Override
+	public Product map(ResultSet resultSet) {
+		try {
+			int productId = resultSet.getInt("product_id");
+			String productName = resultSet.getString("product_name");
+			boolean status = resultSet.getBoolean("status");
+			int warrantyPeriod = resultSet.getInt("warranty_period");
+			int quantity = resultSet.getInt("quantity");
+			int price = resultSet.getInt("price");
+			String description = resultSet.getString("description");
+			int categoryId = resultSet.getInt("category_id");
+
+
+			Category category = categoryDAO.get(categoryId);
+			List<Dimension> dimensionList = dimensionDAO.getGroup(productId);
+			List<Material> materialList = materialDAO.getGroup(productId);
+			List<ImagePath> imagePathList = imagePathDAO.getGroup(productId);
+			return  new Product(productId, productName, warrantyPeriod, quantity, description, price, status,
+					category ,dimensionList ,materialList ,imagePathList );
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+
+	public List<Product> search(int categoryId) {
+		List<Product> productList = new ArrayList<>();
+		String sql = "SELECT * FROM product WHERE category_id=?";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1,  categoryId);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				productList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return productList;
+	}
 }
