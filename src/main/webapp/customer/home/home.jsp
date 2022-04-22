@@ -42,9 +42,10 @@
 Danh mục</span>
                     </div>
                     <div class="category-list">
-                        <a href="" class="category-item active">Tất cả</a>
+                        <a href="${context}" class="category-item ${empty param?'active':''}">Tất cả</a>
                         <c:forEach items="${categoryList}" var="category">
-                            <a href="" class="category-item">
+                            <a href="${context}/products?category=${category.categoryName}" class="category-item
+                            ${category.categoryName==param.category?'active':''}">
                                 ${category.categoryName}
                             </a>
                         </c:forEach>
@@ -81,24 +82,33 @@ Danh mục</span>
                     <div class="products">
                         <div class="container-fluid">
                             <div class="row">
-                                <c:forEach items="${productList}" var="product">
-                                    <div class="col col-3">
+                                <c:choose>
+                                    <c:when test="${not empty productList}">
+                                        <c:forEach items="${productList}" var="product">
+                                            <div class="col col-3">
 
-                                        <a href="${context}/product?id=${product.productId}" class="product">
-                                            <div class="product__image" style="background-image:
-                                                    url('${context}/${product.imagePathList[0].path}');">
+                                                <a href="${context}/products?id=${product.productId}" class="product">
+                                                    <div class="product__image" style="background-image:
+                                                            url('${context}/${product.imagePathList[0].path}');">
+                                                    </div>
+                                                    <div class="product__name">
+                                                            ${product.name}
+                                                    </div>
+                                                    <div class="product__price">
+                                                        <fmt:formatNumber value="${product.price}"
+                                                                          type="number" maxFractionDigits="0"/>
+                                                    </div>
+                                                </a>
                                             </div>
-                                            <div class="product__name">
-                                                ${product.name}
-                                            </div>
-                                            <div class="product__price">
-                                                <fmt:formatNumber value="${product.price}"
-                                                                type="number" maxFractionDigits="0"/>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </c:forEach>
+                                        </c:forEach>
 
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="no-products-found">
+                                            RẤT TIẾC, KHÔNG CÓ SẢN PHẨM NÀO
+                                        </div>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                     </div>

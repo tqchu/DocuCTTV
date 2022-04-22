@@ -9,7 +9,6 @@ public class ImagePath {
 		this.productId= imagePath.productId;
 		this.path=imagePath.path;
 	}
-
 	public ImagePath(int productId, String path) {
 		this.productId = productId;
 		this.path = path;

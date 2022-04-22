@@ -20,6 +20,7 @@ public class CustomerFilter
 	@Override
 	public void doFilter(
 			ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 		String requestURL = httpServletRequest.getRequestURL().toString();

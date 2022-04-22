@@ -3,10 +3,7 @@ package com.ctvv.dao;
 import com.ctvv.model.*;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +68,50 @@ public class ProductDAO
 	}
 
 	@Override
-	public void create(Product product) {
+	public Product create(Product product) {
+		String sql = "INSERT INTO product(product_name, warranty_period, quantity, description, category_id, price, " +
+				"status) VALUES(?,?,?,?,?,?,?)";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			connection.setAutoCommit(false);
+			statement.setString(1, product.getName());
+			statement.setInt(2, product.getWarrantyPeriod());
+			statement.setInt(3, product.getQuantity());
+			statement.setString(4, product.getDescription());
+			if (product.getCategory() == null) {
+				statement.setNull(5, Types.INTEGER);
+			} else
+				statement.setInt(5, product.getCategory().getCategoryId());
+			statement.setInt(6, product.getPrice());
+			statement.setBoolean(7, product.isStatus());
+			statement.execute();
+			ResultSet resultSet = statement.getGeneratedKeys();
+			while (resultSet.next()) {
+				int productId = resultSet.getInt(1);
+				product.setProductId(productId);
+			}
+			connection.commit();
+			resultSet.close();
+			return product;
+
+		} catch (SQLException e) {
+			try {
+				if (connection != null) connection.rollback();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			try {
+				if (statement != null) statement.close();				if (connection != null) connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
 
 	}
 
@@ -83,7 +123,7 @@ public class ProductDAO
 	@Override
 	public void delete(int id) {
 
-		}
+	}
 
 	@Override
 	public Product map(ResultSet resultSet) {
@@ -102,8 +142,8 @@ public class ProductDAO
 			List<Dimension> dimensionList = dimensionDAO.getGroup(productId);
 			List<Material> materialList = materialDAO.getGroup(productId);
 			List<ImagePath> imagePathList = imagePathDAO.getGroup(productId);
-			return  new Product(productId, productName, warrantyPeriod, quantity, description, price, status,
-					category ,dimensionList ,materialList ,imagePathList );
+			return new Product(productId, productName, warrantyPeriod, quantity, description, price, status,
+					category, dimensionList, materialList, imagePathList);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -112,12 +152,12 @@ public class ProductDAO
 	}
 
 
-	public List<Product> search(int categoryId) {
+	public List<Product> getAllByCategory(int categoryId) {
 		List<Product> productList = new ArrayList<>();
 		String sql = "SELECT * FROM product WHERE category_id=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setInt(1,  categoryId);
+			statement.setInt(1, categoryId);
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				productList.add(map(resultSet));

@@ -3,10 +3,7 @@ package com.ctvv.dao;
 import com.ctvv.model.Category;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,15 +50,22 @@ public class CategoryDAO
 	}
 
 	@Override
-	public void create(Category category) {
+	public Category create(Category category) {
 		String sql = "INSERT INTO category(category_name) VALUES(?)";
 		try (Connection connection = dataSource.getConnection();
-		     PreparedStatement statement = connection.prepareStatement(sql)) {
+		     PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 			statement.setString(1, category.getCategoryName());
 			statement.execute();
+			ResultSet resultSet = statement.getGeneratedKeys();
+			while (resultSet.next()) {
+				int categoryId = resultSet.getInt(1);
+				category.setCategoryId(categoryId);
+			}
+			return category;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return  null;
 	}
 
 	@Override

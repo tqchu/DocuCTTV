@@ -1,6 +1,8 @@
 package com.ctvv.controller.customer;
 
+import com.ctvv.dao.CategoryDAO;
 import com.ctvv.dao.ProductDAO;
+import com.ctvv.model.Category;
 import com.ctvv.model.Product;
 
 import javax.naming.Context;
@@ -13,25 +15,42 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "CustomerProductController", value = "/product")
+@WebServlet(name = "CustomerProductController", value = "/products")
 public class CustomerProductController
 		extends HttpServlet {
 	private ProductDAO productDAO;
+	private CategoryDAO categoryDAO;
 
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		int id = Integer.parseInt(request.getParameter("id"));
-		Product product = productDAO.get(id);
-		request.setAttribute("product", product);
-		if (product.getCategory()!=null)
-		{
-			List<Product> similarProducts = productDAO.search(product.getCategory().getCategoryId());
-			similarProducts.remove(product);
-			request.setAttribute("similarProducts", similarProducts);
+		String categoryName = request.getParameter("category");
+		String idParam =request.getParameter("id");
+		if (categoryName!=null){
+			Category category = categoryDAO.find(categoryName);
+			List<Product> productList = productDAO.getAllByCategory(category.getCategoryId());
+			request.setAttribute("productList", productList);
+			List<Category> categoryList = categoryDAO.getAll();
+			request.setAttribute("categoryList", categoryList);
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/home.jsp");
+			dispatcher.forward(request, response);
 		}
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/product.jsp");
-		dispatcher.forward(request, response);
+		else if (idParam!=null){
+			int id = Integer.parseInt(idParam);
+			Product product = productDAO.get(id);
+			request.setAttribute("product", product);
+			if (product.getCategory() != null) {
+				List<Product> similarProducts = productDAO.getAllByCategory(product.getCategory().getCategoryId());
+				similarProducts.remove(product);
+				request.setAttribute("similarProducts", similarProducts);
+			}
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/product.jsp");
+			dispatcher.forward(request, response);
+		}
+		else {
+			response.sendRedirect(request.getContextPath());
+		}
+
 	}
 
 	@Override
@@ -48,6 +67,7 @@ public class CustomerProductController
 			context = new InitialContext();
 			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
 			productDAO = new ProductDAO(dataSource);
+			categoryDAO = new CategoryDAO(dataSource);
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}

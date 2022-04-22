@@ -5,6 +5,19 @@ import java.util.List;
 import java.util.Objects;
 
 public class Product {
+	public Product(
+			String name, int warrantyPeriod, int quantity, String description, Category category, int price,
+			boolean status) {
+		this.name = name;
+		this.warrantyPeriod = warrantyPeriod;
+		this.quantity = quantity;
+		this.description = description;
+		this.price= price;
+		this.status=status;
+		if (category!=null)
+			this.category = new Category(category);
+	}
+
 	public List<Dimension> getDimensionList() {
 		return dimensionList;
 	}

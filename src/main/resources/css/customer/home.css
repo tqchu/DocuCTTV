@@ -183,3 +183,8 @@
 .category-item.active{
     color: red;
 }
+.no-products-found {
+    /* MARGIN: AUTO; */
+    text-align: CENTER;
+    /* align-self: CENTER; */
+}

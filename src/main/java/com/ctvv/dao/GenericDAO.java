@@ -27,7 +27,11 @@ abstract public class GenericDAO<T> {
 	 */
 	abstract public List<T> getAll();
 
-	abstract public void create(T t);
+	/**
+	 * @param t the entity to be persisted
+	 * @return the persisted entity
+	 */
+	abstract public T create(T t);
 
 	abstract public T update(T t);
 

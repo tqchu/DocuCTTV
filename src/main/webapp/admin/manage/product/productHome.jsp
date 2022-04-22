@@ -8,11 +8,25 @@
                 <i class="las la-search"></i>
             </button>
         </form>
-        <a href="" class="search__add-btn btn btn-primary"
+        <a href="${context}/admin/products?action=create" class="search__add-btn btn btn-primary"
            title="Thêm sản phẩm"><i
                 class="las la-plus"></i></a>
 
     </div>
+    <c:if test="${successMessage!=null}">
+        <div class="toast align-items-center toast-message toast-message--success fade show" role="alert"
+             aria-live="assertive"
+             aria-atomic="true" data-bs-autohide="false">
+            <div class="d-flex ">
+                <div class="toast-body">
+                        ${successMessage}
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+            </div>
+        </div>
+        <c:remove var="successMessage" scope="session"/>
+    </c:if>
     <div class="list">
         <table class="data-table  table table-hover table-bordered">
             <thead>

@@ -77,13 +77,12 @@
                                         </span>
                                     </c:when>
                                     <c:otherwise>
-                                        <a href="" class="product__category_text-description">
+                                        <a href="${context}/products?category=${product.category.categoryName}"
+                                           class="product__category_text-description">
                                                 ${product.category.categoryName}
                                         </a>
                                     </c:otherwise>
                                 </c:choose>
-
-
                             </div>
                         </div>
                     </div>
