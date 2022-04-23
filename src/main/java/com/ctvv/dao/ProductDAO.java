@@ -208,7 +208,7 @@ public class ProductDAO
 		try (Connection connection = dataSource.getConnection();
 		PreparedStatement statement = connection.prepareStatement(sql)){
 			statement.setInt(1, product.isStatus()?0:1);
-			statement.setInt(1,product.getProductId());
+			statement.setInt(2,product.getProductId());
 		}
 		catch(SQLException e){
 			e.printStackTrace();
