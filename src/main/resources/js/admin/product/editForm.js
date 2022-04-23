@@ -8,19 +8,25 @@ $(function () {
             materialRows.last().after(materialRows.first().clone());
         }
     )
-    
+
     // 
     const multipleFormGroupContainer = $('.multiple-row__form-group')
-    multipleFormGroupContainer.click(function (e){
-        const target = $(e.target); 
+    multipleFormGroupContainer.click(function (e) {
+        const target = $(e.target);
         const minusButton = target.parent(".form-group__minus-row-btn")
         const numberOfMinusButton = $(this).find('.form-group__minus-row-btn').length
-        if (minusButton!=null && numberOfMinusButton>1){
+        if (minusButton != null && numberOfMinusButton > 1) {
             minusButton.parent().remove()
         }
     })
-    $("input[type=file]").change(function (){
-        console.log(this.files[0].name)
+
+
+    $("#coba").spartanMultiImagePicker({
+        fieldName: 'images', maxCount: 5,
+        rowHeight: '120px',
+        groupClassName: 'col-md-3 col-sm-3 col-xs-6',
+        dropFileLabel: 'Thả ảnh vào đây'
     })
+    
 
 })

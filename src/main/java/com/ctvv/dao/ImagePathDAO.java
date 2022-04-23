@@ -49,8 +49,15 @@ public class ImagePathDAO extends GenericDAO<ImagePath> {
 	}
 
 	@Override
-	public void delete(int id) {
-
+	public void delete(int productId) {
+		String sql = "DELETE FROM image WHERE product_id=?";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, productId);
+			statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

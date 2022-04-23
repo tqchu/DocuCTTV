@@ -18,6 +18,16 @@ public class Product {
 			this.category = new Category(category);
 	}
 
+	public Product(int id, String name, int warrantyPeriod, String description, Category category, int price) {
+			this.productId= id;
+			this.name = name;
+			this.warrantyPeriod = warrantyPeriod;
+			this.description = description;
+			this.price= price;
+			if (category!=null)
+				this.category = new Category(category);
+	}
+
 	public List<Dimension> getDimensionList() {
 		return dimensionList;
 	}

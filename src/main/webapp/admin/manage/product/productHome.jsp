@@ -118,16 +118,55 @@
                         </td>
                         <td class="product__rating">-</td>
                         <td>
-                            <a href="${context}/admin/products?action=update"
-                               class="btn-edit btn btn-primary">
-                                Chỉnh sửa
-                            </a>
+                            <form action="${context}/admin/products"  method="get">
+                                <input type="hidden" name="action" value="update">
+                                <input type="hidden" value="${product.productId}" name="id">
+                                <button type="submit" class="btn-edit btn btn-primary">Chỉnh sửa</button>
+                            </form>
+
 
                         </td>
                         <td>
-                            <a href="" class="btn btn-delete">
-                                Xóa
-                            </a>
+                            <button class="btn btn-delete" title="Xoá sản phẩm"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteProductModal${product.productId}">
+                                Xoá
+                            </button>
+                            <!-- MODAL CONTENT -->
+                            <div class="modal fade"
+                                 id="deleteProductModal${product.productId}"
+                                 tabindex="-1"
+                                 aria-labelledby="deleteProductModal${product.productId}Label"
+                                 aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title"
+                                                id="deleteProductModal${product.productId}Label">
+                                                Xóa doanh mục
+                                            </h5>
+                                            <button type="button" class="btn-close"
+                                                    data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form action="${context}/admin/products"
+                                                  class="delete-form" method="post">
+                                                Vì lý do về lịch sử đơn hàng, bạn không thể xóa sản phẩm này.
+                                                Bạn có muốn ngừng kinh doanh sản phẩm <strong> ${product.name} </strong>?
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="productId"
+                                                       value="${product.productId}">
+                                                <button
+                                                        class="confirm-delete-btn btn">
+                                                    Xác nhận
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </c:forEach>

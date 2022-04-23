@@ -1,37 +1,60 @@
 .form-group {
-    all:unset;
+    all: unset;
     margin-bottom: 4px;
     display: flex;
 }
+
 .form-group__label {
     min-width: 160px;
 }
+
 .dimension-form-group {
     display: flex;
     flex-direction: column;
 }
+
 .dimension-form-group__row {
     display: flex;
 }
+
 .material-form-group {
     display: flex;
     flex-direction: column;
 }
+
 .dimension-form-item {
     margin-right: 40px;
     margin-bottom: 10px;
 }
+
 .dimension-form-item__text-label {
     margin-right: 10px;
 }
+
 .material-form-group__row {
     margin-bottom: 10px;
 }
-.save-btn{
+
+.save-btn {
     color: #fff;
     padding: 8px 12px;
 }
+
 .warranty-period-unit {
     margin-left: 10px;
 }
 
+.input-images-item {
+    width: 200px;
+    height: 120px;
+    border: 1px solid #000;
+    border-radius: 2px;
+}
+
+#coba {
+    display: flex;
+    flex-wrap: wrap;
+}
+.input-images-wrapper{
+    width: 100%;
+}

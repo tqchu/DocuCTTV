@@ -117,6 +117,37 @@ public class ProductDAO
 
 	@Override
 	public Product update(Product product) {
+		String sql = "UPDATE product SET product_name=?, warranty_period=?, quantity=?, description=?, category_id=?," +
+				" price=? WHERE product_id=?";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.prepareStatement(sql);
+			statement.setString(1, product.getName());
+			statement.setInt(2, product.getWarrantyPeriod());
+			statement.setInt(3, product.getQuantity());
+			statement.setString(4, product.getDescription());
+			if (product.getCategory() == null) {
+				statement.setNull(5, Types.INTEGER);
+			} else
+				statement.setInt(5, product.getCategory().getCategoryId());
+			statement.setInt(6, product.getPrice());
+			statement.setInt(7, product.getProductId());
+			statement.executeUpdate();
+
+			return product;
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			try {
+				if (statement != null) statement.close();				if (connection != null) connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 
