@@ -89,9 +89,26 @@ public class ManageProductsController
 				create(request, response);
 			case "update":
 				update(request, response);
-
-			case "addQuantity":
-				addQuantity(request, response);
+			case "delete":
+				changeStatus(request, response);
+		}
+	}
+	private void changeStatus(HttpServletRequest request, HttpServletResponse  response){
+		int productId = Integer.parseInt(request.getParameter("productId"));
+		Product product = productDAO.get(productId);
+		session=request.getSession();
+		if (product.isStatus()){
+			productDAO.changeStatus(product);
+			request.setAttribute("successMessage","Đã đổi sang Ngừng kinh doanh");
+		}
+		else {
+			request.setAttribute("successMessage","Đã sẵn ở trạng thái Ngừng kinh doanh");
+		}
+		try{
+			response.sendRedirect(request.getContextPath() + HOME);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -209,8 +226,6 @@ public class ManageProductsController
 
 		// Tạo đối tượng mới và lưu vào db
 		Product product = new Product(productId, name, warrantyPeriod, description, category, price);
-		// Giải pháp tạm thời
-		product.setQuantity(-1);
 		// Trường hợp trùng product đã có
 		productDAO.update(product);
 
@@ -288,29 +303,6 @@ public class ManageProductsController
 		//
 		session.setAttribute("successMessage", "Sản phẩm đã được sửa thành công");
 		response.sendRedirect(request.getContextPath() + HOME);
-	}
-
-	private void addQuantity(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		int id = Integer.parseInt(request.getParameter("productId"));
-		int price = Integer.parseInt(request.getParameter("price"));
-		int quantity = Integer.parseInt(request.getParameter("quantity"));
-		LocalDate importDay = LocalDate.now();
-
-		// Lưu import
-		importDAO.create(new Import(id, price, importDay, quantity));
-
-		// Tăng số lượng trong bảng product??
-		Product product = productDAO.get(id);
-		product.setQuantity(product.getQuantity() + quantity);
-		productDAO.update(product);
-
-		session.setAttribute("successMessage", "Đã cập nhật số lượng thành công");
-		response.sendRedirect(request.getContextPath() + HOME);
-
-
-
-
-
 	}
 
 	@Override

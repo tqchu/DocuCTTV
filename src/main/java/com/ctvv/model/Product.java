@@ -28,6 +28,7 @@ public class Product {
 				this.category = new Category(category);
 	}
 
+
 	public List<Dimension> getDimensionList() {
 		return dimensionList;
 	}
