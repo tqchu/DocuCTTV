@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
 </head>
 <body>
-<jsp:include page="../common/header.jsp"/>
+<jsp:include page="../../common/header.jsp"/>
 <div class="create-admin__form-box">
     <div class="form__heading-text">
         Thêm quản trị viên
@@ -46,7 +46,7 @@
             ${emailErrorMessage}
     </div>
 </c:if>
-    <form action="${context}/admin/manage-admin" method="post" class="create-admin-form form" autocomplete="off">
+    <form action="${context}/admin/admins" method="post" class="create-admin-form form" autocomplete="off">
         <input
             type="hidden" name="action" value="create">
         <div class="form-group form-floating">
@@ -75,7 +75,7 @@
         <button type="submit" class="btn submit-btn">Thêm</button>
     </form>
 </div>
-<jsp:include page="../../common/footer.jsp"/>
+<%--<jsp:include page="../../common/footer.jsp"/>--%>
 
 
 </body>

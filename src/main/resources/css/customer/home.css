@@ -180,7 +180,11 @@
     position: absolute;
 
 }
-.product__no-category{
-    margin-left: 10px;
-    opacity: 0.6;
+.category-item.active{
+    color: red;
+}
+.no-products-found {
+    /* MARGIN: AUTO; */
+    text-align: CENTER;
+    /* align-self: CENTER; */
 }

@@ -568,10 +568,36 @@
 .super-admin-content__table__delete-action {
     color: #f53a0ce0;
 }
-.super-admin-content__table__save-btn{
+
+.super-admin-content__table__save-btn {
     border-radius: 4px;
     background-color: var(--bg-color);
     padding: 4px 10px;
     border: none;
     color: #fff;
+}
+
+.user-header__not-logged-in {
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.user-header__not-logged-in__item:hover {
+    color: var(--near-red);
+}
+
+.user-header__not-logged-in__item {
+    text-decoration: none;
+    padding: 0 6px;
+    color: red;
+    font-size: 14px;
+    font-weight: 500;
+}
+.role-select{
+    width: auto;
+}
+.admin__full-name,
+.admin__user-name,
+.admin__email{
+    white-space: nowrap;
 }

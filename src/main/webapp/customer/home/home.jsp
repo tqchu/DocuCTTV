@@ -42,8 +42,10 @@
 Danh mục</span>
                     </div>
                     <div class="category-list">
+                        <a href="${context}" class="category-item ${empty param?'active':''}">Tất cả</a>
                         <c:forEach items="${categoryList}" var="category">
-                            <a href="" class="category-item">
+                            <a href="${context}/products?category=${category.categoryName}" class="category-item
+                            ${category.categoryName==param.category?'active':''}">
                                 ${category.categoryName}
                             </a>
                         </c:forEach>
@@ -80,145 +82,33 @@ Danh mục</span>
                     <div class="products">
                         <div class="container-fluid">
                             <div class="row">
-                                <c:forEach items="${productList}" var="product">
-                                    <div class="col col-3">
+                                <c:choose>
+                                    <c:when test="${not empty productList}">
+                                        <c:forEach items="${productList}" var="product">
+                                            <div class="col col-3">
 
-                                        <a href="${context}/product?id=${product.productId}" class="product">
-                                            <div class="product__image" style="background-image:
-                                                    url('${context}/${product.imagePathList[0].path}');">
+                                                <a href="${context}/products?id=${product.productId}" class="product">
+                                                    <div class="product__image" style="background-image:
+                                                            url('${context}/${product.imagePathList[0].path}');">
+                                                    </div>
+                                                    <div class="product__name">
+                                                            ${product.name}
+                                                    </div>
+                                                    <div class="product__price">
+                                                        <fmt:formatNumber value="${product.price}"
+                                                                          type="number" maxFractionDigits="0"/>
+                                                    </div>
+                                                </a>
                                             </div>
-                                            <div class="product__name">
-                                                ${product.name}
-                                            </div>
-                                            <div class="product__price">
-                                                <fmt:formatNumber value="${product.price}"
-                                                                type="number" maxFractionDigits="0"/>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </c:forEach>
-                                <%--<div class="col col-3">
+                                        </c:forEach>
 
-                                    <a href="" class="product">
-                                        <div class="product__image" style="background-image:
-                                                url('${context}/images/products/ban-an-roma-1.jpg');">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="no-products-found">
+                                            RẤT TIẾC, KHÔNG CÓ SẢN PHẨM NÀO
                                         </div>
-                                        <div class="product__name">
-                                            Bàn ăn Roma 6 chỗ
-                                        </div>
-                                        <div class="product__price">9,720,000</div>
-                                    </a>
-                                </div>
-                                <div class="col col-3">
-                                    <a href="" class="product">
-                                        <div class="product__image" style="background-image:
-                                                url('${context}/images/products/ban-an-bridge-1.jpg');">
-                                        </div>
-                                        <div class="product__name">
-                                            Bàn ăn Bridge 6 chỗ
-                                        </div>
-                                        <div class="product__price">8,720,000</div>
-                                    </a>
-                                </div>
-                                <div class="col col-3">
-                                    <a href="" class="product">
-                                        <div class="product__image" style="background-image:
-                                                url('${context}/images/products/ban-an-soul-1.jpg');">
-                                        </div>
-                                        <div class="product__name">
-                                            Bàn ăn Soul
-                                        </div>
-                                        <div class="product__price">7,720,000</div>
-                                    </a>
-                                </div>
-                                <div class="col col-3">
-                                    <a href="" class="product">
-                                        <div class="product__image" style="background-image:
-                                                url('${context}/images/products/giuong-iris-1.jpg');">
-                                        </div>
-                                        <div class="product__name">
-                                            Giường ngủ Iris
-                                        </div>
-                                        <div class="product__price">79,720,000</div>
-                                    </a>
-                                </div>
-                                <div class="col col-3">
-                                    <a href="" class="product">
-                                        <div class="product__image" style="background-image:
-                                                url('${context}/images/products/giuong-lac-vien-1.jpg');">
-                                        </div>
-                                        <div class="product__name">
-                                            Giường ngủ lạc viên
-                                        </div>
-                                        <div class="product__price">89,720,000</div>
-                                    </a>
-                                </div>
-                                <div class="col col-3">
-                                    <a href="" class="product">
-                                        <div class="product__image" style="background-image:
-                                                url('${context}/images/products/ban-an-roma-1.jpg');">
-                                        </div>
-                                        <div class="product__name">
-                                            Bàn ăn Roma 6 chỗ
-                                        </div>
-                                        <div class="product__price">9,720,000</div>
-                                    </a>
-                                </div>
-                                <div class="col col-3">
-                                    <a href="" class="product">
-                                        <div class="product__image" style="background-image:
-                                                url('${context}/images/products/ban-an-roma-1.jpg');">
-                                        </div>
-                                        <div class="product__name">
-                                            Bàn ăn Roma 6 chỗ
-                                        </div>
-                                        <div class="product__price">9,720,000</div>
-                                    </a>
-                                </div>
-                                <div class="col col-3">
-                                    <a href="" class="product">
-                                        <div class="product__image" style="background-image:
-                                                url('${context}/images/products/ban-an-roma-1.jpg');">
-                                        </div>
-                                        <div class="product__name">
-                                            Bàn ăn Roma 6 chỗ
-                                        </div>
-                                        <div class="product__price">9,720,000</div>
-                                    </a>
-                                </div>
-                                <div class="col col-3">
-                                    <a href="" class="product">
-                                        <div class="product__image" style="background-image:
-                                                url('${context}/images/products/ban-an-roma-1.jpg');">
-                                        </div>
-                                        <div class="product__name">
-                                            Bàn ăn Roma 6 chỗ
-                                        </div>
-                                        <div class="product__price">9,720,000</div>
-                                    </a>
-                                </div>
-                                <div class="col col-3">
-                                    <a href="" class="product">
-                                        <div class="product__image" style="background-image:
-                                                url('${context}/images/products/ban-an-roma-1.jpg');">
-                                        </div>
-                                        <div class="product__name">
-                                            Bàn ăn Roma 6 chỗ
-                                        </div>
-                                        <div class="product__price">9,720,000</div>
-                                    </a>
-                                </div>
-                                <div class="col col-3">
-                                    <a href="" class="product">
-                                        <div class="product__image" style="background-image:
-                                                url('${context}/images/products/ban-an-roma-1.jpg');">
-                                        </div>
-                                        <div class="product__name">
-                                            Bàn ăn Roma 6 chỗ
-                                        </div>
-                                        <div class="product__price">9,720,000</div>
-                                    </a>
-                                </div>--%>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                     </div>

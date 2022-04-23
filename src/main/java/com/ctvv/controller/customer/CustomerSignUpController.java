@@ -7,7 +7,7 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-@WebServlet(name = "CustomerSignUpController", value = "/customer/signup")
+@WebServlet(name = "CustomerSignUpController", value = "/register")
 public class CustomerSignUpController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -19,7 +19,7 @@ public class CustomerSignUpController extends HttpServlet {
             dispatcher.forward(request, response);
         }
         else {
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/customer/common/home.jsp");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/customer/common/adminHome.jsp");
             requestDispatcher.forward(request, response);
         }
     }

@@ -32,7 +32,7 @@ public class ImagePathDAO extends GenericDAO<ImagePath> {
 	public ImagePath create(ImagePath imagePath) {
 		String sql = "INSERT INTO image VALUES(?,?)";
 		try(Connection connection = dataSource.getConnection();
-			PreparedStatement statement = connection.prepareStatement(sql)){
+		    PreparedStatement statement = connection.prepareStatement(sql)){
 			statement.setInt(1,imagePath.getProductId());
 			statement.setString(2,imagePath.getPath());
 			statement.execute();
@@ -49,9 +49,22 @@ public class ImagePathDAO extends GenericDAO<ImagePath> {
 	}
 
 	@Override
-	public void delete(int id) {
-
+	public void delete(int productId) {
+		String sql = "DELETE FROM image WHERE product_id=?";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, productId);
+			statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
+
+	@Override
+	public ImagePath map(ResultSet resultSet) {
+		return null;
+	}
+
 	public List<ImagePath> getGroup(int productId) {
 		List<ImagePath> imagePathList = new ArrayList<>();
 		String sql = "SELECT * FROM image WHERE product_id=? ";

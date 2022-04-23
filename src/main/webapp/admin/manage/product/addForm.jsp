@@ -2,7 +2,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%-- set context path--%>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
-<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %></c:set>
+<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %>
+</c:set>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,7 +26,8 @@
 </head>
 <body>
 <jsp:include page="../../common/header.jsp"/>
-<form action="">
+<form action="${context}/admin/products" enctype="multipart/form-data" method="post">
+    <input type="hidden" name="action" value="create">
     <div class="form-group">
         <span class="form-group__label">Tên sản phẩm</span>
 
@@ -34,7 +36,7 @@
     <div class="form-group">
         <span class="form-group__label">Ảnh</span>
 
-        <input type="file" name="images" id="images" multiple>
+        <input type="file" name="images" id="images" multiple >
     </div>
 
     <div class="form-group">
@@ -72,7 +74,7 @@
         <div class="material-form-group">
 
             <div class="material-form-group__row">
-                <input type="text" name="length" id="material">
+                <input type="text" name="material" id="material">
             </div>
 
             <div class="material-form-group__add-row-btn">
@@ -87,13 +89,18 @@
         <span class="warranty-period-unit">tháng</span>
     </div>
     <div class="form-group">
-        <span class="form-group__label">Doanh mục</span>
+        <span class="form-group__label">Danh mục</span>
         <%-- SELECT ROLE --%>
         <select class="form-select category-select" name="categoryId">
+            <option value="" selected>Chưa phân loại</option>
             <c:forEach items="${categoryList}" var="category">
                 <option value="${category.categoryId}">${category.categoryName}</option>
             </c:forEach>
         </select>
+    </div>
+    <div class="form-group">
+        <span class="form-group__label">Giá gốc</span>
+        <input type="text" name="originalPrice">
     </div>
     <div class="form-group">
         <span class="form-group__label">Đơn giá</span>

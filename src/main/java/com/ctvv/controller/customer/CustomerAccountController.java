@@ -1,8 +1,8 @@
 package com.ctvv.controller.customer;
 
 
-
 import java.time.LocalDate;
+
 import com.ctvv.dao.ShippingAddressDAO;
 import com.ctvv.model.Customer;
 import com.ctvv.model.ShippingAddress;
@@ -32,13 +32,17 @@ public class CustomerAccountController
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String tab = request.getParameter("tab");
-		if (tab == null) {
-			response.sendRedirect(request.getContextPath() + "/user/account?tab=profile");
-		} else {
-			request.setAttribute("tab", tab);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
-			dispatcher.forward(request, response);
-		}
+		if (tab != null) {
+			if (tab.equals("profile") || tab.equals("address") || tab.equals("password")) {
+				request.setAttribute("tab", tab);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
+				dispatcher.forward(request, response);
+			} else
+				response.sendRedirect(request.getContextPath() + "/user/account?tab=profile");
+
+		} else response.sendRedirect(request.getContextPath() + "/user/account?tab=profile");
+
+
 	}
 
 	@Override
@@ -104,7 +108,7 @@ public class CustomerAccountController
 	                                                                                             IOException {
 
 		request.setAttribute("tab", "password");
-		session  = request.getSession();
+		session = request.getSession();
 		Customer customer = (Customer) session.getAttribute("customer");
 
 		String oldPassword = request.getParameter("oldPassword");
@@ -113,19 +117,17 @@ public class CustomerAccountController
 
 
 		try {
-			if (oldPassword.equals(customer.getPassword())){
+			if (oldPassword.equals(customer.getPassword())) {
 				//đổi mật khẩu trong database
 				customer.setPassword(newPassword);
 				customer = customerDAO.updatePassword(customer);
 				//đổi mật khẩu cho session hien tai
-				session.setAttribute("customer",customer);
-				request.setAttribute("successMessage","Đổi mật khẩu thành công");
+				session.setAttribute("customer", customer);
+				request.setAttribute("successMessage", "Đổi mật khẩu thành công");
+			} else {
+				request.setAttribute("wrongOldPasswordMessage", "Sai mật khẩu cũ");
 			}
-			else {
-				request.setAttribute("wrongOldPasswordMessage","Sai mật khẩu cũ");
-			}
-		}
-		catch(SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
@@ -156,8 +158,7 @@ public class CustomerAccountController
 			request.setAttribute("successMessage", "Cập nhật thành công");
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
 			dispatcher.forward(request, response);
-		}
-		catch (IOException | SQLException e) {
+		} catch (IOException | SQLException e) {
 			e.printStackTrace();
 		}
 
