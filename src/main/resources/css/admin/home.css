@@ -86,7 +86,6 @@ ul {
 
 .list {
     margin-top: 16px;
-    overflow-x: auto;
 }
 
 .dataTables_length {
@@ -138,3 +137,6 @@ img.product__main-image {
 
 }
 
+.product__add-quantity{
+    white-space: nowrap;
+}

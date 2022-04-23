@@ -106,7 +106,8 @@ public class ProductDAO
 			e.printStackTrace();
 		} finally {
 			try {
-				if (statement != null) statement.close();				if (connection != null) connection.close();
+				if (statement != null) statement.close();
+				if (connection != null) connection.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -117,7 +118,8 @@ public class ProductDAO
 
 	@Override
 	public Product update(Product product) {
-		String sql = "UPDATE product SET product_name=?, warranty_period=?, quantity=?, description=?, category_id=?," +
+		String sql = "UPDATE product SET product_name=?, warranty_period=?, quantity=?, description=?, " +
+				"category_id=?," +
 				" price=? WHERE product_id=?";
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -126,7 +128,8 @@ public class ProductDAO
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, product.getName());
 			statement.setInt(2, product.getWarrantyPeriod());
-			statement.setInt(3, product.getQuantity());
+			if (product.getQuantity() != -1)
+				statement.setInt(3, product.getQuantity());
 			statement.setString(4, product.getDescription());
 			if (product.getCategory() == null) {
 				statement.setNull(5, Types.INTEGER);
@@ -143,7 +146,8 @@ public class ProductDAO
 			e.printStackTrace();
 		} finally {
 			try {
-				if (statement != null) statement.close();				if (connection != null) connection.close();
+				if (statement != null) statement.close();
+				if (connection != null) connection.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

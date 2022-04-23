@@ -112,7 +112,7 @@
     left: 0;
     right: 0;
     background-color: #fff;
-    box-shadow: 0 0 2px rgb(0 0 0 / 20%);
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
 .products__sort-selection__price-item:hover {
@@ -180,11 +180,18 @@
     position: absolute;
 
 }
-.category-item.active{
+
+.category-item.active {
     color: red;
 }
+
 .no-products-found {
-    /* MARGIN: AUTO; */
     text-align: CENTER;
-    /* align-self: CENTER; */
+}
+
+.header {
+    top: 32px;
+}
+.content{
+    margin-top: 95px;
 }
