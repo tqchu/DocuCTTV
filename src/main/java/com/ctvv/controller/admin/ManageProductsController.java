@@ -14,6 +14,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -89,9 +91,27 @@ public class ManageProductsController
 				create(request, response);
 			case "update":
 				update(request, response);
+			case "delete":
+				changeStatus(request,response);
 		}
 	}
-
+	private void changeStatus(HttpServletRequest request, HttpServletResponse response)  {
+		int productId = Integer.parseInt(request.getParameter("productId"));
+		Product product = productDAO.get(productId);
+		session=request.getSession();
+		if (product.isStatus()){
+			productDAO.changeStatus(product);
+			request.setAttribute("sucessMesssage","Đã đổi trạng thái sản phẩm thành Ngừng kinh doanh.");
+		}
+		else{
+			request.setAttribute("successMessage","Sản phẩm trước đó đã ở trạng thái Ngừng kinh doanh.");
+		}
+		try {
+			response.sendRedirect(request.getContextPath() + HOME);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
 

@@ -199,4 +199,15 @@ public class ProductDAO
 		}
 		return productList;
 	}
+	public void changeStatus(Product product)  {
+		String sql = "UPDATE product SET status = ? WHERE product_id = ?";
+		try (Connection connection = dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setInt(1, product.isStatus()?0:1);
+			statement.setInt(1,product.getProductId());
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
 }
