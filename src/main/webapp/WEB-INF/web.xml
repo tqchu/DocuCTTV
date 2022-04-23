@@ -16,6 +16,18 @@
             <page-encoding>UTF-8</page-encoding>
         </jsp-property-group>
     </jsp-config>
+    <servlet>
+        <servlet-name>ManageProductsController</servlet-name>
+        <servlet-class>com.ctvv.controller.admin.ManageProductsController</servlet-class>
+        <init-param>
+            <param-name>sourceImageFolder</param-name>
+            <param-value>D:\PBL3\NoiThatCTVV\src\main\resources\images\products</param-value>
+        </init-param>
+        <init-param>
+            <param-name>targetImageFolder</param-name>
+            <param-value>D:\PBL3\NoiThatCTVV\target\NoiThatCTVV-1.0-SNAPSHOT\images\products</param-value>
+        </init-param>
+    </servlet>
     <!--<error-page>
         <exception-type>java.lang.Exception</exception-type>
         <location>/error.jsp</location>

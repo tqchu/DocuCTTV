@@ -24,7 +24,7 @@ abstract public class GenericDAO<T> {
 	 */
 	abstract public List<T> getAll() ;
 
-	abstract public void create(T t) throws SQLException ;
+	abstract public T create(T t) throws SQLException ;
 
 	abstract public T update(T t) ;
 

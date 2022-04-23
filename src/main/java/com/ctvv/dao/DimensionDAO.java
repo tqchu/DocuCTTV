@@ -38,7 +38,6 @@ public class DimensionDAO
 				int width = resultSet.getInt("width");
 				int height = resultSet.getInt("height");
 				dimensionList.add(new Dimension(length, width, height));
-
 			}
 
 		}
