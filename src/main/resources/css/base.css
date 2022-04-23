@@ -7,6 +7,9 @@
     --warning-bg-color: #F8D7DA;
     --warning-text-color: #A22029;
 }
+.btn{
+    border-radius: 2px;
+}
 .btn.btn-edit{
     width: 80px;
 }

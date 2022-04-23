@@ -1,8 +1,3 @@
-.content {
-    background-color: rgba(0, 0, 0, 0.04);
-    padding-top: 16px;
-    padding-bottom: 16px;
-}
 
 .category-wrapper {
     background-color: #fff;
@@ -186,12 +181,10 @@
 }
 
 .no-products-found {
+    margin-top: 60px;
+    color: var(--near-red);
+    font-weight: 600;
     text-align: CENTER;
-}
-
-.header {
-    top: 32px;
-}
-.content{
-    margin-top: 95px;
+    /* align-self: CENTER; */
+    font-size: 20px;
 }
