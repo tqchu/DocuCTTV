@@ -30,4 +30,6 @@ release.properties
 dependency-reduced-pom.xml
 pom.xml
 context.xml
+web.xml
 test/
+src/main/resources/images/products
