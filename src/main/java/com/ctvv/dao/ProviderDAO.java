@@ -118,7 +118,26 @@ public class ProviderDAO
 		return null;
 	}
 
-	public Provider findByEmail(String name) {
+	public Provider findByEmail(String email) {
+		String sql = "SELECT * FORM provider where email=?";
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setString(1,email);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next())
+			{
+				int providerId = resultSet.getInt("provider_id");
+				String providerName = resultSet.getString("provider_name");
+				String address = resultSet.getString("address");
+				String phoneNumber = resultSet.getString("phoneNumber");
+				String taxId = resultSet.getString("taxId");
+				return new Provider(providerId, providerName, address, phoneNumber, email, taxId);
+			}
+			resultSet.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -126,7 +145,26 @@ public class ProviderDAO
 		return null;
 	}
 
-	public Provider findByTaxId(String name) {
+	public Provider findByTaxId(String taxId) {
+		String sql = "SELECT * FORM provider where tax_id_number=?";
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setString(1,taxId);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next())
+			{
+				int providerId = resultSet.getInt("provider_id");
+				String providerName = resultSet.getString("provider_name");
+				String address = resultSet.getString("address");
+				String phoneNumber = resultSet.getString("phoneNumber");
+				String email = resultSet.getString("email");
+				return new Provider(providerId, providerName, address, phoneNumber, email, taxId);
+			}
+			resultSet.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
