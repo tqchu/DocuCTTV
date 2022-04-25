@@ -56,4 +56,14 @@ public class ProductDimensionDAO {
 			e.printStackTrace();
 		}
 	}
+	private void removeUnncessarydDimension(int dimensionId){
+		String sql = "DELETE FROM dimension WHERE dimension_id NOT IN (SELECT dimension_id FROM product_dimension)";
+		try(Connection connection = dataSource.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.executeUpdate();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
 }
