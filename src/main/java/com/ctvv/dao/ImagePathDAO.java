@@ -1,7 +1,8 @@
 package com.ctvv.dao;
 
+import com.ctvv.model.Dimension;
 import com.ctvv.model.ImagePath;
-import com.ctvv.model.ImagePath;
+import com.ctvv.model.Import;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -29,8 +30,9 @@ public class ImagePathDAO extends GenericDAO<ImagePath> {
 	}
 
 	@Override
-	public void create(ImagePath imagePath) {
+	public Dimension create(ImagePath imagePath) {
 
+		return null;
 	}
 
 	@Override
@@ -42,6 +44,12 @@ public class ImagePathDAO extends GenericDAO<ImagePath> {
 	public void delete(int id) {
 
 	}
+
+	@Override
+	public Import map(ResultSet resultSet) {
+		return null;
+	}
+
 	public List<ImagePath> getGroup(int productId) {
 		List<ImagePath> imagePathList = new ArrayList<>();
 		String sql = "SELECT * FROM image WHERE product_id=? ";

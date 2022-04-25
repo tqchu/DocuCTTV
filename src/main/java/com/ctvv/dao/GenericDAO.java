@@ -1,6 +1,10 @@
 package com.ctvv.dao;
 
+import com.ctvv.model.Dimension;
+import com.ctvv.model.Import;
+
 import javax.sql.DataSource;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -24,10 +28,12 @@ abstract public class GenericDAO<T> {
 	 */
 	abstract public List<T> getAll() ;
 
-	abstract public void create(T t) ;
+	abstract public Dimension create(T t) ;
 
 	abstract public T update(T t) ;
 
 	abstract public void delete(int id) ;
+
+	public abstract Import map(ResultSet resultSet);
 
 }

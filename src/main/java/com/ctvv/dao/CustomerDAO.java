@@ -33,7 +33,7 @@ public class CustomerDAO {
 				int userId = resultSet.getInt("user_id");
 				String fullName = resultSet.getString("fullname");
 				String passWord = resultSet.getString("password");
-				String pNumber = resultSet.getString("phoneNumber");
+				String pNumber = resultSet.getString("phonenumber");
 				Customer.Gender gender = Customer.Gender.values()[resultSet.getByte("gender")];
 				LocalDate dateOfBirth = resultSet.getDate("date_of_birth").toLocalDate();
 				ShippingAddressDAO addressDAO = new ShippingAddressDAO(dataSource);

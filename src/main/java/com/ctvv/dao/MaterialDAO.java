@@ -1,5 +1,7 @@
 package com.ctvv.dao;
 
+import com.ctvv.model.Dimension;
+import com.ctvv.model.Import;
 import com.ctvv.model.Material;
 
 import javax.sql.DataSource;
@@ -49,8 +51,9 @@ public class MaterialDAO extends GenericDAO<Material>{
 	}
 
 	@Override
-	public void create(Material material) {
+	public Dimension create(Material material) {
 
+		return null;
 	}
 
 	@Override
@@ -61,5 +64,10 @@ public class MaterialDAO extends GenericDAO<Material>{
 	@Override
 	public void delete(int id) {
 
+	}
+
+	@Override
+	public Import map(ResultSet resultSet) {
+		return null;
 	}
 }

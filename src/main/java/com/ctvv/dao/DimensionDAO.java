@@ -1,7 +1,7 @@
 package com.ctvv.dao;
 
 import com.ctvv.model.Dimension;
-import com.ctvv.model.Dimension;
+import com.ctvv.model.Import;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -53,9 +53,21 @@ public class DimensionDAO
 		return null;
 	}
 
-	@Override
-	public void create(Dimension dimension) {
 
+	@Override
+	public Dimension create(Dimension dimension) {
+		String sql = "INSERT INTO dimension VALUES(?, ?)";
+		try(Connection connection = dataSource.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, dimension.getDimensionId());
+			statement.setDouble(2, dimension.getLength());
+			statement.setDouble(3, dimension.getHeight());
+			statement.setDouble(4, dimension.getWidth());
+			statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return dimension;
 	}
 
 	@Override
@@ -66,5 +78,10 @@ public class DimensionDAO
 	@Override
 	public void delete(int id) {
 
+	}
+
+	@Override
+	public Import map(ResultSet resultSet) {
+		return null;
 	}
 }

@@ -103,8 +103,9 @@ public class ProductDAO
 	}
 
 	@Override
-	public void create(Product product) {
+	public Dimension create(Product product) {
 
+		return null;
 	}
 
 	@Override
@@ -116,5 +117,10 @@ public class ProductDAO
 	public void delete(int id) {
 
 		}
+
+	@Override
+	public Import map(ResultSet resultSet) {
+		return null;
+	}
 
 }

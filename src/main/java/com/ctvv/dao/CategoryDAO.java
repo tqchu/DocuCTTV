@@ -1,6 +1,8 @@
 package com.ctvv.dao;
 
 import com.ctvv.model.Category;
+import com.ctvv.model.Dimension;
+import com.ctvv.model.Import;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -56,7 +58,7 @@ public class CategoryDAO
 	}
 
 	@Override
-	public void create(Category category) {
+	public Dimension create(Category category) {
 		String sql = "INSERT INTO category(category_name) VALUES(?)";
 		try (Connection connection = dataSource.getConnection();
 		PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -66,6 +68,7 @@ public class CategoryDAO
 		catch(SQLException e){
 			e.printStackTrace();
 		}
+		return null;
 	}
 	public Category find(String categoryName) {
 		String sql = "SELECT * FROM category WHERE category_name = ?";
@@ -115,5 +118,10 @@ public class CategoryDAO
 		catch(SQLException e){
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public Import map(ResultSet resultSet) {
+		return null;
 	}
 }

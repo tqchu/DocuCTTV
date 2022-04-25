@@ -105,7 +105,6 @@ public class ManageCategoriesController
 
 		} else {
 			session.setAttribute("errorMessage", "Tên doanh mục đã tồn tại");
-
 		}
 		try {
 			response.sendRedirect(request.getContextPath() + "/admin/categories");
