@@ -93,22 +93,22 @@ public class DimensionDAO
 		return dimensionList;
 	}
 
-	public Dimension find(double length, double width, double height) {
+	public Dimension find(Dimension dimension) {
 		String sql = "SELECT * FROM dimension WHERE length=? AND width=? AND height=? LIMIT 1";
-		Dimension dimension=null;
+		Dimension returnDimension=null;
 		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql);) {
-			statement.setDouble(1, length);
-			statement.setDouble(2, width);
-			statement.setDouble(3, height);
+			statement.setDouble(1, dimension.getLength());
+			statement.setDouble(2, dimension.getWidth());
+			statement.setDouble(3, dimension.getHeight());
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				dimension = map(resultSet);
+				returnDimension = map(resultSet);
 			}
 			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return dimension;
+		return returnDimension;
 	}
 }

@@ -51,6 +51,8 @@ ul {
 .search__form {
     display: flex;
     align-items: center;
+    margin-right: 200px;
+    flex-grow: 1;
 }
 
 .search__add-btn {

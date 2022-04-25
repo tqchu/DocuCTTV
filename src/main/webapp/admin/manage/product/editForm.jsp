@@ -31,10 +31,9 @@
           integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
-    <%--    SCRIPT--%>
+    <%-- SCRIPT--%>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="${context}/js/admin/product/image-picker.js?rd=${rand}"></script>
-    <script src="${context}/js/admin/product/editForm.js?rd=${rand}"></script>
+
 
 </head>
 <body>
@@ -55,15 +54,54 @@
 
             <div class="input-images-wrapper">
                 <div id="coba">
-                    <!-- <input type="file" name="images" id="images" multiple>
-                     <div class="input-images">-->
+                    <c:if test="${product.imagePathList!=null}">
+                        <c:forEach items="${product.imagePathList}" var="imagePath" varStatus="loop">
+                            <div class="col-md-3 col-sm-3 col-xs-6 spartan_item_wrapper"
+                                 data-spartanindexrow="${loop.index}"
+                                 style="margin-bottom : 20px; ">
+                                <div style="position: relative;">
+                                    <div class="spartan_item_loader" data-spartanindexloader="${loop.index}"
+                                         style=" position: absolute; width: 100%; height: 120px; background: rgba(255,255,255, 0.7); z-index: 22; text-align: center; align-items: center; margin: auto; justify-content: center; flex-direction: column; display : none; font-size : 1.7em; color: #CECECE">
+                                        <i class="fas fa-sync fa-spin"></i>
+                                    </div>
+                                    <label class="file_upload"
+                                           style="width: 100%; height: 120px; border: 2px dashed #ddd; border-radius: 3px; cursor: pointer; text-align: center; overflow: hidden; padding: 5px; margin-top: 5px; margin-bottom : 5px; position : relative; display: flex; align-items: center; margin: auto; justify-content: center; flex-direction: column;">
+                                        <a
+                                                href="javascript:void(0)" data-spartanindexremove="${loop.index}"
+                                                style="right: 3px; top: 3px; background: rgb(237, 60, 32); border-radius: 3px; width: 30px; height: 30px; line-height: 30px; text-align: center; text-decoration: none; color: rgb(255, 255, 255); position: absolute !important;"
+                                                class="spartan_remove_row"><i class="fas fa-times"></i>
+                                        </a>
+                                        <img
+                                                style="width: 64px; margin: 0px auto; vertical-align: middle; display: none;"
+                                                data-spartanindexi="${loop.index}"
+                                                src=""
+                                                class="spartan_image_placeholder" >
+                                        <p data-spartanlbldropfile="${loop.index}" style="color : #5FAAE1; display:
+                                        none;
+                                        width :
+                                         auto; ">
+                                            Thả ảnh vào
+                                            đây</p><img style="width: 100%; vertical-align: middle;" class="img_"
+                                                        data-spartanindeximage="${loop.index}"
+                                                        src="${context}/${imagePath.path}"
+                                                        path="${imagePath.path}"><input
+                                            class="form-control spartan_image_input" accept="image/*"
+                                            data-spartanindexinput="${loop.index}"
+                                            style="display : none" name="images" type="file"></label></div>
+                            </div>
+                        </c:forEach>
+                    </c:if>
 
-                    <!--<img src="500-71353-nha-xinh-hang-trang-tri-chim-gom4.jpg" alt="" class="input-images-item">
-                    <img src="500-71353-nha-xinh-hang-trang-tri-chim-gom81.jpg" alt="" class="input-images-item">
-                    <img src="500-71389-nha-xinh-hang-trang-tri-chen-gom.jpg" alt="" class="input-images-item">
-                    <img src="500-71390-nha-xinh-hang-trang-tri-to-gom21.jpg" alt="" class="input-images-item">
-                    <img src="500-71353-nha-xinh-hang-trang-tri-chim-gom4.jpg" alt="" class="input-images-item">-->
-                    <!--                    </div>-->
+
+                    <%-- <input type="file" name="images" id="images" multiple>
+                      <div class="input-images">
+
+                     <img src="500-71353-nha-xinh-hang-trang-tri-chim-gom4.jpg" alt="" class="input-images-item">
+                     <img src="500-71353-nha-xinh-hang-trang-tri-chim-gom81.jpg" alt="" class="input-images-item">
+                     <img src="500-71389-nha-xinh-hang-trang-tri-chen-gom.jpg" alt="" class="input-images-item">
+                     <img src="500-71390-nha-xinh-hang-trang-tri-to-gom21.jpg" alt="" class="input-images-item">
+                     <img src="500-71353-nha-xinh-hang-trang-tri-chim-gom4.jpg" alt="" class="input-images-item">-->
+                     </div>--%>
                 </div>
             </div>
         </div>
@@ -147,6 +185,9 @@
 
     </form>
 </div>
+<script src="${context}/js/admin/product/image-picker.js?rd=${rand}"></script>
+<script src="${context}/js/admin/product/editForm.js?rd=${rand}"></script>
+<script src="${context}/js/admin/product/image-input-handler.js?rd=${rand}"></script>
 <%--<jsp:include page="../../common/footer.jsp"/>--%>
 </body>
 </html>

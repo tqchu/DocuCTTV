@@ -118,7 +118,7 @@ public class ProductDAO
 
 	@Override
 	public Product update(Product product) {
-		String sql = "UPDATE product SET product_name=?, warranty_period=?, quantity=?, description=?, " +
+		String sql = "UPDATE product SET product_name=?, warranty_period=?,  description=?, " +
 				"category_id=?," +
 				" price=? WHERE product_id=?";
 		Connection connection = null;
@@ -128,15 +128,13 @@ public class ProductDAO
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, product.getName());
 			statement.setInt(2, product.getWarrantyPeriod());
-			if (product.getQuantity() != -1)
-				statement.setInt(3, product.getQuantity());
-			statement.setString(4, product.getDescription());
+			statement.setString(3, product.getDescription());
 			if (product.getCategory() == null) {
-				statement.setNull(5, Types.INTEGER);
+				statement.setNull(4, Types.INTEGER);
 			} else
-				statement.setInt(5, product.getCategory().getCategoryId());
-			statement.setInt(6, product.getPrice());
-			statement.setInt(7, product.getProductId());
+				statement.setInt(4, product.getCategory().getCategoryId());
+			statement.setInt(5, product.getPrice());
+			statement.setInt(6, product.getProductId());
 			statement.executeUpdate();
 
 			return product;
@@ -202,5 +200,16 @@ public class ProductDAO
 			e.printStackTrace();
 		}
 		return productList;
+	}
+	public void changeStatus(Product product)  {
+		String sql = "UPDATE product SET status = ? WHERE product_id = ?";
+		try (Connection connection = dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setInt(1, 0);
+			statement.setInt(2,product.getProductId());
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 }

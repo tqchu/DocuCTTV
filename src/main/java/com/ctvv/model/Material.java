@@ -1,5 +1,7 @@
 package com.ctvv.model;
 
+import java.util.Objects;
+
 public class Material {
 	private int materialId;
 	private String materialName;
@@ -18,6 +20,19 @@ public class Material {
 	public Material(int materialId, String materialName) {
 		this.materialId = materialId;
 		this.materialName = materialName;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Material material = (Material) o;
+		return materialName.equals(material.materialName) || (this.materialId==material.materialId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(materialName);
 	}
 
 	public int getMaterialId() {

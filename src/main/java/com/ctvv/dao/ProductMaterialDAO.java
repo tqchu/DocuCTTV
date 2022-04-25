@@ -47,13 +47,25 @@ public class ProductMaterialDAO{
 		return  null;
 	}
 
-	public void delete(int productId) {
-		String sql = "DELETE FROM product_material WHERE product_id=?";
+	public void delete(ProductMaterial productMaterial) {
+		String sql = "DELETE FROM product_material WHERE product_id=? AND material_id=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setInt(1, productId);
+			statement.setInt(1, productMaterial.getProductId());
+			statement.setInt(2, productMaterial.getMaterialId());
 			statement.execute();
 		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void removeUnnecessaryMaterial() {
+		String sql = "DELETE FROM material WHERE material_id NOT IN (SELECT DISTINCT material_id FROM product_material)";
+		try(Connection connection = dataSource.getConnection();
+		    PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.executeUpdate();
+		}
+		catch(SQLException e){
 			e.printStackTrace();
 		}
 	}
