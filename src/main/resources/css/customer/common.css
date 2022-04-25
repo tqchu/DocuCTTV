@@ -1,0 +1,63 @@
+.user-header {
+    display: flex;
+    width: 100%;
+    padding-top: 10px;
+    position: fixed;
+    top: 0;
+    background-color: #fff;
+    z-index: 20;
+}
+
+.user-header__contact {
+    display: flex;
+    margin-left: 10px;
+}
+
+.user-header__phone {
+    display: block;
+}
+
+.user-header__phone i {
+    color: #F24E1E;
+    cursor: pointer;
+}
+
+.user-header__phone__text {
+    margin-left: 4px;
+    text-decoration: none;
+    color: #000;
+}
+
+.user-header__social {
+    padding: 0 8px;
+}
+
+.user-header__social:before {
+    height: 8px;
+    content: "";
+    border-left: 1px solid rgba(0, 0, 0, 0.6);
+    margin-right: 8px;
+
+
+}
+
+.user-header__facebook-icon {
+    color: #3c28ca;
+}
+
+.user-header__insta-icon {
+    color: #f03a0a;
+}
+
+.content {
+    background-color: rgba(0, 0, 0, 0.04);
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.header {
+    top: 32px;
+}
+.content{
+    margin-top: 95px;
+}

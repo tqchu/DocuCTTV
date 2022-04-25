@@ -1,10 +1,25 @@
 package com.ctvv.model;
 
+import java.util.Objects;
+
 public class Dimension {
 	private int dimensionId;
 	private double length;
 
 	public Dimension() {
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Dimension dimension = (Dimension) o;
+		return dimension.dimensionId == dimensionId ||(Double.compare(dimension.length, length) == 0 && Double.compare(dimension.width, width) == 0 && Double.compare(dimension.height, height) == 0);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(length, width, height);
 	}
 
 	public Dimension(double length, double width, double height) {

@@ -6,12 +6,13 @@
     position: fixed;
     width: 100%;
     z-index: 10;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     top: 0;
 }
 
 .content {
     margin-top: 63px;
+    padding-top: 10px;
 }
 
 .header__logo {
@@ -175,58 +176,6 @@
     font-size: 18px;
 }
 
-
-/*CUSTOMER*/
-.user-header {
-    display: flex;
-    width: 100%;
-    padding-top: 10px;
-    position: fixed;
-    top: 0;
-    background-color: #fff;
-    z-index: 10;
-}
-
-.user-header__contact {
-    display: flex;
-    margin-left: 10px;
-}
-
-.user-header__phone {
-    display: block;
-}
-
-.user-header__phone i {
-    color: #F24E1E;
-    cursor: pointer;
-}
-
-.user-header__phone__text {
-    margin-left: 4px;
-    text-decoration: none;
-    color: #000;
-}
-
-.user-header__social {
-    padding: 0 8px;
-}
-
-.user-header__social:before {
-    height: 8px;
-    content: "";
-    border-left: 1px solid rgba(0, 0, 0, 0.6);
-    margin-right: 8px;
-
-
-}
-
-.user-header__facebook-icon {
-    color: #3c28ca;
-}
-
-.user-header__insta-icon {
-    color: #f03a0a;
-}
 
 /* REGISTER */
 .register__gender-option {

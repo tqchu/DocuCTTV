@@ -51,6 +51,8 @@ ul {
 .search__form {
     display: flex;
     align-items: center;
+    margin-right: 200px;
+    flex-grow: 1;
 }
 
 .search__add-btn {
@@ -86,6 +88,7 @@ ul {
 
 .list {
     margin-top: 16px;
+    overflow-x: auto;
 }
 
 .dataTables_length {

@@ -26,6 +26,7 @@
     <%-- APP--%>
     <link rel="stylesheet" href="${context}/css/base.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/customer/common.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/customer/home.css?rd=${rand}">
 </head>
 <body>

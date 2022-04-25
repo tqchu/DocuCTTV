@@ -6,6 +6,7 @@
 
 .form-group__label {
     min-width: 160px;
+    margin-left: 40px;
 }
 
 .dimension-form-group {
@@ -57,4 +58,9 @@
 }
 .input-images-wrapper{
     width: 100%;
+}
+
+.btn.btn-primary.save-btn{
+    margin-left: 480px;
+    margin-top: 20px;
 }

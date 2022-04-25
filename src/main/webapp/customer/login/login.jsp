@@ -28,29 +28,31 @@
 <body>
 <jsp:include page="../common/search-header.jsp"/>
 
+<div class="content">
 
-<div class="login-box">
-    <div class="form__heading-text">Đăng nhập</div>
-    <c:if test="${loginMessage!=null}">
-        <div class="error-message">${loginMessage}</div>
-    </c:if>
-    <form action="${context}/login" method="post" class="login-form form" autocomplete="off">
-        <input type="hidden" name="from" value="${param.from}">
-        <div class="form-group form-floating">
-            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Số điện thoại">
-            <label for="phoneNumber" class="form-label">Số điện thoại</label>
+    <div class="login-box">
+        <div class="form__heading-text">Đăng nhập</div>
+        <c:if test="${loginMessage!=null}">
+            <div class="error-message">${loginMessage}</div>
+        </c:if>
+        <form action="${context}/login" method="post" class="login-form form" autocomplete="off">
+            <input type="hidden" name="from" value="${param.from}">
+            <div class="form-group form-floating">
+                <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Số điện thoại">
+                <label for="phoneNumber" class="form-label">Số điện thoại</label>
+            </div>
+            <div class="form-group form-floating">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">
+                <label for="password" class="form-label">Mật khẩu</label>
+            </div>
+            <a href="${context}/forgot-password" class="login__forget-password">Quên mật khẩu?</a>
+            <button type="submit" class="btn submit-btn">Đăng nhập</button>
+        </form>
+        <div class="register-suggestion">
+            Người dùng mới? <a href="${context}/register" class="register-suggestion-link">Đăng ký</a>
         </div>
-        <div class="form-group form-floating">
-            <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">
-            <label for="password" class="form-label">Mật khẩu</label>
-        </div>
-        <a href="${context}/forgot-password" class="login__forget-password">Quên mật khẩu?</a>
-        <button type="submit" class="btn submit-btn">Đăng nhập</button>
-    </form>
-    <div class="register-suggestion">
-        Người dùng mới? <a href="${context}/register" class="register-suggestion-link">Đăng ký</a>
+
     </div>
-
 </div>
 <jsp:include page="../../common/footer.jsp"/>
 </body>

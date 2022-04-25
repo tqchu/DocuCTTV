@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
           integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
-
+    <!-- BOOSTRAP CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FONT   -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,96 +27,99 @@
 </head>
 <body>
 <jsp:include page="../../common/header.jsp"/>
-<form action="${context}/admin/products" enctype="multipart/form-data" method="post">
-    <input type="hidden" name="action" value="create">
-    <div class="form-group">
-        <span class="form-group__label">Tên sản phẩm</span>
+<div class="content">
 
-        <input type="text" name="productName" id="productName">
-    </div>
-    <div class="form-group">
-        <span class="form-group__label">Ảnh</span>
+    <form action="${context}/admin/products" enctype="multipart/form-data" method="post">
+        <input type="hidden" name="action" value="create">
+        <div class="form-group">
+            <span class="form-group__label">Tên sản phẩm</span>
 
-        <input type="file" name="images" id="images" multiple >
-    </div>
+            <input type="text" name="productName" id="productName">
+        </div>
+        <div class="form-group">
+            <span class="form-group__label">Ảnh</span>
 
-    <div class="form-group">
-        <span class="form-group__label">Mô tả sản phẩm</span>
+            <input type="file" name="images" id="images" multiple>
+        </div>
 
-        <textarea name="description" id="" cols="60" rows="8"></textarea>
-    </div>
-    <div class="form-group">
-        <span class="form-group__label">Kích thước</span>
-        <div class="dimension-form-group">
-            <div class="dimension-form-group__row">
-                <div class="dimension-form-item">
-                    <span class="dimension-form-item__text-label">Dài</span>
-                    <input type="number" name="length">
+        <div class="form-group">
+            <span class="form-group__label">Mô tả sản phẩm</span>
+
+            <textarea name="description" id="" cols="60" rows="8"></textarea>
+        </div>
+        <div class="form-group">
+            <span class="form-group__label">Kích thước</span>
+            <div class="dimension-form-group">
+                <div class="dimension-form-group__row">
+                    <div class="dimension-form-item">
+                        <span class="dimension-form-item__text-label">Dài</span>
+                        <input type="number" name="length">
+                    </div>
+                    <div class="dimension-form-item">
+                        <span class="dimension-form-item__text-label">Rộng</span>
+
+                        <input type="text" name="width">
+                    </div>
+                    <div class="dimension-form-item">
+                        <span class="dimension-form-item__text-label">Cao</span>
+
+                        <input type="text" name="height">
+                    </div>
                 </div>
-                <div class="dimension-form-item">
-                    <span class="dimension-form-item__text-label">Rộng</span>
 
-                    <input type="text" name="width">
+                <div class="dimension-form-group__add-row-btn">
+                    <i class="las la-plus-circle"></i>
                 </div>
-                <div class="dimension-form-item">
-                    <span class="dimension-form-item__text-label">Cao</span>
-
-                    <input type="text" name="height">
-                </div>
-            </div>
-
-            <div class="dimension-form-group__add-row-btn">
-                <i class="las la-plus-circle"></i>
             </div>
         </div>
-    </div>
-    <div class="form-group">
-        <span class="form-group__label">Chất liệu</span>
-        <div class="material-form-group">
+        <div class="form-group">
+            <span class="form-group__label">Chất liệu</span>
+            <div class="material-form-group">
 
-            <div class="material-form-group__row">
-                <input type="text" name="material" id="material">
-            </div>
+                <div class="material-form-group__row">
+                    <input type="text" name="material" id="material">
+                </div>
 
-            <div class="material-form-group__add-row-btn">
-                <i class="las la-plus-circle"></i>
+                <div class="material-form-group__add-row-btn">
+                    <i class="las la-plus-circle"></i>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <span class="form-group__label">Thời gian bảo hành</span>
-        <input type="number" name="warrantyPeriod">
-        <span class="warranty-period-unit">tháng</span>
-    </div>
-    <div class="form-group">
-        <span class="form-group__label">Danh mục</span>
-        <%-- SELECT ROLE --%>
-        <select class="form-select category-select" name="categoryId">
-            <option value="" selected>Chưa phân loại</option>
-            <c:forEach items="${categoryList}" var="category">
-                <option value="${category.categoryId}">${category.categoryName}</option>
-            </c:forEach>
-        </select>
-    </div>
-    <div class="form-group">
-        <span class="form-group__label">Giá gốc</span>
-        <input type="text" name="originalPrice">
-    </div>
-    <div class="form-group">
-        <span class="form-group__label">Đơn giá</span>
-        <input type="text" name="price">
-    </div>
-    <div class="form-group">
-        <span class="form-group__label">Số lượng</span>
+        <div class="form-group">
+            <span class="form-group__label">Thời gian bảo hành</span>
+            <input type="number" name="warrantyPeriod">
+            <span class="warranty-period-unit">tháng</span>
+        </div>
+        <div class="form-group">
+            <span class="form-group__label">Doanh mục</span>
+            <%-- SELECT ROLE --%>
+            <select class="form-select category-select" name="categoryId">
+                <option value="" selected>Chưa phân loại</option>
+                <c:forEach items="${categoryList}" var="category">
+                    <option value="${category.categoryId}">${category.categoryName}</option>
+                </c:forEach>
+            </select>
+        </div>
+        <div class="form-group">
+            <span class="form-group__label">Giá gốc</span>
+            <input type="text" name="originalPrice">
+        </div>
+        <div class="form-group">
+            <span class="form-group__label">Đơn giá</span>
+            <input type="text" name="price">
+        </div>
+        <div class="form-group">
+            <span class="form-group__label">Số lượng</span>
 
-        <input type="text" name="quantity">
-    </div>
-    <button class="btn btn-primary save-btn">
-        Thêm sản phẩm
-    </button>
+            <input type="text" name="quantity">
+        </div>
+        <button class="btn btn-primary save-btn ">
+            Thêm sản phẩm
+        </button>
 
-</form>
+    </form>
+</div>
 <%--<jsp:include page="../../common/footer.jsp"/>--%>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>

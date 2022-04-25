@@ -29,6 +29,8 @@
     <!-- APP -->
     <link rel="stylesheet" href="${context}/css/base.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/customer/common.css?rd=${rand}">
+
     <link rel="stylesheet" href="${context}/css/customer/product.css?rd=${rand}">
 </head>
 <body>
@@ -172,14 +174,16 @@
 
                             <c:forEach items="${similarProducts}" var="product">
                                 <div class="col col-2">
-                                    <a href="${context}/product?id=${product.productId}" class="product">
-                                        <div class="product__image" style="background-image:
+                                    <a href="${context}/products?id=${product.productId}"
+                                       class="product__similar-product__product-list__product">
+                                        <div class="product__similar-product__product-list__product__product__image"
+                                             style="background-image:
                                                 url('${context}/${product.imagePathList[0].path}');">
                                         </div>
-                                        <div class="product__name">
+                                        <div class="product__similar-product__product-list__product__name">
                                                 ${product.name}
                                         </div>
-                                        <div class="product__price">
+                                        <div class="product__similar-product__product-list__product__price">
                                             <fmt:formatNumber value="${product.price}"
                                                               type="number" maxFractionDigits="0"/>
                                         </div>
