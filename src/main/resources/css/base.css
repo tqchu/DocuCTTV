@@ -1,6 +1,7 @@
 :root {
     --btn-color: #37BDDB;
     --bg-color: rgba(0, 0, 0, 0.03);
+    --border-color: rgba(0,0,0,0.2);
     --primary-color: #37BDDB;
     --near-red: #FD5E32;
     --text-hover-color: rgba(255, 255, 255, 0.8);
@@ -55,17 +56,22 @@ a:hover {
 }
 
 .btn-search {
-    padding: 10px 12px;
+    padding: 10px 14px;
     margin-left: 4px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 .form-control:focus {
     box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
 }
+
 .search__bar {
-    font-size: 14px;
-    padding: 7px 12px;
+    padding: 6px 12px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
+
 .form-floating label {
     color: rgba(0, 0, 0, 0.6);
 }
