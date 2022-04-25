@@ -53,6 +53,7 @@ ul {
     align-items: center;
     margin-right: 200px;
     flex-grow: 1;
+    font-size: 14px;
 }
 
 .search__add-btn {

@@ -1,0 +1,8 @@
+.provider__search-option {
+    padding: 7px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.provider__search-option:focus-visible {
+    outline: none;
+}
