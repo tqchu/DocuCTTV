@@ -7,16 +7,20 @@
     --warning-bg-color: #F8D7DA;
     --warning-text-color: #A22029;
 }
-.btn{
+
+.btn {
     border-radius: 2px;
 }
-.btn.btn-edit{
+
+.btn.btn-edit {
     width: 80px;
 }
-.btn.btn-delete{
+
+.btn.btn-delete {
     background-color: var(--warning-text-color);
     color: #fff;
 }
+
 table th {
     font-weight: 500;
 }
@@ -52,8 +56,16 @@ a:hover {
 
 .btn-search {
     padding: 10px 12px;
+    margin-left: 4px;
 }
 
+.form-control:focus {
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+.search__bar {
+    font-size: 14px;
+    padding: 7px 12px;
+}
 .form-floating label {
     color: rgba(0, 0, 0, 0.6);
 }

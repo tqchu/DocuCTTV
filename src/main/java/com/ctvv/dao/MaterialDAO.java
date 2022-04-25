@@ -88,20 +88,20 @@ public class MaterialDAO
 		return null;
 	}
 
-	public Material find(String materialName) {
+	public Material find(Material material) {
 		String sql = "SELECT * FROM material WHERE material_name=?";
-		Material material = null;
+		Material returnMaterial = null;
 		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql);) {
-			statement.setString(1, materialName);
+			statement.setString(1, material.getMaterialName());
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				material = map(resultSet);
+				returnMaterial = map(resultSet);
 			}
 			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return material;
+		return returnMaterial;
 	}
 }

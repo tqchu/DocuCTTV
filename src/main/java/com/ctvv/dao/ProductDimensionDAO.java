@@ -46,13 +46,26 @@ public class ProductDimensionDAO {
 		return  null;
 	}
 
-	public void delete(int productId) {
-		String sql = "DELETE FROM product_dimension WHERE product_id=?";
+	public void delete(ProductDimension productDimension) {
+		String sql = "DELETE FROM product_dimension WHERE product_id=? AND dimension_id=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setInt(1, productId);
+			statement.setInt(1, productDimension.getProductId());
+			statement.setInt(2, productDimension.getDimensionId());
 			statement.execute();
 		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void removeUnnecessaryDimension() {
+		String sql = "DELETE FROM dimension WHERE dimension_id NOT IN (SELECT DISTINCT dimension_id FROM " +
+				"product_dimension)";
+		try(Connection connection = dataSource.getConnection();
+		    PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.executeUpdate();
+		}
+		catch(SQLException e){
 			e.printStackTrace();
 		}
 	}

@@ -60,6 +60,10 @@
 
                             <span class="navbar__tab__text-description">Danh mục</span>
                         </a>
+                        <a href="${context}/admin/providers" class="navbar__tab ${tab=='providers'?'active':''}">
+                            <span class="navbar__tab__icon"><i class="las la-wallet"></i></span>
+                            <span class="navbar__tab__text-description">Nhà cung cấp</span>
+                        </a>
                         <a href="${context}/admin/orders" class="navbar__tab ${tab=='orders'?'active':''}">
                         <span class="navbar__tab__icon">
                             <i class="las la-shopping-bag"></i>
@@ -70,12 +74,12 @@
                             <span class="navbar__tab__icon"><i class="las la-wallet"></i></span>
                             <span class="navbar__tab__text-description">Thống kê</span>
                         </a>
-                       <c:if test="${admin.role=='super'}">
-                           <a href="${context}/admin/admins" class="navbar__tab ${tab=='admins'?'active':''}">
-                               <span class="navbar__tab__icon"><i class="las la-user-tie"></i></span>
-                               <span class="navbar__tab__text-description">Quản trị viên</span>
-                           </a>
-                       </c:if>
+                        <c:if test="${admin.role=='super'}">
+                            <a href="${context}/admin/admins" class="navbar__tab ${tab=='admins'?'active':''}">
+                                <span class="navbar__tab__icon"><i class="las la-user-tie"></i></span>
+                                <span class="navbar__tab__text-description">Quản trị viên</span>
+                            </a>
+                        </c:if>
                     </div>
                 </div>
             </div>
@@ -88,6 +92,9 @@
                 </c:if>
                 <c:if test="${tab=='admins'}">
                     <jsp:include page="admins/adminHome.jsp"/>
+                </c:if>
+                <c:if test="${tab=='providers'}">
+                    <jsp:include page="provider/providerHome.jsp"/>
                 </c:if>
             </div>
         </div>
