@@ -358,23 +358,16 @@ public class ManageProductsController
 	private void changeStatus(HttpServletRequest request, HttpServletResponse response) {
 		int productId = Integer.parseInt(request.getParameter("productId"));
 		Product product = productDAO.get(productId);
-		session = request.getSession();
 		product.setStatus(false);
 		productDAO.changeStatus(product);
-		/*if (product.isStatus()){
-			productDAO.changeStatus(product);
-			request.setAttribute("successMessage","Đã đổi sang Ngừng kinh doanh");
-		}
-		else {*/
-		request.setAttribute("successMessage", "Đã sẵn ở trạng thái Ngừng kinh doanh");
-		//		}
+		session = request.getSession();
+		session.setAttribute("successMessage", "Đã đổi sang Ngừng kinh doanh");
 		try {
 			response.sendRedirect(request.getContextPath() + HOME);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
 	@Override
 	public void init() throws ServletException {
 		super.init();
