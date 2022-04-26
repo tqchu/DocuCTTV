@@ -1,8 +1,7 @@
 package com.ctvv.dao;
 
-import com.ctvv.model.Dimension;
 import com.ctvv.model.ImagePath;
-import com.ctvv.model.Import;
+import com.ctvv.model.ImagePath;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -30,9 +29,18 @@ public class ImagePathDAO extends GenericDAO<ImagePath> {
 	}
 
 	@Override
-	public Dimension create(ImagePath imagePath) {
-
-		return null;
+	public ImagePath create(ImagePath imagePath) {
+		String sql = "INSERT INTO image VALUES(?,?)";
+		try(Connection connection = dataSource.getConnection();
+		    PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setInt(1,imagePath.getProductId());
+			statement.setString(2,imagePath.getPath());
+			statement.execute();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return imagePath;
 	}
 
 	@Override
@@ -41,12 +49,19 @@ public class ImagePathDAO extends GenericDAO<ImagePath> {
 	}
 
 	@Override
-	public void delete(int id) {
-
+	public void delete(int productId) {
+		String sql = "DELETE FROM image WHERE product_id=?";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, productId);
+			statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public Import map(ResultSet resultSet) {
+	public ImagePath map(ResultSet resultSet) {
 		return null;
 	}
 

@@ -6,7 +6,7 @@
 
 .form-group__label {
     min-width: 160px;
-    margin-left: 80px;
+    margin-left: 40px;
 }
 
 .dimension-form-group {
@@ -44,8 +44,23 @@
 .warranty-period-unit {
     margin-left: 10px;
 }
+
+.input-images-item {
+    width: 200px;
+    height: 120px;
+    border: 1px solid #000;
+    border-radius: 2px;
+}
+
+#coba {
+    display: flex;
+    flex-wrap: wrap;
+}
+.input-images-wrapper{
+    width: 100%;
+}
+
 .btn.btn-primary.save-btn{
     margin-left: 480px;
     margin-top: 20px;
 }
-

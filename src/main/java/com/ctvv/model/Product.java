@@ -2,8 +2,33 @@ package com.ctvv.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Product {
+	public Product(
+			String name, int warrantyPeriod, int quantity, String description, Category category, int price,
+			boolean status) {
+		this.name = name;
+		this.warrantyPeriod = warrantyPeriod;
+		this.quantity = quantity;
+		this.description = description;
+		this.price= price;
+		this.status=status;
+		if (category!=null)
+			this.category = new Category(category);
+	}
+
+	public Product(int id, String name, int warrantyPeriod, String description, Category category, int price) {
+			this.productId= id;
+			this.name = name;
+			this.warrantyPeriod = warrantyPeriod;
+			this.description = description;
+			this.price= price;
+			if (category!=null)
+				this.category = new Category(category);
+	}
+
+
 	public List<Dimension> getDimensionList() {
 		return dimensionList;
 	}
@@ -120,6 +145,19 @@ public class Product {
 
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Product product = (Product) o;
+		return productId == product.productId;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(productId);
 	}
 
 	public int getPrice() {

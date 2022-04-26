@@ -3,7 +3,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%-- set context path--%>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
-<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %></c:set>
+<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %>
+</c:set>
 
 <html>
 <head>
@@ -28,6 +29,8 @@
     <!-- APP -->
     <link rel="stylesheet" href="${context}/css/base.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/customer/common.css?rd=${rand}">
+
     <link rel="stylesheet" href="${context}/css/customer/product.css?rd=${rand}">
 </head>
 <body>
@@ -76,13 +79,12 @@
                                         </span>
                                     </c:when>
                                     <c:otherwise>
-                                        <a href="" class="product__category_text-description">
+                                        <a href="${context}/products?category=${product.category.categoryName}"
+                                           class="product__category_text-description">
                                                 ${product.category.categoryName}
                                         </a>
                                     </c:otherwise>
                                 </c:choose>
-
-
                             </div>
                         </div>
                     </div>
@@ -101,9 +103,9 @@
                                 </span>
                                 <ul class="dimension-group">
                                     <c:forEach items="${product.dimensionList}" var="dimension">
-                                    <li class="product__info__text-content">
-                                        ${dimension.length}D x ${dimension.width}R x ${dimension.height}C (cm)
-                                    </li>
+                                        <li class="product__info__text-content">
+                                                ${dimension.length}D x ${dimension.width}R x ${dimension.height}C (cm)
+                                        </li>
                                     </c:forEach>
                                 </ul>
                             </div>
@@ -154,21 +156,46 @@
             </div>
             <div class="product__meta-info__content">
                 <div class="product__meta-info__content-of-item product__meta-info__content__description">
-                   ${product.description}
+                    ${product.description}
                 </div>
                 <div class="product__meta-info__content-of-item product__meta-info__content__reviews">
 
                 </div>
             </div>
         </div>
-        <div class="product__similar-product">
-            <div class="product__similar-product__text-heading">
-                SẢN PHẨM TƯƠNG TỰ
-            </div>
-            <div class="product__similar-product__product-list">
+        <c:if test="${not empty similarProducts}">
+            <div class="product__similar-product">
+                <div class="product__similar-product__text-heading">
+                    SẢN PHẨM TƯƠNG TỰ
+                </div>
+                <div class="product__similar-product__product-list">
+                    <div class="container-fluid">
+                        <div class="row">
+
+                            <c:forEach items="${similarProducts}" var="product">
+                                <div class="col col-2">
+                                    <a href="${context}/products?id=${product.productId}"
+                                       class="product__similar-product__product-list__product">
+                                        <div class="product__similar-product__product-list__product__product__image"
+                                             style="background-image:
+                                                url('${context}/${product.imagePathList[0].path}');">
+                                        </div>
+                                        <div class="product__similar-product__product-list__product__name">
+                                                ${product.name}
+                                        </div>
+                                        <div class="product__similar-product__product-list__product__price">
+                                            <fmt:formatNumber value="${product.price}"
+                                                              type="number" maxFractionDigits="0"/>
+                                        </div>
+                                    </a>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </div>
 
             </div>
-        </div>
+        </c:if>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>

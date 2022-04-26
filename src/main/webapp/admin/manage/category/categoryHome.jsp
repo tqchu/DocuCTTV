@@ -1,9 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="${context}/js/admin/category/category.js?rd=${rand}"></script>
+<c:set var="context" value="${pageContext.request.contextPath}"/>
 <div class="tab__content">
     <div class="search">
-        <form action="" class="search__form">
-            <input type="search" class="search__bar form-control">
+        <form action="${context}/admin/categories/search" class="search__form" method="get">
+            <input type="search" class="search__bar form-control" name="keyword" placeholder="Nhập tên doanh mục">
             <button type="submit" class="btn btn-primary btn-search">
                 <i class="las la-search"></i>
             </button>

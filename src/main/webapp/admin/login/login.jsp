@@ -28,24 +28,27 @@
 </head>
 <body>
 <jsp:include page="../common/header.jsp"/>
-<div class="login-box">
-    <div class="form__heading-text">Đăng nhập</div>
-    <c:if test="${loginMessage!=null}">
-        <div class="login__fail-message">${loginMessage}</div>
-    </c:if>
-    <form action="${context}/admin" method="post" class="login-form form" autocomplete="off">
-        <input type="hidden" name="from" value="${param.from}"/>
-        <div class="form-group form-floating">
-            <input type="text" class="form-control" id="usernameOrEmail" name="usernameOrEmail" placeholder="Tên đăng nhập">
-            <label for="usernameOrEmail" class="form-label">Email hoặc tên đăng nhập</label>
-        </div>
-        <div class="form-group form-floating">
-            <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">
-            <label for="password" class="form-label">Mật khẩu</label>
-        </div>
-        <a href="${context}/admin/forgot-password" class="login__forget-password">Quên mật khẩu?</a>
-        <button type="submit" class="btn submit-btn">Đăng nhập</button>
-</form>
+<div class="content">
+
+    <div class="login-box">
+        <div class="form__heading-text">Đăng nhập</div>
+        <c:if test="${loginMessage!=null}">
+            <div class="login__fail-message">${loginMessage}</div>
+        </c:if>
+        <form action="${context}/admin" method="post" class="login-form form" autocomplete="off">
+            <input type="hidden" name="from" value="${param.from}"/>
+            <div class="form-group form-floating">
+                <input type="text" class="form-control" id="usernameOrEmail" name="usernameOrEmail" placeholder="Tên đăng nhập">
+                <label for="usernameOrEmail" class="form-label">Email hoặc tên đăng nhập</label>
+            </div>
+            <div class="form-group form-floating">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">
+                <label for="password" class="form-label">Mật khẩu</label>
+            </div>
+            <a href="${context}/admin/forgot-password" class="login__forget-password">Quên mật khẩu?</a>
+            <button type="submit" class="btn submit-btn">Đăng nhập</button>
+        </form>
+    </div>
 </div>
 <jsp:include page="../../common/footer.jsp"/>
 

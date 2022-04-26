@@ -51,6 +51,8 @@ ul {
 .search__form {
     display: flex;
     align-items: center;
+    margin-right: 200px;
+    flex-grow: 1;
 }
 
 .search__add-btn {
@@ -118,7 +120,7 @@ td.product__material {
 }
 
 img.product__main-image {
-    width: 100%;
+    width: 200px ;
     height: 120px;
 }
 
@@ -138,3 +140,6 @@ img.product__main-image {
 
 }
 
+.product__add-quantity{
+    white-space: nowrap;
+}
