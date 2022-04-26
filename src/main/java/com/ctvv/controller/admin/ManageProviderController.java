@@ -88,8 +88,8 @@ public class ManageProviderController
 
 	private void update(HttpServletRequest request, HttpServletResponse response) {
 		// Nhận các parameter có name là "id", "name", "address", "phoneNumber", "email", "taxId"
-		int providerId = Integer.parseInt(request.getParameter("provider_id"));
-		String providerName = request.getParameter("provider_name");
+		int providerId = Integer.parseInt(request.getParameter("id"));
+		String providerName = request.getParameter("name");
 		String address = request.getParameter("address");
 		String phoneNumber = request.getParameter("phoneNumber");
 		String email = request.getParameter("email");
@@ -98,48 +98,37 @@ public class ManageProviderController
 
 		// Phát hiện trùng tên, số điện thoại, email, mã số thuế
 		// (bằng cách sử dụng các hàm findByName, findByPhoneNumber, findByEmail, findByTaxId)
-		if (providerDAO.findByEmail(email) == null)
+		boolean isEmailValid = providerDAO.findByEmail(email)==null;
+		boolean isTaxIdValid = providerDAO.findByTaxId(taxId)==null;
+		if(isEmailValid && isTaxIdValid)
 		{
-			Provider provider = new Provider(providerId,providerName,address,phoneNumber,email,taxId);
+			Provider provider = new Provider(providerId,providerName,phoneNumber,address,email,taxId);
 			providerDAO.update(provider);
-			session.setAttribute("successMessage","Cập nhật thành công!");
+			session.setAttribute("successMessage", "Cập nhật thành công!");
 			try {
 				response.sendRedirect(request.getContextPath() + "/admin/providers");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		else
-		{
-			session.setAttribute("errorMessage","Email đã tồn tại!");
-			try {
-				response.sendRedirect(request.getContextPath() + "/admin/providers");
-			} catch (IOException e) {
-				e.printStackTrace();
+		else {
+			if(!isEmailValid)
+			{
+				session.setAttribute("errorMessage", "Email đã tồn tại");
+
 			}
+			if(!isTaxIdValid)
+			{
+				session.setAttribute("errorMessage", "Mã số thuế đã tồn tại");
+
+				}
+			}
+		try {
+			response.sendRedirect(request.getContextPath() + "/admin/providers");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
-		if (providerDAO.findByTaxId(taxId) == null)
-		{
-			Provider provider = new Provider(providerId,providerName,address,phoneNumber,email,taxId);
-			providerDAO.update(provider);
-			session.setAttribute("successMessage","Cập nhật thành công");
-			try {
-				response.sendRedirect(request.getContextPath() + "/admin/providers");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-		}
-		else
-		{
-			session.setAttribute("taxIdErrorMessage","Mã số thuế đã tồn tại!");
-			try {
-				response.sendRedirect(request.getContextPath() + "/admin/providers");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 
 		// set các attribute trong session: nameErrorMessage, phoneNumberMessage ... nếu phát hiện trùng lặp tên, sdt,
 		// sendRedirect về trang chính + /admin/providers
