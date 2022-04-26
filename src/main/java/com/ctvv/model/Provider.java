@@ -1,5 +1,7 @@
 package com.ctvv.model;
 
+import java.util.Objects;
+
 public class Provider {
     int providerId;
     String providerName;
