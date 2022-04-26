@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="${context}/css/admin/provider/provider.css?rd=${rand}">
 <div class="tab__content">
     <div class="search">
-        <form action="" class="search__form">
+        <form action="${context}/admin/providers/search" class="search__form">
             <input type="search" class="search__bar form-control" name="keyword">
             <select name="field" id="" class="provider__search-option">
                 <option value="name">Theo tên nhà cung cấp</option>

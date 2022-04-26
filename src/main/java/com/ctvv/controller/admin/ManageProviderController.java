@@ -31,8 +31,26 @@ public class ManageProviderController
 			listProviders(request, response);
 	}
 
-	private void search(HttpServletRequest request, HttpServletResponse response) {
-
+	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String field = request.getParameter("field");
+		String keyword = request.getParameter("keyword");
+		switch (field){
+			case "name":
+				field= "provider_name";
+				break;
+			case "address":
+				field = "provider_address";
+				break;
+			case "phoneNumber":
+				field="phone_number";
+				break;
+			case "taxId":
+				field="tax_id_number";
+				break;
+		}
+		List<Provider> providerList = providerDAO.search(keyword, field);
+		request.setAttribute("providerList", providerList);
+		goHome(request, response);
 	}
 
 	private void listProviders(

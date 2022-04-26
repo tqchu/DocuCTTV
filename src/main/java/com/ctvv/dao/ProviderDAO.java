@@ -130,4 +130,23 @@ public class ProviderDAO
 		return null;
 	}
 
+
+    public List<Provider> search(String keyword, String fieldName){
+        String sql = "SELECT * FROM provider WHERE "+fieldName+" LIKE ?";
+        List<Provider> providerList = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setString(1,"%"+keyword+"%");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                providerList.add(map(resultSet));
+            }
+            resultSet.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return providerList;
+    }
+
 }
