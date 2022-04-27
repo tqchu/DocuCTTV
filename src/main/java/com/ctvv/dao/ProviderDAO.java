@@ -115,6 +115,19 @@ public class ProviderDAO
 	}
 
 	public Provider findByName(String name) {
+		String sql = "SELECT * FROM provider WHERE provider_name = ?";
+		try(Connection connection = dataSource.getConnection();
+		    PreparedStatement statement = connection.prepareStatement(sql);) {
+			ResultSet resultSet;
+			statement.setString(1, name);
+			resultSet = statement.executeQuery();
+			while (resultSet.next()){
+				return map(resultSet);
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -136,7 +149,21 @@ public class ProviderDAO
 		return null;
 	}
 
-	public Provider findByPhoneNumber(String name) {
+	public Provider findByPhoneNumber(String phoneNumber) {
+		String sql = "SELECT * FROM provider WHERE phone_number = ?";
+		Provider provider = null;
+		try(Connection connection = dataSource.getConnection();
+		    PreparedStatement statement = connection.prepareStatement(sql);) {
+			ResultSet resultSet;
+			statement.setString(1, phoneNumber);
+			resultSet = statement.executeQuery();
+			while (resultSet.next()){
+				return map(resultSet);
+			}
+			resultSet.close();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		return null;
 	}
 

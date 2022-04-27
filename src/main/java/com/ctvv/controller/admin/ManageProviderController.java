@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @WebServlet(name = "ManageProviderController", value = "/admin/providers/*")
 public class ManageProviderController
@@ -35,21 +36,22 @@ public class ManageProviderController
 			listProviders(request, response);
 	}
 
-	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                     IOException {
 		String field = request.getParameter("field");
 		String keyword = request.getParameter("keyword");
-		switch (field){
+		switch (field) {
 			case "name":
-				field= "provider_name";
+				field = "provider_name";
 				break;
 			case "address":
 				field = "provider_address";
 				break;
 			case "phoneNumber":
-				field="phone_number";
+				field = "phone_number";
 				break;
 			case "taxId":
-				field="tax_id_number";
+				field = "tax_id_number";
 				break;
 		}
 		List<Provider> providerList = providerDAO.search(keyword, field);
@@ -88,39 +90,80 @@ public class ManageProviderController
 		}
 	}
 
-	private void create(HttpServletRequest request, HttpServletResponse response) {
-		// Nhận các parameter có name là "name", "address", "phoneNumber", "email", "taxId"
+	private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String providerName = request.getParameter("name");
+		String providerAddress = request.getParameter("address");
+		String phoneNumber = request.getParameter("phoneNumber");
+		String email = request.getParameter("email");
+		String taxId = request.getParameter("taxId");
 
-		// Phát hiện trùng tên, số điện thoại, email, mã số thuế
-		// (bằng cách sử dụng các hàm findByName, findByPhoneNumber, findByEmail, findByTaxId)
+		boolean isNameValid = (providerDAO.findByName(providerName) == null);
+		boolean isPhoneNumberValid = (providerDAO.findByPhoneNumber(phoneNumber) == null);
+		boolean isEmailValid = (providerDAO.findByEmail(email) == null);
+		boolean isTaxIdValid = (providerDAO.findByTaxId(taxId) == null);
+		if (isNameValid && isPhoneNumberValid && isEmailValid && isTaxIdValid) {
+			Provider provider = new Provider(providerName, providerAddress, phoneNumber, email, taxId);
+			providerDAO.create(provider);
+			request.setAttribute("successMessage", "Thêm nhà cung cấp thành công");
+			try {
+				response.sendRedirect(request.getContextPath() + "/admin/providers");
+			} catch (IOException e){
+				e.printStackTrace();
+			}
+		} else {
+			String errorMessage = "";
+			boolean isFirst = true;
+			if(!isNameValid){
+				errorMessage +="Tên NCC";
+				isFirst = false;
+			}
+			if(!isPhoneNumberValid) {
+				if  (isFirst) errorMessage+="Số điện thoại, ";
+				else errorMessage+=", số điện thoại";
+				isFirst = false;
 
+			}
+			if(!isEmailValid){
+				if (isFirst) errorMessage+="Email";
+				else errorMessage+=", email";
+				isFirst = false;
 
-		// set các attribute trong session: nameErrorMessage, phoneNumberMessage ... nếu phát hiện trùng lặp tên, sdt,
-		// sendRedirect về trang chính + /admin/providers
+			}
+			if(!isTaxIdValid) {
+				if (isFirst) errorMessage+="MST";
+				else errorMessage+=", MST";
+				isFirst = false;
 
-		// goi ham create
-
-		// set attribute successMessage trong session nếu thành công
-		// sendRedirect về trang chính + /admin/providers
+			}
+			errorMessage+=" đã  tồn tại!";
+			session.setAttribute("errorMessage", errorMessage);
+			response.sendRedirect(request.getContextPath() + "/admin/providers");
+		}
 	}
 
-	private void update(HttpServletRequest request, HttpServletResponse response) {
-		// Nhận các parameter có name là "id", "name", "address", "phoneNumber", "email", "taxId"
+	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		int providerId = Integer.parseInt(request.getParameter("id"));
+		// Tìm provider ứng với id
+		Provider provider= providerDAO.get(providerId);
 		String providerName = request.getParameter("name");
 		String address = request.getParameter("address");
 		String phoneNumber = request.getParameter("phoneNumber");
 		String email = request.getParameter("email");
 		String taxId = request.getParameter("taxId");
-		session=request.getSession();
+		session = request.getSession();
 
-		// Phát hiện trùng tên, số điện thoại, email, mã số thuế
-		// (bằng cách sử dụng các hàm findByName, findByPhoneNumber, findByEmail, findByTaxId)
-		boolean isEmailValid = providerDAO.findByEmail(email)==null;
-		boolean isTaxIdValid = providerDAO.findByTaxId(taxId)==null;
-		if(isEmailValid && isTaxIdValid)
-		{
-			Provider provider = new Provider(providerId,providerName,phoneNumber,address,email,taxId);
+
+		// Lưu ý: nếu phần người dùng nhập không khác gì dữ liệu cũ thì khỏi cần find và trả về true, nếu dùng thì
+		// tiếp tục kiểm tra điều kiện của find (để xem thử trùng với provider khác không)
+		boolean isEmailValid =
+				((Objects.equals(email, provider.getEmail()))||providerDAO.findByEmail(email) == null);
+		boolean isTaxIdValid =(Objects.equals(taxId, provider.getTaxId()))|| providerDAO.findByTaxId(taxId) == null;
+		boolean isNameValid =
+				(Objects.equals(providerName, provider.getProviderName()))||(providerDAO.findByName(providerName) == null);
+		boolean isPhoneNumberValid =
+				(Objects.equals(phoneNumber, provider.getPhoneNumber()))|| (providerDAO.findByPhoneNumber(phoneNumber) == null);
+		if (isEmailValid && isTaxIdValid && isNameValid && isPhoneNumberValid) {
+			provider= new Provider(providerId, providerName, phoneNumber, address, email, taxId);
 			providerDAO.update(provider);
 			session.setAttribute("successMessage", "Cập nhật thành công!");
 			try {
@@ -128,34 +171,31 @@ public class ManageProviderController
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		else {
-			if(!isEmailValid)
-			{
-				session.setAttribute("errorMessage", "Email đã tồn tại");
-
+		} else {
+			String errorMessage = "";
+			boolean isFirst = true;
+			if(!isNameValid){
+				errorMessage +="Tên NCC";
+				isFirst = false;
 			}
-			if(!isTaxIdValid)
-			{
-				session.setAttribute("errorMessage", "Mã số thuế đã tồn tại");
-
-				}
+			if(!isPhoneNumberValid) {
+				if  (isFirst) errorMessage+="Số điện thoại, ";
+				else errorMessage+=", số điện thoại";
+				isFirst = false;
 			}
-		try {
+			if(!isEmailValid){
+				if (isFirst) errorMessage+="Email";
+				else errorMessage+=", email";
+				isFirst=false;
+			}
+			if(!isTaxIdValid) {
+				if (isFirst) errorMessage+="MST";
+				else errorMessage+=", MST";
+			}
+			errorMessage+=" đã  tồn tại!";
+			session.setAttribute("errorMessage", errorMessage);
 			response.sendRedirect(request.getContextPath() + "/admin/providers");
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-
-
-		// set các attribute trong session: nameErrorMessage, phoneNumberMessage ... nếu phát hiện trùng lặp tên, sdt,
-		// sendRedirect về trang chính + /admin/providers
-
-		// goi ham update
-
-		// set attribute successMessage trong session nếu thành công
-		// sendRedirect về trang chính + /admin/providers
-
 
 	}
 
