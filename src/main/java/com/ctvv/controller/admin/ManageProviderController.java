@@ -1,15 +1,18 @@
 package com.ctvv.controller.admin;
 
-import com.ctvv.dao.ProductDAO;
 import com.ctvv.dao.ProviderDAO;
 import com.ctvv.model.Provider;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.List;
@@ -20,6 +23,7 @@ public class ManageProviderController
 	private final String HOME_PAGE = "/admin/manage/home.jsp";
 	private final String SEARCH_SERVLET = "/admin/providers/search";
 	private ProviderDAO providerDAO;
+	private HttpSession session;
 
 	@Override
 	protected void doGet(
@@ -102,9 +106,46 @@ public class ManageProviderController
 
 	private void update(HttpServletRequest request, HttpServletResponse response) {
 		// Nhận các parameter có name là "id", "name", "address", "phoneNumber", "email", "taxId"
+		int providerId = Integer.parseInt(request.getParameter("id"));
+		String providerName = request.getParameter("name");
+		String address = request.getParameter("address");
+		String phoneNumber = request.getParameter("phoneNumber");
+		String email = request.getParameter("email");
+		String taxId = request.getParameter("taxId");
+		session=request.getSession();
 
 		// Phát hiện trùng tên, số điện thoại, email, mã số thuế
 		// (bằng cách sử dụng các hàm findByName, findByPhoneNumber, findByEmail, findByTaxId)
+		boolean isEmailValid = providerDAO.findByEmail(email)==null;
+		boolean isTaxIdValid = providerDAO.findByTaxId(taxId)==null;
+		if(isEmailValid && isTaxIdValid)
+		{
+			Provider provider = new Provider(providerId,providerName,phoneNumber,address,email,taxId);
+			providerDAO.update(provider);
+			session.setAttribute("successMessage", "Cập nhật thành công!");
+			try {
+				response.sendRedirect(request.getContextPath() + "/admin/providers");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			if(!isEmailValid)
+			{
+				session.setAttribute("errorMessage", "Email đã tồn tại");
+
+			}
+			if(!isTaxIdValid)
+			{
+				session.setAttribute("errorMessage", "Mã số thuế đã tồn tại");
+
+				}
+			}
+		try {
+			response.sendRedirect(request.getContextPath() + "/admin/providers");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 
 		// set các attribute trong session: nameErrorMessage, phoneNumberMessage ... nếu phát hiện trùng lặp tên, sdt,

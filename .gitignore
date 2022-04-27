@@ -31,5 +31,6 @@ dependency-reduced-pom.xml
 pom.xml
 web.xml
 context.xml
+web.xml
 test/
 src/main/resources/images/products

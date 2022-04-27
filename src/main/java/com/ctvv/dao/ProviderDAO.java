@@ -118,7 +118,21 @@ public class ProviderDAO
 		return null;
 	}
 
-	public Provider findByEmail(String name) {
+	public Provider findByEmail(String email) {
+		String sql = "SELECT * FROM provider where email=?";
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setString(1,email);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next())
+			{
+				return map(resultSet);
+			}
+			resultSet.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -126,7 +140,21 @@ public class ProviderDAO
 		return null;
 	}
 
-	public Provider findByTaxId(String name) {
+	public Provider findByTaxId(String taxId) {
+		String sql = "SELECT * FROM provider where tax_id_number=?";
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setString(1,taxId);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next())
+			{
+				return map(resultSet);
+			}
+			resultSet.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
