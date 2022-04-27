@@ -126,7 +126,8 @@ public class ManageProductsController
 		}
 
 		// Tạo đối tượng mới và lưu vào db
-		Product product = new Product(name, warrantyPeriod, quantity, description, category, price, true);
+		Product product =null;
+//		= new Product(name, warrantyPeriod, quantity, description, category, price, true,null);
 		// Trường hợp trùng product đã có
 
 		int productId = productDAO.create(product).getProductId();
@@ -194,7 +195,7 @@ public class ManageProductsController
 
 	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
-		//		Lấy danh sách tham số và chuyển về đối  tượng
+		/*//		Lấy danh sách tham số và chuyển về đối  tượng
 		int productId = Integer.parseInt(request.getParameter("productId"));
 		Product product = productDAO.get(productId);
 
@@ -208,7 +209,6 @@ public class ManageProductsController
 		product.setWarrantyPeriod(warrantyPeriod);
 
 		int price = Integer.parseInt(request.getParameter("price"));
-		product.setPrice(price);
 
 
 		Category category = null;
@@ -332,7 +332,7 @@ public class ManageProductsController
 				imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
 			}
 		}
-
+*/
 		session.setAttribute("successMessage", "Sản phẩm đã được sửa thành công");
 		response.sendRedirect(request.getContextPath() + HOME);
 	}
@@ -348,7 +348,7 @@ public class ManageProductsController
 
 		// Tăng số lượng trong bảng product??
 		Product product = productDAO.get(id);
-		product.setQuantity(product.getQuantity() + quantity);
+//		product.setQuantity(product.getQuantity() + quantity);
 		productDAO.update(product);
 
 		session.setAttribute("successMessage", "Đã cập nhật số lượng thành công");
