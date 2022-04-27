@@ -218,9 +218,18 @@ public class ManageProviderController
 
 	private void delete(HttpServletRequest request, HttpServletResponse response) {
 		// Nhan parameter có name là "id"
+		int providerId = Integer.parseInt(request.getParameter("id"));
 		// goi ham delete
+		providerDAO.delete(providerId);
 		// set successMessage trong session
+		session = request.getSession();
+		session.setAttribute("successMessage", "Xóa nhà cung cấp thành công");
 		// sendRedirect về trang chính + /admin/providers
+		try {
+			response.sendRedirect(request.getContextPath() + "/admin/providers");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	}
 	public String getOrder(HttpServletRequest request){
