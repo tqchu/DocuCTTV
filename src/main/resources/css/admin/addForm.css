@@ -9,32 +9,15 @@
     margin-left: 80px;
 }
 
-.dimension-form-group {
+.dimension-form-group,
+.material-form-group, .price-form-group {
     display: flex;
-    flex-direction: column;
-}
 
-.dimension-form-group__row {
-    display: flex;
 }
-
-.material-form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.dimension-form-item {
-    margin-right: 40px;
-    margin-bottom: 10px;
-}
-
 .dimension-form-item__text-label {
     margin-right: 10px;
 }
 
-.material-form-group__row {
-    margin-bottom: 10px;
-}
 
 .save-btn {
     color: #fff;
@@ -44,8 +27,52 @@
 .warranty-period-unit {
     margin-left: 10px;
 }
-.btn.btn-primary.save-btn{
+
+.btn.btn-primary.save-btn {
     margin-left: 480px;
     margin-top: 20px;
 }
 
+
+#coba {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.spartan_item_wrapper {
+    margin-right: 32px;
+}
+.dimen-mater-price-group{
+    flex-wrap: wrap;
+}
+.dimension-form-group__input{
+    display: flex;
+}
+.material-form-group__label.form-group__label {
+    margin-left: 40px;
+    min-width: 80px;
+}
+.price-form-group__label.form-group__label {
+    margin-left: 40px;
+    min-width: 80px;
+}
+.price-form-group__input input{
+    width: 100px;
+}
+.dimension-form-item input{
+    width: 40px;
+}
+.dimen-mater-price-group {
+    flex-wrap: wrap;
+    margin-top: 40px;
+    align-items: center;
+}
+.form-group__minus-row-btn {
+    margin-left: 20px;
+}
+.form-group__add-row-btn{
+    margin-left: 80px;
+    margin-bottom: 40px;
+    font-size: 18px;
+}

@@ -1,12 +1,27 @@
 $(function () {
-    const dimensionRows = $('.dimension-form-group__row');
-    const materialRows = $('.material-form-group__row');
-    $('.dimension-form-group__add-row-btn').click(function () {
-        dimensionRows.last().after(dimensionRows.first().clone());
-    })
-    $('.material-form-group__add-row-btn').click(function () {
-            materialRows.last().after(materialRows.first().clone());
+    const minusRowBtn = $('.form-group__minus-row-btn')
+    const addRowBtn = $('.form-group__add-row-btn')
+    const form = $(".products__add-form")
+    form.click(function (e) {
+        const minusRowBtn = $(e.target).parent('.form-group__minus-row-btn')
+        if (minusRowBtn!=null){
+            const count = $('.dimen-mater-price-group').length
+            if (count>1){
+                minusRowBtn.parent().remove()
+            }
         }
-    )
+    })
+    addRowBtn.click(function () {
+        const diMaPrGroup = $(this).prev()
+        diMaPrGroup.after(diMaPrGroup.clone())
+    })
+
+
+    $("#coba").spartanMultiImagePicker({
+        fieldName: 'images', maxCount: 5,
+        rowHeight: '120px',
+        groupClassName: 'col-md-3 col-sm-3 col-xs-6',
+        dropFileLabel: 'Thả ảnh vào đây'
+    })
 
 })

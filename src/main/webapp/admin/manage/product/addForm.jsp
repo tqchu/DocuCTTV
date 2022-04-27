@@ -24,12 +24,16 @@
     <link rel="stylesheet" href="${context}/css/base.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/admin/addForm.css?rd=${rand}">
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 </head>
 <body>
 <jsp:include page="../../common/header.jsp"/>
 <div class="content">
 
-    <form action="${context}/admin/products" enctype="multipart/form-data" method="post">
+    <form action="${context}/admin/products" enctype="multipart/form-data" method="post" class="products__add-form">
         <input type="hidden" name="action" value="create">
         <div class="form-group">
             <span class="form-group__label">Tên sản phẩm</span>
@@ -39,7 +43,7 @@
         <div class="form-group">
             <span class="form-group__label">Ảnh</span>
 
-            <input type="file" name="images" id="images" multiple>
+            <div id="coba"></div>
         </div>
 
         <div class="form-group">
@@ -47,44 +51,50 @@
 
             <textarea name="description" id="" cols="60" rows="8"></textarea>
         </div>
-        <div class="form-group">
-            <span class="form-group__label">Kích thước</span>
+        <div class="form-group dimen-mater-price-group">
             <div class="dimension-form-group">
-                <div class="dimension-form-group__row">
+                <span class="dimension-form-group__label form-group__label">Kích thước</span>
+
+                <div class="dimension-form-group__input">
                     <div class="dimension-form-item">
-                        <span class="dimension-form-item__text-label">Dài</span>
                         <input type="number" name="length">
+                        <span class="dimension-form-item__text-label">D</span>
                     </div>
                     <div class="dimension-form-item">
-                        <span class="dimension-form-item__text-label">Rộng</span>
 
                         <input type="text" name="width">
+                        <span class="dimension-form-item__text-label">R</span>
                     </div>
                     <div class="dimension-form-item">
-                        <span class="dimension-form-item__text-label">Cao</span>
 
                         <input type="text" name="height">
+                        <span class="dimension-form-item__text-label">C</span>
                     </div>
                 </div>
-
-                <div class="dimension-form-group__add-row-btn">
-                    <i class="las la-plus-circle"></i>
-                </div>
             </div>
-        </div>
-        <div class="form-group">
-            <span class="form-group__label">Chất liệu</span>
             <div class="material-form-group">
-
-                <div class="material-form-group__row">
+                <span class="material-form-group__label form-group__label">
+                    Chất liệu
+                </span>
+                <div class="material-form-group__input">
                     <input type="text" name="material" id="material">
                 </div>
-
-                <div class="material-form-group__add-row-btn">
-                    <i class="las la-plus-circle"></i>
+            </div>
+            <div class="price-form-group">
+                <span class="price-form-group__label form-group__label">Đơn giá</span>
+                <div class="price-form-group__input">
+                    <input type="text" name="price">
                 </div>
             </div>
+
+            <div class="form-group__minus-row-btn">
+                <i class="fa-solid fa-minus"></i>
+            </div>
         </div>
+        <div class="form-group__add-row-btn">
+                <i class="las la-plus-circle"></i>
+        </div>
+
 
         <div class="form-group">
             <span class="form-group__label">Thời gian bảo hành</span>
@@ -101,19 +111,8 @@
                 </c:forEach>
             </select>
         </div>
-        <div class="form-group">
-            <span class="form-group__label">Giá gốc</span>
-            <input type="text" name="originalPrice">
-        </div>
-        <div class="form-group">
-            <span class="form-group__label">Đơn giá</span>
-            <input type="text" name="price">
-        </div>
-        <div class="form-group">
-            <span class="form-group__label">Số lượng</span>
 
-            <input type="text" name="quantity">
-        </div>
+
         <button class="btn btn-primary save-btn ">
             Thêm sản phẩm
         </button>
@@ -123,6 +122,7 @@
 <%--<jsp:include page="../../common/footer.jsp"/>--%>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="${context}/js/admin/product/image-picker.js?rd=${rand}"></script>
 <script src="${context}/js/admin/product/addProduct.js?rd=${rand}"></script>
 
 </body>
