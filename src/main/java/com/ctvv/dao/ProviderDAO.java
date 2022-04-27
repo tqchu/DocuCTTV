@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ProviderDAO
 		extends GenericDAO<Provider> {
@@ -70,7 +71,7 @@ public class ProviderDAO
 	@Override
 	public Provider update(Provider provider) {
 		String sql = "UPDATE provider SET provider_name = ?, provider_address = ?, phone_number = ?, email = ?, " +
-				"tax_id_number = ?";
+				"tax_id_number = ? WHERE provider_id = ?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, provider.getProviderName());
@@ -78,6 +79,7 @@ public class ProviderDAO
 			statement.setString(3, provider.getPhoneNumber());
 			statement.setString(4, provider.getEmail());
 			statement.setString(5, provider.getTaxId());
+			statement.setInt(6, provider.getProviderId());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -185,9 +187,8 @@ public class ProviderDAO
 		return null;
 	}
 
-
-    public List<Provider> search(String keyword, String fieldName){
-        String sql = "SELECT * FROM provider WHERE "+fieldName+" LIKE ?";
+    public List<Provider> search(String keyword, String fieldName, String orderBy){
+        String sql = "SELECT * FROM provider WHERE "+fieldName+" LIKE ?" + (orderBy!=null ?"ORDER BY "+ orderBy:"");
         List<Provider> providerList = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
         PreparedStatement statement = connection.prepareStatement(sql)){
@@ -203,5 +204,20 @@ public class ProviderDAO
         }
         return providerList;
     }
+
+	public List<Provider> getAll(String orderBy) {
+		List<Provider> providerList = new ArrayList<>();
+		String sql = "SELECT * FROM provider ORDER BY "+ orderBy;
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				providerList.add(map(resultSet));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return providerList;
+	}
 
 }

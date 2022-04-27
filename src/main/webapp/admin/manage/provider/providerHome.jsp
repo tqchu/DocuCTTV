@@ -4,13 +4,14 @@
 <div class="tab__content">
     <div class="search">
         <form action="${context}/admin/providers/search" class="search__form">
-            <input type="search" class="search__bar form-control" name="keyword">
+            <input type="search" class="search__bar form-control" name="keyword" value="${param.keyword}">
             <select name="field" id="" class="provider__search-option">
-                <option value="name">Theo tên nhà cung cấp</option>
-                <option value="address">Theo địa chỉ</option>
-                <option value="phoneNumber">Theo số điện thoại</option>
-                <option value="email">Theo email</option>
-                <option value="taxId">Theo mã số thuế</option>
+                <option value="name" ${param.field=='name'||empty param.field?'selected':''}>Theo tên nhà cung
+                    cấp</option>
+                <option value="address" ${param.field=='address'?'selected':''}>Theo địa chỉ</option>
+                <option value="phoneNumber" ${param.field=='phoneNumber'?'selected':''}>Theo số điện thoại</option>
+                <option value="email" ${param.field=='email'?'selected':''}>Theo email</option>
+                <option value="taxId" ${param.field=='taxId'?'selected':''}>Theo mã số thuế</option>
             </select>
             <button type="submit" class="btn btn-primary btn-search">
                 <i class="las la-search"></i>
@@ -63,7 +64,6 @@
                             </div>
 
 
-
                             <button type="submit" class="btn btn-primary save-btn">Thêm</button>
                         </form>
                     </div>
@@ -101,6 +101,17 @@
         <c:remove var="errorMessage" scope="session"/>
 
     </c:if>
+    <div class="provider__order-bar">
+        <span class="provider__order-bar__text-heading">
+            Sắp xếp theo
+        </span>
+        <input type="hidden" name="query-string"
+               value="${not empty param.keyword?'keyword=' += param.keyword+='&field='+=param.field:''}">
+        <span class="provider__order-bar__option ${param.orderBy=='default'|| empty param.orderBy?'active':''}"
+              data-sort="default">Mới
+            nhất</span>
+        <span class="provider__order-bar__option  ${param.orderBy=='name'?'active':''}" data-sort="name">Tên</span>
+    </div>
     <div class="list">
         <table class="data-table  table table-hover table-bordered">
             <thead>
@@ -148,7 +159,7 @@
                                             <form action="${context}/admin/providers" method="post"
                                                   class="d-flex align-items-center flex-column">
                                                 <input type="hidden" value="update" name="action">
-                                                <input type="hidden" name="id" value="${provider.providerId}" >
+                                                <input type="hidden" name="id" value="${provider.providerId}">
                                                 <div class="form-group form-floating">
                                                     <input type="text" name="name"
                                                            class="form-control" placeholder="Tên nhà cung cấp"
@@ -158,7 +169,7 @@
                                                 <div class="form-group form-floating">
                                                     <input type="text" name="email"
                                                            class="form-control" placeholder="Email" autofocus
-                    value="${provider.email}">
+                                                           value="${provider.email}">
                                                     <label class="form-label">Email</label>
                                                 </div>
                                                 <div class="form-group form-floating">
@@ -179,7 +190,6 @@
                                                            value="${provider.taxId}">
                                                     <label class="form-label">Mã số thuế</label>
                                                 </div>
-
 
 
                                                 <button type="submit" class="btn btn-primary save-btn">Lưu</button>
@@ -238,3 +248,4 @@
         </table>
     </div>
 </div>
+<script src="${context}/js/admin/provider/provider.js?rd=${rand}"></script>

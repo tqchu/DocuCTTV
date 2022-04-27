@@ -54,14 +54,20 @@ public class ManageProviderController
 				field = "tax_id_number";
 				break;
 		}
-		List<Provider> providerList = providerDAO.search(keyword, field);
+		String orderBy= getOrder(request);
+		List<Provider> providerList;
+
+		providerList = providerDAO.search(keyword, field, orderBy);
 		request.setAttribute("providerList", providerList);
 		goHome(request, response);
 	}
 
 	private void listProviders(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<Provider> providerList = providerDAO.getAll();
+		String orderBy =getOrder(request);
+		List<Provider> providerList;
+		if (orderBy != null) providerList = providerDAO.getAll(orderBy);
+		else providerList = providerDAO.getAll();
 		request.setAttribute("providerList", providerList);
 		goHome(request, response);
 	}
@@ -90,7 +96,8 @@ public class ManageProviderController
 		}
 	}
 
-	private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                     IOException {
 		String providerName = request.getParameter("name");
 		String providerAddress = request.getParameter("address");
 		String phoneNumber = request.getParameter("phoneNumber");
@@ -107,44 +114,50 @@ public class ManageProviderController
 			request.setAttribute("successMessage", "Thêm nhà cung cấp thành công");
 			try {
 				response.sendRedirect(request.getContextPath() + "/admin/providers");
-			} catch (IOException e){
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} else {
 			String errorMessage = "";
 			boolean isFirst = true;
-			if(!isNameValid){
-				errorMessage +="Tên NCC";
+			if (!isNameValid) {
+				errorMessage += "Tên NCC";
 				isFirst = false;
 			}
-			if(!isPhoneNumberValid) {
-				if  (isFirst) errorMessage+="Số điện thoại, ";
-				else errorMessage+=", số điện thoại";
-				isFirst = false;
+			if (!isPhoneNumberValid) {
+				if (isFirst) errorMessage += "Số điện thoại, ";
+				else {
+					errorMessage += ", số điện thoại";
+					isFirst = false;
+				}
 
 			}
-			if(!isEmailValid){
-				if (isFirst) errorMessage+="Email";
-				else errorMessage+=", email";
-				isFirst = false;
+			if (!isEmailValid) {
+				if (isFirst) errorMessage += "Email";
+				else {
+					errorMessage += ", email";
+					isFirst = false;
+				}
+			}
+			if (!isTaxIdValid) {
+				if (isFirst) errorMessage += "MST";
+				else {
+					errorMessage += ", MST";
+					isFirst = false;
+				}
 
 			}
-			if(!isTaxIdValid) {
-				if (isFirst) errorMessage+="MST";
-				else errorMessage+=", MST";
-				isFirst = false;
-
-			}
-			errorMessage+=" đã  tồn tại!";
+			errorMessage += " đã  tồn tại!";
 			session.setAttribute("errorMessage", errorMessage);
 			response.sendRedirect(request.getContextPath() + "/admin/providers");
 		}
 	}
 
-	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                     IOException {
 		int providerId = Integer.parseInt(request.getParameter("id"));
 		// Tìm provider ứng với id
-		Provider provider= providerDAO.get(providerId);
+		Provider provider = providerDAO.get(providerId);
 		String providerName = request.getParameter("name");
 		String address = request.getParameter("address");
 		String phoneNumber = request.getParameter("phoneNumber");
@@ -156,14 +169,14 @@ public class ManageProviderController
 		// Lưu ý: nếu phần người dùng nhập không khác gì dữ liệu cũ thì khỏi cần find và trả về true, nếu dùng thì
 		// tiếp tục kiểm tra điều kiện của find (để xem thử trùng với provider khác không)
 		boolean isEmailValid =
-				((Objects.equals(email, provider.getEmail()))||providerDAO.findByEmail(email) == null);
-		boolean isTaxIdValid =(Objects.equals(taxId, provider.getTaxId()))|| providerDAO.findByTaxId(taxId) == null;
+				((Objects.equals(email, provider.getEmail())) || providerDAO.findByEmail(email) == null);
+		boolean isTaxIdValid = (Objects.equals(taxId, provider.getTaxId())) || providerDAO.findByTaxId(taxId) == null;
 		boolean isNameValid =
-				(Objects.equals(providerName, provider.getProviderName()))||(providerDAO.findByName(providerName) == null);
+				(Objects.equals(providerName, provider.getProviderName())) || (providerDAO.findByName(providerName) == null);
 		boolean isPhoneNumberValid =
-				(Objects.equals(phoneNumber, provider.getPhoneNumber()))|| (providerDAO.findByPhoneNumber(phoneNumber) == null);
+				(Objects.equals(phoneNumber, provider.getPhoneNumber())) || (providerDAO.findByPhoneNumber(phoneNumber) == null);
 		if (isEmailValid && isTaxIdValid && isNameValid && isPhoneNumberValid) {
-			provider= new Provider(providerId, providerName, phoneNumber, address, email, taxId);
+			provider = new Provider(providerId, providerName, phoneNumber, address, email, taxId);
 			providerDAO.update(provider);
 			session.setAttribute("successMessage", "Cập nhật thành công!");
 			try {
@@ -174,25 +187,29 @@ public class ManageProviderController
 		} else {
 			String errorMessage = "";
 			boolean isFirst = true;
-			if(!isNameValid){
-				errorMessage +="Tên NCC";
+			if (!isNameValid) {
+				errorMessage += "Tên NCC";
 				isFirst = false;
 			}
-			if(!isPhoneNumberValid) {
-				if  (isFirst) errorMessage+="Số điện thoại, ";
-				else errorMessage+=", số điện thoại";
-				isFirst = false;
+			if (!isPhoneNumberValid) {
+				if (isFirst) errorMessage += "Số điện thoại, ";
+				else {
+					errorMessage += ", số điện thoại";
+					isFirst = false;
+				}
 			}
-			if(!isEmailValid){
-				if (isFirst) errorMessage+="Email";
-				else errorMessage+=", email";
-				isFirst=false;
+			if (!isEmailValid) {
+				if (isFirst) errorMessage += "Email";
+				else {
+					errorMessage += ", email";
+					isFirst = false;
+				}
 			}
-			if(!isTaxIdValid) {
-				if (isFirst) errorMessage+="MST";
-				else errorMessage+=", MST";
+			if (!isTaxIdValid) {
+				if (isFirst) errorMessage += "MST";
+				else errorMessage += ", MST";
 			}
-			errorMessage+=" đã  tồn tại!";
+			errorMessage += " đã  tồn tại!";
 			session.setAttribute("errorMessage", errorMessage);
 			response.sendRedirect(request.getContextPath() + "/admin/providers");
 		}
@@ -206,7 +223,20 @@ public class ManageProviderController
 		// sendRedirect về trang chính + /admin/providers
 
 	}
-
+	public String getOrder(HttpServletRequest request){
+		String orderBy = request.getParameter("orderBy");
+		if (orderBy != null) {
+			switch (orderBy) {
+				case "default":
+					orderBy = null;
+					break;
+				case "name":
+					orderBy = "provider_name";
+					break;
+			}
+		}
+		return  orderBy;
+	}
 	@Override
 	public void init() throws ServletException {
 		super.init();

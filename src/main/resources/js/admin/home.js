@@ -19,6 +19,7 @@ $(function () {
     $(".data-table").DataTable({
         ordering: false,
         searching: false,
+        "lengthChange": false,
         "language": languageOption
     });
     /*const collapseButton =$('.collapse-button')
