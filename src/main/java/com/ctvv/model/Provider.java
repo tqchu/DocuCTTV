@@ -1,14 +1,12 @@
 package com.ctvv.model;
 
-import java.util.Objects;
-
 public class Provider {
     int providerId;
     String providerName;
     String address;
     String phoneNumber;
     String email;
-    String taxIdNumber;
+    String taxId;
 
     public Provider(int providerId, String providerName, String address, String phoneNumber, String email, String taxIdNumber) {
         this.providerId = providerId;
@@ -16,7 +14,7 @@ public class Provider {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.taxIdNumber = taxIdNumber;
+        this.taxId = taxIdNumber;
     }
 
     public Provider(String providerName, String address, String phoneNumber, String email, String taxIdNumber) {
@@ -24,7 +22,7 @@ public class Provider {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        this.taxIdNumber = taxIdNumber;
+        this.taxId = taxIdNumber;
     }
 
     public int getProviderId() {
@@ -67,11 +65,11 @@ public class Provider {
         this.email = email;
     }
 
-    public String getTaxIdNumber() {
-        return taxIdNumber;
+    public String getTaxId() {
+        return taxId;
     }
 
-    public void setTaxIdNumber(String taxIdNumber) {
-        this.taxIdNumber = taxIdNumber;
+    public void setTaxId(String taxId) {
+        this.taxId = taxId;
     }
 }

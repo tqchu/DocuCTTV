@@ -56,7 +56,6 @@ public class ManageProviderController
 		}
 		String orderBy= getOrder(request);
 		List<Provider> providerList;
-
 		providerList = providerDAO.search(keyword, field, orderBy);
 		request.setAttribute("providerList", providerList);
 		goHome(request, response);
@@ -168,7 +167,7 @@ public class ManageProviderController
 		// tiếp tục kiểm tra điều kiện của find (để xem thử trùng với provider khác không)
 		boolean isEmailValid =
 				((Objects.equals(email, provider.getEmail())) || providerDAO.findByEmail(email) == null);
-		boolean isTaxIdValid = (Objects.equals(taxId, provider.getTaxIdNumber())) || providerDAO.findByTaxId(taxId) == null;
+		boolean isTaxIdValid = (Objects.equals(taxId, provider.getTaxId())) || providerDAO.findByTaxId(taxId) == null;
 		boolean isNameValid =
 				(Objects.equals(providerName, provider.getProviderName())) || (providerDAO.findByName(providerName) == null);
 		boolean isPhoneNumberValid =
@@ -241,7 +240,7 @@ public class ManageProviderController
 					break;
 			}
 		}
-		return  orderBy;
+		return orderBy;
 	}
 	@Override
 	public void init() throws ServletException {
