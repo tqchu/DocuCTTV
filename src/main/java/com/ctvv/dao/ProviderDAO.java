@@ -70,7 +70,7 @@ public class ProviderDAO
 	@Override
 	public Provider update(Provider provider) {
 		String sql = "UPDATE provider SET provider_name = ?, provider_address = ?, phone_number = ?, email = ?, " +
-				"tax_id_number = ? WHERE provider_id = ?";
+				"tax_id_number = ?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, provider.getProviderName());
@@ -78,7 +78,6 @@ public class ProviderDAO
 			statement.setString(3, provider.getPhoneNumber());
 			statement.setString(4, provider.getEmail());
 			statement.setString(5, provider.getTaxId());
-			statement.setInt(6,provider.getProviderId());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
