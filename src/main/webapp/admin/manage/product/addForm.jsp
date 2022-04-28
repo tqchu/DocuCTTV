@@ -54,7 +54,6 @@
         <div class="form-group dimen-mater-price-group">
             <div class="dimension-form-group">
                 <span class="dimension-form-group__label form-group__label">Kích thước</span>
-
                 <div class="dimension-form-group__input">
                     <div class="dimension-form-item">
                         <input type="number" name="length">
@@ -73,11 +72,12 @@
                 </div>
             </div>
             <div class="material-form-group">
-                <span class="material-form-group__label form-group__label">
-                    Chất liệu
-                </span>
+                             <span class="material-form-group__label form-group__label">
+                                Chất liệu
+                             </span>
                 <div class="material-form-group__input">
-                    <input type="text" name="material" id="material">
+                    <input type="text" name="material" id="material"
+                    >
                 </div>
             </div>
             <div class="price-form-group">
@@ -85,16 +85,15 @@
                 <div class="price-form-group__input">
                     <input type="text" name="price">
                 </div>
-            </div>
 
+            </div>
             <div class="form-group__minus-row-btn">
                 <i class="fa-solid fa-minus"></i>
             </div>
         </div>
         <div class="form-group__add-row-btn">
-                <i class="las la-plus-circle"></i>
+            <i class="las la-plus-circle"></i>
         </div>
-
 
         <div class="form-group">
             <span class="form-group__label">Thời gian bảo hành</span>

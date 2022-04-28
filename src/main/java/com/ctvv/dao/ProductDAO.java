@@ -9,16 +9,14 @@ import java.util.List;
 
 public class ProductDAO
 		extends GenericDAO<Product> {
-	DimensionDAO dimensionDAO;
-	MaterialDAO materialDAO;
-	ImagePathDAO imagePathDAO;
+	private ProductPriceDAO productPriceDAO;
+	private ImagePathDAO imagePathDAO;
 	private CategoryDAO categoryDAO;
 
 	public ProductDAO(DataSource dataSource) {
 		super(dataSource);
 		categoryDAO = new CategoryDAO(dataSource);
-		dimensionDAO = new DimensionDAO(dataSource);
-		materialDAO = new MaterialDAO(dataSource);
+		productPriceDAO = new ProductPriceDAO(dataSource);
 		imagePathDAO = new ImagePathDAO(dataSource);
 	}
 
@@ -31,12 +29,7 @@ public class ProductDAO
 			ResultSet resultSet = preparedStatement.executeQuery();
 
 			while (resultSet.next()) {
-				boolean status = resultSet.getBoolean("status");
-				// Nếu sản phẩm còn sử dụng
-				if (status) {
-					return map(resultSet);
-				}
-
+				return map(resultSet);
 			}
 
 		} catch (SQLException e) {
@@ -53,12 +46,7 @@ public class ProductDAO
 				connection.prepareStatement(sql);) {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				boolean status = resultSet.getBoolean("status");
-				// Sản phẩm còn kinh doanh
-				if (status) {
-					productList.add(map(resultSet));
-				}
-
+				productList.add(map(resultSet));
 			}
 
 		} catch (SQLException e) {
@@ -69,8 +57,7 @@ public class ProductDAO
 
 	@Override
 	public Product create(Product product) {
-		/*String sql = "INSERT INTO product(product_name, warranty_period, quantity, description, category_id, price, " +
-				"status) VALUES(?,?,?,?,?,?,?)";
+		String sql = "INSERT INTO product(product_name, warranty_period, description, category_id) VALUES (?,?,?,?)";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
@@ -79,14 +66,11 @@ public class ProductDAO
 			connection.setAutoCommit(false);
 			statement.setString(1, product.getName());
 			statement.setInt(2, product.getWarrantyPeriod());
-			statement.setInt(3, product.getQuantity());
-			statement.setString(4, product.getDescription());
+			statement.setString(3, product.getDescription());
 			if (product.getCategory() == null) {
-				statement.setNull(5, Types.INTEGER);
+				statement.setNull(4, Types.INTEGER);
 			} else
-				statement.setInt(5, product.getCategory().getCategoryId());
-			statement.setInt(6, product.getPrice());
-			statement.setBoolean(7, product.isStatus());
+				statement.setInt(4, product.getCategory().getCategoryId());
 			statement.execute();
 			ResultSet resultSet = statement.getGeneratedKeys();
 			while (resultSet.next()) {
@@ -111,7 +95,7 @@ public class ProductDAO
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}*/
+		}
 		return null;
 
 	}
@@ -160,26 +144,21 @@ public class ProductDAO
 
 	@Override
 	public Product map(ResultSet resultSet) {
-		/*try {
+		try {
 			int productId = resultSet.getInt("product_id");
 			String productName = resultSet.getString("product_name");
-			boolean status = resultSet.getBoolean("status");
 			int warrantyPeriod = resultSet.getInt("warranty_period");
-			int quantity = resultSet.getInt("quantity");
-			int price = resultSet.getInt("price");
 			String description = resultSet.getString("description");
 			int categoryId = resultSet.getInt("category_id");
-
-
 			Category category = categoryDAO.get(categoryId);
-			List<Dimension> dimensionList = dimensionDAO.getGroup(productId);
-			List<Material> materialList = materialDAO.getGroup(productId);
 			List<ImagePath> imagePathList = imagePathDAO.getGroup(productId);
-			return new Product(productId, productName, warrantyPeriod, quantity, description, price, status,
-					category, dimensionList, materialList, imagePathList);
+			List<ProductPrice> productPriceList = productPriceDAO.getGroup(productId);
+
+			return new Product(productId, productName, warrantyPeriod, description,
+					category, imagePathList, productPriceList);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}*/
+		}
 		return null;
 
 	}
@@ -200,16 +179,5 @@ public class ProductDAO
 			e.printStackTrace();
 		}
 		return productList;
-	}
-	public void changeStatus(Product product)  {
-		String sql = "UPDATE product SET status = ? WHERE product_id = ?";
-		try (Connection connection = dataSource.getConnection();
-		PreparedStatement statement = connection.prepareStatement(sql)){
-			statement.setInt(1, 0);
-			statement.setInt(2,product.getProductId());
-		}
-		catch(SQLException e){
-			e.printStackTrace();
-		}
 	}
 }

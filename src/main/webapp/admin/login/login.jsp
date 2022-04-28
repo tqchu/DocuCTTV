@@ -3,7 +3,7 @@
 <%-- set context path--%>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %></c:set>
-
+<c:set var="from"><%= request.getQueryString()!=null?request.getQueryString().substring(5):""%></c:set>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -36,7 +36,7 @@
             <div class="login__fail-message">${loginMessage}</div>
         </c:if>
         <form action="${context}/admin" method="post" class="login-form form" autocomplete="off">
-            <input type="hidden" name="from" value="${param.from}"/>
+            <input type="hidden" name="from" value="${from}"/>
             <div class="form-group form-floating">
                 <input type="text" class="form-control" id="usernameOrEmail" name="usernameOrEmail" placeholder="Tên đăng nhập">
                 <label for="usernameOrEmail" class="form-label">Email hoặc tên đăng nhập</label>

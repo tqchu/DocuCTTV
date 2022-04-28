@@ -3,6 +3,7 @@ package com.ctvv.dao;
 import com.ctvv.model.Category;
 import com.ctvv.model.Dimension;
 import com.ctvv.model.Dimension;
+import com.ctvv.model.Dimension;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -18,7 +19,21 @@ public class DimensionDAO
 
 	@Override
 	public Dimension get(int id) {
-		return null;
+
+		String sql = "SELECT * FROM dimension WHERE dimension_id=?";
+		Dimension returnDimension = null;
+		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+				connection.prepareStatement(sql);) {
+			statement.setInt(1, id);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				returnDimension = map(resultSet);
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return returnDimension;
 	}
 
 	@Override
@@ -69,28 +84,6 @@ public class DimensionDAO
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	public List<Dimension> getGroup(int productId) {
-		List<Dimension> dimensionList = new ArrayList<>();
-		String sql = "SELECT * FROM dimension " +
-				"JOIN product_dimension ON dimension.dimension_id = product_dimension.dimension_id " +
-				"JOIN product p on product_dimension.product_id = p.product_id  WHERE p.product_id=? ";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
-				connection.prepareStatement(sql);) {
-			statement.setInt(1, productId);
-			ResultSet resultSet = statement.executeQuery();
-			// loop the result set
-			while (resultSet.next()) {
-				dimensionList.add(map(resultSet));
-
-			}
-			resultSet.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return dimensionList;
 	}
 
 	public Dimension find(Dimension dimension) {

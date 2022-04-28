@@ -2,8 +2,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <div class="tab__content">
     <div class="search">
-        <form action="" class="search__form">
-            <input type="search" class="search__bar form-control">
+        <form action="${context}/admin/products/search" class="search__form">
+            <input type="search" class="search__bar form-control" name="keyword" placeholder="Nhập tên sản phẩm">
             <button type="submit" class="btn btn-primary btn-search">
                 <i class="las la-search"></i>
             </button>
@@ -34,10 +34,6 @@
                 <th>STT</th>
                 <th>Tên sản phẩm</th>
                 <th>Ảnh sản phẩm</th>
-                <th>Kích thước</th>
-                <th>Vật liệu</th>
-                <th>Giá</th>
-                <th>Số lượng</th>
                 <th>Doanh mục</th>
                 <th>Đánh giá</th>
                 <th></th>
@@ -78,32 +74,6 @@
                             </div>
 
                         </td>
-                        <td class="product__dimension">
-                            <ul>
-                                <c:forEach items="${product.dimensionList}" var="dimension">
-                                    <li class="product__dimension-item">
-                                            ${dimension.length}D x ${dimension.width}R x
-                                            ${dimension.height}C (cm)
-                                    </li>
-                                </c:forEach>
-
-                            </ul>
-                        </td>
-                        <td class="product__material">
-                            <ul>
-                                <c:forEach items="${product.materialList}" var="material">
-                                    <li class="product__material-item">
-                                            ${material.materialName}
-                                    </li>
-                                </c:forEach>
-
-                            </ul>
-                        </td>
-                        <td class="product__price">
-                            <fmt:formatNumber value="${product.price}"
-                                              currencySymbol="đ" type="CURRENCY" maxFractionDigits="0"/>
-                        </td>
-                        <td class="product__quantity">${product.quantity}</td>
                         <td class="product__category">
                             <c:choose>
                                 <c:when test="${product.category==null}">
@@ -115,7 +85,6 @@
                                     ${product.category.categoryName}
                                 </c:otherwise>
                             </c:choose>
-
                         </td>
                         <td class="product__rating">-</td>
                         <td>

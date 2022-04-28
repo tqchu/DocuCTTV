@@ -76,7 +76,7 @@
                                                 style="width: 64px; margin: 0px auto; vertical-align: middle; display: none;"
                                                 data-spartanindexi="${loop.index}"
                                                 src=""
-                                                class="spartan_image_placeholder" >
+                                                class="spartan_image_placeholder">
                                         <p data-spartanlbldropfile="${loop.index}" style="color : #5FAAE1; display:
                                         none;
                                         width :
@@ -92,16 +92,6 @@
                             </div>
                         </c:forEach>
                     </c:if>
-
-                    <%-- <input type="file" name="images" id="images" multiple>
-                      <div class="input-images">
-
-                     <img src="500-71353-nha-xinh-hang-trang-tri-chim-gom4.jpg" alt="" class="input-images-item">
-                     <img src="500-71353-nha-xinh-hang-trang-tri-chim-gom81.jpg" alt="" class="input-images-item">
-                     <img src="500-71389-nha-xinh-hang-trang-tri-chen-gom.jpg" alt="" class="input-images-item">
-                     <img src="500-71390-nha-xinh-hang-trang-tri-to-gom21.jpg" alt="" class="input-images-item">
-                     <img src="500-71353-nha-xinh-hang-trang-tri-chim-gom4.jpg" alt="" class="input-images-item">-->
-                     </div>--%>
                 </div>
             </div>
         </div>
@@ -111,46 +101,48 @@
 
             <textarea name="description" id="" cols="60" rows="8">${product.description}</textarea>
         </div>
-        <div class="form-group dimen-mater-price-group">
-            <div class="dimension-form-group">
-                <span class="dimension-form-group__label form-group__label">Kích thước</span>
+        <c:forEach items="${product.productPriceList}" var="productPrice">
+            <div class="form-group dimen-mater-price-group">
+                <div class="dimension-form-group">
+                    <span class="dimension-form-group__label form-group__label">Kích thước</span>
+                    <div class="dimension-form-group__input">
+                        <div class="dimension-form-item">
+                            <input type="number" name="length" value="${productPrice.productDetail.dimension.length}">
+                            <span class="dimension-form-item__text-label">D</span>
+                        </div>
+                        <div class="dimension-form-item">
 
-                <div class="dimension-form-group__input">
-                    <div class="dimension-form-item">
-                        <input type="number" name="length">
-                        <span class="dimension-form-item__text-label">D</span>
-                    </div>
-                    <div class="dimension-form-item">
+                            <input type="text" name="width" value="${productPrice.productDetail.dimension.width}">
+                            <span class="dimension-form-item__text-label">R</span>
+                        </div>
+                        <div class="dimension-form-item">
 
-                        <input type="text" name="width">
-                        <span class="dimension-form-item__text-label">R</span>
-                    </div>
-                    <div class="dimension-form-item">
-
-                        <input type="text" name="height">
-                        <span class="dimension-form-item__text-label">C</span>
+                            <input type="text" name="height" value="${productPrice.productDetail.dimension.height}">
+                            <span class="dimension-form-item__text-label">C</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="material-form-group">
-                <span class="material-form-group__label form-group__label">
-                    Chất liệu
-                </span>
-                <div class="material-form-group__input">
-                    <input type="text" name="material" id="material">
+                <div class="material-form-group">
+            <span class="material-form-group__label form-group__label">
+                                Chất liệu
+                             </span>
+                    <div class="material-form-group__input">
+                        <input type="text" name="material" id="material"
+                               value="${productPrice.productDetail.material.materialName}">
+                    </div>
+                </div>
+                <div class="price-form-group">
+                    <span class="price-form-group__label form-group__label">Đơn giá</span>
+                    <div class="price-form-group__input">
+                        <input type="text" name="price" value="${productPrice.price}">
+                    </div>
+                </div>
+                <div class="form-group__minus-row-btn">
+                    <i class="fa-solid fa-minus"></i>
                 </div>
             </div>
-            <div class="price-form-group">
-                <span class="price-form-group__label form-group__label">Đơn giá</span>
-                <div class="price-form-group__input">
-                    <input type="text" name="price">
-                </div>
-            </div>
+        </c:forEach>
 
-            <div class="form-group__minus-row-btn">
-                <i class="fa-solid fa-minus"></i>
-            </div>
-        </div>
         <div class="form-group__add-row-btn">
             <i class="las la-plus-circle"></i>
         </div>
