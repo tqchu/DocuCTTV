@@ -180,4 +180,22 @@ public class ProductDAO
 		}
 		return productList;
 	}
+
+	public List<Product> search(String keyword) {
+		List<Product> productList = new ArrayList<>();
+		String sql = "SELECT * FROM product WHERE product_name LIKE ?";
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, "%"+keyword + "%");
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				productList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return productList;
+
+	}
 }
