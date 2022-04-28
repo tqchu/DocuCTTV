@@ -23,6 +23,7 @@
     <!-- APP -->
     <link rel="stylesheet" href="${context}/css/base.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/admin/product/common.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/admin/addForm.css?rd=${rand}">
     <!-- FONT AWESOME -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
@@ -32,7 +33,6 @@
 <body>
 <jsp:include page="../../common/header.jsp"/>
 <div class="content">
-
     <form action="${context}/admin/products" enctype="multipart/form-data" method="post" class="products__add-form">
         <input type="hidden" name="action" value="create">
         <div class="form-group">
@@ -123,6 +123,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="${context}/js/admin/product/image-picker.js?rd=${rand}"></script>
+<script src="${context}/js/admin/product/common.js?rd=${rand}"></script>
 <script src="${context}/js/admin/product/addProduct.js?rd=${rand}"></script>
 
 </body>

@@ -101,16 +101,16 @@
         <c:remove var="errorMessage" scope="session"/>
 
     </c:if>
-    <div class="provider__order-bar">
-        <span class="provider__order-bar__text-heading">
+    <div class="order-bar">
+        <span class="order-bar__text-heading">
             Sắp xếp theo
         </span>
         <input type="hidden" name="query-string"
                value="${not empty param.keyword?'keyword=' += param.keyword+='&field='+=param.field:''}">
-        <span class="provider__order-bar__option ${param.orderBy=='default'|| empty param.orderBy?'active':''}"
+        <span class="order-bar__option ${param.orderBy=='default'|| empty param.orderBy?'active':''}"
               data-sort="default">Mới
             nhất</span>
-        <span class="provider__order-bar__option  ${param.orderBy=='name'?'active':''}" data-sort="name">Tên</span>
+        <span class="order-bar__option  ${param.orderBy=='name'?'active':''}" data-sort="name">Tên</span>
     </div>
     <div class="list">
         <table class="data-table  table table-hover table-bordered">

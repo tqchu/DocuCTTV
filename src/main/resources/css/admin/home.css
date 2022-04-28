@@ -144,17 +144,17 @@ img.product__main-image {
 .product__add-quantity{
     white-space: nowrap;
 }
-.provider__order-bar {
+.order-bar {
     background-color: #EDEDED;
     padding: 16px 20px;
     font-size: 14px;
     opacity: 0.95;
 }
-.provider__order-bar__option.active {
+.order-bar__option.active {
     background-color: var(--primary-color);
     color: #fff;
 }
-.provider__order-bar__option {
+.order-bar__option {
     background-color: #fff;
     padding: 4px 12px;
     margin-left: 10px;

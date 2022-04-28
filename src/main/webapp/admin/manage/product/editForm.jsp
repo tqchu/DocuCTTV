@@ -22,7 +22,8 @@
     <!-- APP -->
     <link rel="stylesheet" href="${context}/css/base.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
-    <link rel="stylesheet" href="${context}/css/admin/editForm.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/admin/product/common.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/admin/product/editForm.css?rd=${rand}">
 
 
     <!-- BOOSTRAP CSS -->
@@ -40,7 +41,7 @@
 <jsp:include page="../../common/header.jsp"/>
 <div class="content">
 
-    <form action="${context}/admin/products" enctype="multipart/form-data" method="post">
+    <form action="${context}/admin/products" enctype="multipart/form-data" method="post" class="product__edit-form">
         <input type="hidden" name="action" value="update">
         <input type="hidden" name="productId" value="${product.productId}"/>
         <div class="form-group">
@@ -92,7 +93,6 @@
                         </c:forEach>
                     </c:if>
 
-
                     <%-- <input type="file" name="images" id="images" multiple>
                       <div class="input-images">
 
@@ -111,54 +111,50 @@
 
             <textarea name="description" id="" cols="60" rows="8">${product.description}</textarea>
         </div>
-        <div class="form-group">
-            <span class="form-group__label">Kích thước</span>
-            <div class="dimension-form-group multiple-row__form-group">
-                <c:forEach items="${product.dimensionList}" var="dimension">
-                    <div class="dimension-form-group__row">
-                        <div class="dimension-form-item">
-                            <span class="dimension-form-item__text-label">Dài</span>
-                            <input type="number" name="length" value="${dimension.length}">
-                        </div>
-                        <div class="dimension-form-item">
-                            <span class="dimension-form-item__text-label">Rộng</span>
+        <div class="form-group dimen-mater-price-group">
+            <div class="dimension-form-group">
+                <span class="dimension-form-group__label form-group__label">Kích thước</span>
 
-                            <input type="text" name="width" value="${dimension.width}">
-                        </div>
-                        <div class="dimension-form-item">
-                            <span class="dimension-form-item__text-label">Cao</span>
-
-                            <input type="text" name="height" value="${dimension.height}">
-                        </div>
-                        <span class="form-group__minus-row-btn">
-                   <i class="fa-solid fa-minus"></i>
-                </span>
+                <div class="dimension-form-group__input">
+                    <div class="dimension-form-item">
+                        <input type="number" name="length">
+                        <span class="dimension-form-item__text-label">D</span>
                     </div>
-                </c:forEach>
+                    <div class="dimension-form-item">
 
-                <div class="dimension-form-group__add-row-btn">
-                    <i class="fa-solid fa-plus"></i>
+                        <input type="text" name="width">
+                        <span class="dimension-form-item__text-label">R</span>
+                    </div>
+                    <div class="dimension-form-item">
+
+                        <input type="text" name="height">
+                        <span class="dimension-form-item__text-label">C</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="form-group">
-            <span class="form-group__label">Chất liệu</span>
-            <div class="material-form-group multiple-row__form-group">
-                <c:forEach items="${product.materialList}" var="material">
-                    <div class="material-form-group__row">
-                        <input type="text" name="material" id="material" value="${material.materialName}">
-                        <span class="form-group__minus-row-btn">
-                   <i class="fa-solid fa-minus"></i>
+            <div class="material-form-group">
+                <span class="material-form-group__label form-group__label">
+                    Chất liệu
                 </span>
-                    </div>
-                </c:forEach>
-
-                <div class="material-form-group__add-row-btn">
-                    <i class="fa-solid fa-plus"></i>
+                <div class="material-form-group__input">
+                    <input type="text" name="material" id="material">
                 </div>
+            </div>
+            <div class="price-form-group">
+                <span class="price-form-group__label form-group__label">Đơn giá</span>
+                <div class="price-form-group__input">
+                    <input type="text" name="price">
+                </div>
+            </div>
 
+            <div class="form-group__minus-row-btn">
+                <i class="fa-solid fa-minus"></i>
             </div>
         </div>
+        <div class="form-group__add-row-btn">
+            <i class="las la-plus-circle"></i>
+        </div>
+
         <div class="form-group">
             <span class="form-group__label">Thời gian bảo hành</span>
             <input type="number" name="warrantyPeriod" value="${product.warrantyPeriod}">
@@ -175,10 +171,6 @@
 
             </select>
         </div>
-        <div class="form-group">
-            <span class="form-group__label">Đơn giá</span>
-            <input type="text" name="price" value="${product.price}">
-        </div>
         <button class="btn btn-primary save-btn">
             Lưu sản phẩm
         </button>
@@ -186,8 +178,8 @@
     </form>
 </div>
 <script src="${context}/js/admin/product/image-picker.js?rd=${rand}"></script>
+<script src="${context}/js/admin/product/common.js?rd=${rand}"></script>
 <script src="${context}/js/admin/product/editForm.js?rd=${rand}"></script>
-<script src="${context}/js/admin/product/image-input-handler.js?rd=${rand}"></script>
 <%--<jsp:include page="../../common/footer.jsp"/>--%>
 </body>
 </html>

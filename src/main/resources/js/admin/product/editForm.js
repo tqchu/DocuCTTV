@@ -1,32 +1,36 @@
-$(function () {
-    const dimensionRows = $('.dimension-form-group__row');
-    const materialRows = $('.material-form-group__row');
-    $('.dimension-form-group__add-row-btn').click(function () {
-        dimensionRows.last().after(dimensionRows.first().clone());
+function getFileName(filePath) {
+    const begin = filePath.search("products/")
+    return filePath.slice(begin + 9, filePath.length-36) + ".jpg"
+}
+
+const imageInput = $('input[type=file]')
+for (const imageInputElement of imageInput) {
+    const _this = $(imageInputElement)
+    console.log(getFileName(_this.prev().attr("path")))
+    loadURLToInputField(_this[0], _this.prev().prop('src'), getFileName(_this.prev().attr("path")))
+}
+
+// loadURLToInputField("http://localhost:8080/noithatctvv/images/products/ban-an-roma-1.jpg");
+
+function loadURLToInputField(input, url, fileName) {
+    getImgURL(url, (imgBlob) => {
+
+        let file = new File([imgBlob], fileName, {type: "image/jpeg", lastModified: new Date().getTime()}, 'utf-8');
+        let container = new DataTransfer();
+        container.items.add(file);
+        input.files = container.files;
+        // document.querySelector('#status').files = container.files;
+
     })
-    $('.material-form-group__add-row-btn').click(function () {
-            materialRows.last().after(materialRows.first().clone());
-        }
-    )
+}
 
-    // 
-    const multipleFormGroupContainer = $('.multiple-row__form-group')
-    multipleFormGroupContainer.click(function (e) {
-        const target = $(e.target);
-        const minusButton = target.parent(".form-group__minus-row-btn")
-        const numberOfMinusButton = $(this).find('.form-group__minus-row-btn').length
-        if (minusButton != null && numberOfMinusButton > 1) {
-            minusButton.parent().remove()
-        }
-    })
-
-
-    $("#coba").spartanMultiImagePicker({
-        fieldName: 'images', maxCount: 5,
-        rowHeight: '120px',
-        groupClassName: 'col-md-3 col-sm-3 col-xs-6',
-        dropFileLabel: 'Thả ảnh vào đây'
-    })
-    
-
-})
+// xml blob res
+function getImgURL(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+        callback(xhr.response);
+    };
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.send();
+}

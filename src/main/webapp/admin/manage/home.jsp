@@ -2,7 +2,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <c:set var="context" value="${pageContext.request.contextPath}" scope="request"/>
-<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %>
+<c:set var="rand" scope="request"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %>
 </c:set>
 <html>
 <head>
@@ -102,7 +102,7 @@
 </div>
 
 <script src="${context}/js/admin/home.js?rd=${rand}"></script>
-<jsp:include page="../../common/footer.jsp"/>
+<%--<jsp:include page="../../common/footer.jsp"/>--%>
 
 </body>
 </html>
