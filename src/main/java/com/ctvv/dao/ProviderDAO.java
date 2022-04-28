@@ -8,7 +8,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ProviderDAO extends GenericDAO<Provider>{
 
@@ -61,7 +63,6 @@ public class ProviderDAO extends GenericDAO<Provider>{
         }
         return provider;
     }
-
     @Override
     public Provider update(Provider provider) {
         String sql = "UPDATE provider SET provider_name = ?, provider_address = ?, phone_number = ?, email = ?, tax_id_number = ?";
@@ -98,59 +99,107 @@ public class ProviderDAO extends GenericDAO<Provider>{
         return null;
     }
 
-    public Provider findByName(String providerName) {
-        String sql = "SELECT * FROM provider WHERE provider_name = ?";
-        Provider provider = null;
-        try(Connection connection = dataSource.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql);) {
-            ResultSet resultSet;
-            statement.setString(1, providerName);
-            resultSet = statement.executeQuery();
+	public Provider findByName(String name) {
+		String sql = "SELECT * FROM provider WHERE provider_name = ?";
+		try(Connection connection = dataSource.getConnection();
+		    PreparedStatement statement = connection.prepareStatement(sql);) {
+			ResultSet resultSet;
+			statement.setString(1, name);
+			resultSet = statement.executeQuery();
+			while (resultSet.next()){
+				return map(resultSet);
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Provider findByEmail(String email) {
+		String sql = "SELECT * FROM provider where email=?";
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setString(1,email);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next())
+			{
+				return map(resultSet);
+			}
+			resultSet.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Provider findByPhoneNumber(String phoneNumber) {
+		String sql = "SELECT * FROM provider WHERE phone_number = ?";
+		Provider provider = null;
+		try(Connection connection = dataSource.getConnection();
+		    PreparedStatement statement = connection.prepareStatement(sql);) {
+			ResultSet resultSet;
+			statement.setString(1, phoneNumber);
+			resultSet = statement.executeQuery();
+			while (resultSet.next()){
+				return map(resultSet);
+			}
+			resultSet.close();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public Provider findByTaxId(String taxId) {
+		String sql = "SELECT * FROM provider where tax_id_number=?";
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setString(1,taxId);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next())
+			{
+				return map(resultSet);
+			}
+			resultSet.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+    public List<Provider> search(String keyword, String fieldName, String orderBy){
+        String sql = "SELECT * FROM provider WHERE "+fieldName+" LIKE ?" + (orderBy!=null ?"ORDER BY "+ orderBy:"");
+        List<Provider> providerList = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql)){
+            statement.setString(1,"%"+keyword+"%");
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()){
-                int providerId = resultSet.getInt("provider_id");
-                String providerAdress = resultSet.getString("provider_address");
-                String phoneNumber = resultSet.getString("phone_number");
-                String email = resultSet.getString("email");
-                String taxIdNumber = resultSet.getString("tax_id_number");
-                provider = new Provider(providerId, providerName, providerAdress, phoneNumber, email, taxIdNumber);
+                providerList.add(map(resultSet));
             }
             resultSet.close();
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
-        return provider;
+        return providerList;
     }
 
-    public Provider findByPhoneNumber(String phoneNumber) {
-        String sql = "SELECT * FROM provider WHERE phone_number = ?";
-        Provider provider = null;
-        try(Connection connection = dataSource.getConnection();
-        PreparedStatement statement = connection.prepareStatement(sql);) {
-            ResultSet resultSet;
-            statement.setString(1, phoneNumber);
-            resultSet = statement.executeQuery();
-            while (resultSet.next()){
-                int providerId = resultSet.getInt("provider_id");
-                String providerName = resultSet.getString("provider_name");
-                String providerAddress = resultSet.getString("provider_address");
-                String email = resultSet.getString("email");
-                String taxIdNumber = resultSet.getString("tax_id_number");
-                provider = new Provider(providerId, providerName, providerAddress, phoneNumber, email, taxIdNumber);
-            }
-            resultSet.close();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return provider;
-    }
-
-    public Provider findByEmail(String email){
-        Provider provider = null;
-        return provider;
-    }
-
-    public  Provider findByTaxId(String taxId){
-        Provider provider = null;
-        return provider;
-    }
+	public List<Provider> getAll(String orderBy) {
+		List<Provider> providerList = new ArrayList<>();
+		String sql = "SELECT * FROM provider ORDER BY "+ orderBy;
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				providerList.add(map(resultSet));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return providerList;
+	}
 }

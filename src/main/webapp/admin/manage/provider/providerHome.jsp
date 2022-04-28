@@ -3,14 +3,15 @@
 <link rel="stylesheet" href="${context}/css/admin/provider/provider.css?rd=${rand}">
 <div class="tab__content">
     <div class="search">
-        <form action="" class="search__form">
-            <input type="search" class="search__bar form-control" name="keyword">
+        <form action="${context}/admin/providers/search" class="search__form">
+            <input type="search" class="search__bar form-control" name="keyword" value="${param.keyword}">
             <select name="field" id="" class="provider__search-option">
-                <option value="name">Theo tên nhà cung cấp</option>
-                <option value="address">Theo địa chỉ</option>
-                <option value="phoneNumber">Theo số điện thoại</option>
-                <option value="email">Theo email</option>
-                <option value="taxId">Theo mã số thuế</option>
+                <option value="name" ${param.field=='name'||empty param.field?'selected':''}>Theo tên nhà cung
+                    cấp</option>
+                <option value="address" ${param.field=='address'?'selected':''}>Theo địa chỉ</option>
+                <option value="phoneNumber" ${param.field=='phoneNumber'?'selected':''}>Theo số điện thoại</option>
+                <option value="email" ${param.field=='email'?'selected':''}>Theo email</option>
+                <option value="taxId" ${param.field=='taxId'?'selected':''}>Theo mã số thuế</option>
             </select>
             <button type="submit" class="btn btn-primary btn-search">
                 <i class="las la-search"></i>
@@ -63,7 +64,6 @@
                             </div>
 
 
-
                             <button type="submit" class="btn btn-primary save-btn">Thêm</button>
                         </form>
                     </div>
@@ -86,6 +86,32 @@
         </div>
         <c:remove var="successMessage" scope="session"/>
     </c:if>
+    <c:if test="${errorMessage!=null}">
+        <div class="toast align-items-center toast-message toast-message--error show" role="alert"
+             aria-live="assertive"
+             aria-atomic="true" data-bs-autohide="false">
+            <div class="d-flex ">
+                <div class="toast-body">
+                        ${errorMessage}
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+            </div>
+        </div>
+        <c:remove var="errorMessage" scope="session"/>
+
+    </c:if>
+    <div class="order-bar">
+        <span class="order-bar__text-heading">
+            Sắp xếp theo
+        </span>
+        <input type="hidden" name="query-string"
+               value="${not empty param.keyword?'keyword=' += param.keyword+='&field='+=param.field:''}">
+        <span class="order-bar__option ${param.orderBy=='default'|| empty param.orderBy?'active':''}"
+              data-sort="default">Mới
+            nhất</span>
+        <span class="order-bar__option  ${param.orderBy=='name'?'active':''}" data-sort="name">Tên</span>
+    </div>
     <div class="list">
         <table class="data-table  table table-hover table-bordered">
             <thead>
@@ -133,33 +159,37 @@
                                             <form action="${context}/admin/providers" method="post"
                                                   class="d-flex align-items-center flex-column">
                                                 <input type="hidden" value="update" name="action">
-                                                <input type="hidden" name="id" value="${provider.providerId}" >
+                                                <input type="hidden" name="id" value="${provider.providerId}">
                                                 <div class="form-group form-floating">
                                                     <input type="text" name="name"
-                                                           class="form-control" placeholder="Tên nhà cung cấp" autofocus>
+                                                           class="form-control" placeholder="Tên nhà cung cấp"
+                                                           autofocus value="${provider.providerName}">
                                                     <label class="form-label">Tên nhà cung cấp</label>
                                                 </div>
                                                 <div class="form-group form-floating">
                                                     <input type="text" name="email"
-                                                           class="form-control" placeholder="Email" autofocus>
+                                                           class="form-control" placeholder="Email" autofocus
+                                                           value="${provider.email}">
                                                     <label class="form-label">Email</label>
                                                 </div>
                                                 <div class="form-group form-floating">
                                                     <input type="text" name="phoneNumber"
-                                                           class="form-control" placeholder="Số điện thoại" autofocus>
+                                                           class="form-control" placeholder="Số điện thoại" autofocus
+                                                           value="${provider.phoneNumber}">
                                                     <label class="form-label">Số điện thoại</label>
                                                 </div>
                                                 <div class="form-group form-floating">
                                                     <input type="text" name="address"
-                                                           class="form-control" placeholder="Địa chỉ" autofocus>
+                                                           class="form-control" placeholder="Địa chỉ" autofocus
+                                                           value="${provider.address}">
                                                     <label class="form-label">Địa chỉ</label>
                                                 </div>
                                                 <div class="form-group form-floating">
                                                     <input type="text" name="taxId"
-                                                           class="form-control" placeholder="Mã số thuế" autofocus>
+                                                           class="form-control" placeholder="Mã số thuế" autofocus
+                                                           value="${provider.taxId}">
                                                     <label class="form-label">Mã số thuế</label>
                                                 </div>
-
 
 
                                                 <button type="submit" class="btn btn-primary save-btn">Lưu</button>
@@ -218,3 +248,4 @@
         </table>
     </div>
 </div>
+<script src="${context}/js/admin/provider/provider.js?rd=${rand}"></script>

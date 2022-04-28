@@ -2,8 +2,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <div class="tab__content">
     <div class="search">
-        <form action="" class="search__form">
-            <input type="search" class="search__bar form-control">
+        <form action="${context}/admin/products/search" class="search__form">
+            <input type="search" class="search__bar form-control" name="keyword" placeholder="Nhập tên sản phẩm">
             <button type="submit" class="btn btn-primary btn-search">
                 <i class="las la-search"></i>
             </button>
@@ -34,10 +34,6 @@
                 <th>STT</th>
                 <th>Tên sản phẩm</th>
                 <th>Ảnh sản phẩm</th>
-                <th>Kích thước</th>
-                <th>Vật liệu</th>
-                <th>Giá</th>
-                <th>Số lượng</th>
                 <th>Doanh mục</th>
                 <th>Đánh giá</th>
                 <th></th>
@@ -78,32 +74,6 @@
                             </div>
 
                         </td>
-                        <td class="product__dimension">
-                            <ul>
-                                <c:forEach items="${product.dimensionList}" var="dimension">
-                                    <li class="product__dimension-item">
-                                            ${dimension.length}D x ${dimension.width}R x
-                                            ${dimension.height}C (cm)
-                                    </li>
-                                </c:forEach>
-
-                            </ul>
-                        </td>
-                        <td class="product__material">
-                            <ul>
-                                <c:forEach items="${product.materialList}" var="material">
-                                    <li class="product__material-item">
-                                            ${material.materialName}
-                                    </li>
-                                </c:forEach>
-
-                            </ul>
-                        </td>
-                        <td class="product__price">
-                            <fmt:formatNumber value="${product.price}"
-                                              currencySymbol="đ" type="CURRENCY" maxFractionDigits="0"/>
-                        </td>
-                        <td class="product__quantity">${product.quantity}</td>
                         <td class="product__category">
                             <c:choose>
                                 <c:when test="${product.category==null}">
@@ -115,7 +85,6 @@
                                     ${product.category.categoryName}
                                 </c:otherwise>
                             </c:choose>
-
                         </td>
                         <td class="product__rating">-</td>
                         <td>
@@ -124,62 +93,6 @@
                                 <input type="hidden" value="${product.productId}" name="id">
                                 <button type="submit" class="btn-edit btn btn-primary">Chỉnh sửa</button>
                             </form>
-
-
-                        </td>
-                        <td class="product__add-quantity">
-                            <button class="btn btn-delete" title="Nhập sản phẩm"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#addQuantityProductModal${product.productId}">
-                                Nhập sản phẩm
-                            </button>
-                            <!-- MODAL CONTENT -->
-                            <div class="modal fade"
-                                 id="addQuantityProductModal${product.productId}"
-                                 tabindex="-1"
-                                 aria-labelledby="addQuantityProductModal${product.productId}Label"
-                                 aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title"
-                                                id="addQuantityProductModal${product.productId}Label">
-                                                Nhập sản phẩm
-                                            </h5>
-                                            <button type="button" class="btn-close"
-                                                    data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="${context}/admin/products"
-                                                  class="delete-form" method="post">
-                                                <input type="hidden" name="action" value="addQuantity">
-                                                <input type="hidden" name="productId"
-                                                       value="${product.productId}">
-                                                <div class="form-group form-floating">
-                                                    <input type="number" name="price"
-                                                           class="form-control"
-                                                           placeholder="Giá" style="height: 28px;"
-                                                           autofocus>
-                                                    <label class="form-label">Giá</label>
-                                                </div>
-                                                <div class="form-group form-floating">
-                                                    <input type="number" name="quantity"
-                                                           class="form-control"
-                                                           placeholder="Số lượng" style="height: 28px;"
-                                                           >
-                                                    <label class="form-label">Số lượng</label>
-                                                </div>
-                                                <button
-                                                        class="btn btn-primary save-btn">
-                                                    Xác nhận
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </td>
                         <td>
                             <button class="btn btn-delete" title="Xoá sản phẩm"

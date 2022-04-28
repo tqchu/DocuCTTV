@@ -14,7 +14,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ import java.util.UUID;
 @MultipartConfig(fileSizeThreshold = 1024 * 1024,
 		maxFileSize = 1024 * 1024 * 5,
 		maxRequestSize = 1024 * 1024 * 5 * 5)
-@WebServlet(name = "ManageProductsController", value = "/admin/products")
+@WebServlet(name = "ManageProductsController", value = "/admin/products/*")
 public class ManageProductsController
 		extends HttpServlet {
 	private static final String HOME = "/admin/products";
@@ -33,9 +32,9 @@ public class ManageProductsController
 	private CategoryDAO categoryDAO;
 	private DimensionDAO dimensionDAO;
 	private MaterialDAO materialDAO;
+	private  ProductDetailDAO productDetailDAO;
+	private ProductPriceDAO productPriceDAO ;
 	private ImagePathDAO imagePathDAO;
-	private ProductDimensionDAO productDimensionDAO;
-	private ProductMaterialDAO productMaterialDAO;
 	private ImportDAO importDAO;
 
 	@Override
@@ -96,85 +95,78 @@ public class ManageProductsController
 				addQuantity(request, response);
 				break;
 			case "delete":
-				changeStatus(request, response);
+				delete(request, response);
 				break;
 		}
 	}
 
 	private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
-
 		// Lấy danh sách tham số và chuyển về đối  tượng
 		String name = request.getParameter("productName");
 		String description = request.getParameter("description");
 		String[] lengthList = request.getParameterValues("length");
 		String[] widthList = request.getParameterValues("width");
 		String[] heightList = request.getParameterValues("height");
-
+		String[] priceParamList = request.getParameterValues("price");
 
 		int warrantyPeriod = Integer.parseInt(request.getParameter("warrantyPeriod"));
-
-		int originalPrice = Integer.parseInt(request.getParameter("originalPrice"));
-		int price = Integer.parseInt(request.getParameter("price"));
-		int quantity = Integer.parseInt(request.getParameter("quantity"));
-
-
 		Category category = null;
 		if (!Objects.equals(request.getParameter("categoryId"), "")) {
 
 			category = categoryDAO.get(Integer.parseInt(request.getParameter("categoryId")));
 		}
 
-		// Tạo đối tượng mới và lưu vào db
-		Product product = new Product(name, warrantyPeriod, quantity, description, category, price, true);
-		// Trường hợp trùng product đã có
-
+		Product product = new Product(name, warrantyPeriod, description, category);
 		int productId = productDAO.create(product).getProductId();
 
-		List<Dimension> dimensionList = new ArrayList<>();
-		int dimensionCount = lengthList.length;
-		for (int i = 0; i < dimensionCount; i++) {
-			dimensionList.add(new Dimension(Double.parseDouble(lengthList[i]), Double.parseDouble(widthList[i]),
-					Double.parseDouble(heightList[i])));
+		int productPriceListLength = lengthList.length;
+		int[] priceList = new int[productPriceListLength];
+		for (int i = 0; i < productPriceListLength; i++) {
+			priceList[i] = Integer.parseInt(priceParamList[i]);
+		}
+		Dimension[] dimensionList = new Dimension[productPriceListLength];
+		for (int i = 0; i < productPriceListLength; i++) {
+			dimensionList[i] = new Dimension(Double.parseDouble(lengthList[i]), Double.parseDouble(widthList[i]),
+					Double.parseDouble(heightList[i]));
+		}
+		Material[] materialList = new Material[productPriceListLength];
+		String[] materialParamList = request.getParameterValues("material");
+		for (int i = 0; i < productPriceListLength; i++) {
+			materialList[i] = new Material(materialParamList[i]);
 		}
 
-		for (Dimension dimension : dimensionList) {
-			Dimension foundDimension = dimensionDAO.find(dimension);
-			int dimensionId;
+		for (int i = 0; i < productPriceListLength ; i++) {
+			int dimensionId, materialId;
+			Dimension foundDimension = dimensionDAO.find(dimensionList[i]);
 			// Nếu không có thì tạo mới dimension
 			if (foundDimension == null) {
-				dimensionId = dimensionDAO.create(dimension).getDimensionId();
+				dimensionId = dimensionDAO.create(dimensionList[i]).getDimensionId();
 			} else {
 				dimensionId = foundDimension.getDimensionId();
 			}
-			// Đua cặp product-dimension mới vào bảng
-			productDimensionDAO.create(new ProductDimension(productId, dimensionId));
-		}
-
-
-		List<Material> materialList = new ArrayList<>();
-		String[] materialParamList = request.getParameterValues("material");
-		for (String s : materialParamList) {
-			materialList.add(new Material(s));
-		}
-
-
-		for (Material material : materialList) {
-			Material foundMaterial = materialDAO.find(material);
-			int materialId;
+			Dimension dimension  = new Dimension();
+			dimension.setDimensionId(dimensionId);
+			Material foundMaterial = materialDAO.find(materialList[i]);
 			// Nếu không có thì tạo mới material
 			if (foundMaterial == null) {
-				materialId = materialDAO.create(material).getMaterialId();
+				materialId = materialDAO.create(materialList[i]).getMaterialId();
 			} else {
 				materialId = foundMaterial.getMaterialId();
 			}
-			// Đua cặp product-material mới vào bảng
-			productMaterialDAO.create(new ProductMaterial(productId, materialId));
-		}
 
+			Material material = new Material();
+			material.setMaterialId(materialId);
+
+			ProductDetail productDetail = new ProductDetail(productId, material, dimension);
+			productDetail.setProductDetailId(productDetailDAO.create(productDetail).getProductDetailId());
+
+			ProductPrice productPrice = new ProductPrice(productDetail, priceList[i]);
+			productPriceDAO.create(productPrice);
+		}
 		String imageFolder = "images/products";
 		for (Part part : request.getParts()) {
-			if (part.getName().equals("images")) {
+			if (part.getName().equals("images") && !Objects.equals(part.getSubmittedFileName(), "")){
 				String uniqueId = UUID.randomUUID().toString();
 				String submittedFileName = part.getSubmittedFileName();
 				String baseName = FilenameUtils.getBaseName(submittedFileName);
@@ -185,16 +177,13 @@ public class ManageProductsController
 				imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
 			}
 		}
-
-		LocalDate importDay = LocalDate.now();
-		importDAO.create(new Import(productId, originalPrice, importDay, quantity));
 		session.setAttribute("successMessage", "Sản phẩm đã sửa thêm thành công");
 		response.sendRedirect(request.getContextPath() + HOME);
 	}
 
 	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
-		//		Lấy danh sách tham số và chuyển về đối  tượng
+		/*//		Lấy danh sách tham số và chuyển về đối  tượng
 		int productId = Integer.parseInt(request.getParameter("productId"));
 		Product product = productDAO.get(productId);
 
@@ -208,7 +197,6 @@ public class ManageProductsController
 		product.setWarrantyPeriod(warrantyPeriod);
 
 		int price = Integer.parseInt(request.getParameter("price"));
-		product.setPrice(price);
 
 
 		Category category = null;
@@ -332,7 +320,7 @@ public class ManageProductsController
 				imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
 			}
 		}
-
+*/
 		session.setAttribute("successMessage", "Sản phẩm đã được sửa thành công");
 		response.sendRedirect(request.getContextPath() + HOME);
 	}
@@ -348,31 +336,14 @@ public class ManageProductsController
 
 		// Tăng số lượng trong bảng product??
 		Product product = productDAO.get(id);
-		product.setQuantity(product.getQuantity() + quantity);
+		//		product.setQuantity(product.getQuantity() + quantity);
 		productDAO.update(product);
 
 		session.setAttribute("successMessage", "Đã cập nhật số lượng thành công");
 		response.sendRedirect(request.getContextPath() + HOME);
 	}
 
-	private void changeStatus(HttpServletRequest request, HttpServletResponse response) {
-		int productId = Integer.parseInt(request.getParameter("productId"));
-		Product product = productDAO.get(productId);
-		session = request.getSession();
-		product.setStatus(false);
-		productDAO.changeStatus(product);
-		/*if (product.isStatus()){
-			productDAO.changeStatus(product);
-			request.setAttribute("successMessage","Đã đổi sang Ngừng kinh doanh");
-		}
-		else {*/
-		request.setAttribute("successMessage", "Đã sẵn ở trạng thái Ngừng kinh doanh");
-		//		}
-		try {
-			response.sendRedirect(request.getContextPath() + HOME);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	private void delete(HttpServletRequest request, HttpServletResponse response) {
 	}
 
 	@Override
@@ -387,8 +358,8 @@ public class ManageProductsController
 			dimensionDAO = new DimensionDAO(dataSource);
 			materialDAO = new MaterialDAO(dataSource);
 			imagePathDAO = new ImagePathDAO(dataSource);
-			productDimensionDAO = new ProductDimensionDAO(dataSource);
-			productMaterialDAO = new ProductMaterialDAO(dataSource);
+			productDetailDAO = new ProductDetailDAO(dataSource);
+			productPriceDAO = new ProductPriceDAO(dataSource);
 			importDAO = new ImportDAO(dataSource);
 		} catch (NamingException e) {
 
