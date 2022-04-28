@@ -23,8 +23,8 @@ public class ProductDAO
 	@Override
 	public Product get(int id) {
 		String sql = "SELECT * FROM product WHERE product_id=?";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement =
-				connection.prepareStatement(sql);) {
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
 			preparedStatement.setInt(1, id);
 			ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -102,14 +102,10 @@ public class ProductDAO
 
 	@Override
 	public Product update(Product product) {
-		/*String sql = "UPDATE product SET product_name=?, warranty_period=?,  description=?, " +
-				"category_id=?," +
-				" price=? WHERE product_id=?";
-		Connection connection = null;
-		PreparedStatement statement = null;
-		try {
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(sql);
+		String sql = "UPDATE product SET product_name=?, warranty_period=?,  description=?, "+
+				"category_id=? WHERE product_id=?";
+		try (Connection connection = dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql)){
 			statement.setString(1, product.getName());
 			statement.setInt(2, product.getWarrantyPeriod());
 			statement.setString(3, product.getDescription());
@@ -117,23 +113,12 @@ public class ProductDAO
 				statement.setNull(4, Types.INTEGER);
 			} else
 				statement.setInt(4, product.getCategory().getCategoryId());
-			statement.setInt(5, product.getPrice());
-			statement.setInt(6, product.getProductId());
+			statement.setInt(5, product.getProductId());
 			statement.executeUpdate();
-
 			return product;
-
 		} catch (SQLException e) {
-
 			e.printStackTrace();
-		} finally {
-			try {
-				if (statement != null) statement.close();
-				if (connection != null) connection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}*/
+		}
 		return null;
 	}
 
