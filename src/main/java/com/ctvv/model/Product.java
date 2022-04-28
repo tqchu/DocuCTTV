@@ -5,97 +5,64 @@ import java.util.List;
 import java.util.Objects;
 
 public class Product {
-	public Product(
-			String name, int warrantyPeriod, int quantity, String description, Category category, int price,
-			boolean status) {
-		this.name = name;
-		this.warrantyPeriod = warrantyPeriod;
-		this.quantity = quantity;
-		this.description = description;
-		this.price= price;
-		this.status=status;
-		if (category!=null)
-			this.category = new Category(category);
-	}
-
-	public Product(int id, String name, int warrantyPeriod, String description, Category category, int price) {
-			this.productId= id;
-			this.name = name;
-			this.warrantyPeriod = warrantyPeriod;
-			this.description = description;
-			this.price= price;
-			if (category!=null)
-				this.category = new Category(category);
-	}
-
-
-	public List<Dimension> getDimensionList() {
-		return dimensionList;
-	}
-
-	public void setDimensionList(List<Dimension> dimensionList) {
-		this.dimensionList = dimensionList;
-	}
-
-	public List<Material> getMaterialList() {
-		return materialList;
-	}
-
-	public void setMaterialList(List<Material> materialList) {
-		this.materialList = materialList;
-	}
-
-	public List<ImagePath> getImagePathList() {
-		return imagePathList;
-	}
-
-	public void setImagePathList(List<ImagePath> imagePathList) {
-		this.imagePathList = imagePathList;
-	}
 
 	private int productId;
 	private String name;
 	private int warrantyPeriod;
-	private int quantity;
 	private String description;
 	private Category category;
-	List<Dimension> dimensionList;
-	List<Material> materialList;
-	List<ImagePath> imagePathList;
-	private int price;
+	private List<ImagePath> imagePathList;
 	private boolean status;
+	private List<ProductPrice> productPrice;
 
 	public Product() {
 	}
-	public Product(Product product) {
-		this.productId=product.productId;
-		this.name = product.name;
-		this.warrantyPeriod = product.warrantyPeriod;
-		this.quantity = product.quantity;
-		this.description = product.description;
-		this.price= product.price;
-		this.status=product.status;
-		this.category = new Category(product.category);
-		this.dimensionList = new ArrayList<>(product.dimensionList);
-		this.materialList = new ArrayList<>(product.materialList);
-		this.imagePathList = new ArrayList<>(product.imagePathList);
-	}
 
-	public Product(int id,
-			String name, int warrantyPeriod, int quantity, String description, int price, boolean status,
-			       Category category,
-			List<Dimension> dimensionList, List<Material> materialList, List<ImagePath> imagePathList) {
-		this.productId=id;
+	public Product(
+			String name, int warrantyPeriod, String description, Category category,
+			boolean status,List<ProductPrice> productPrice) {
 		this.name = name;
 		this.warrantyPeriod = warrantyPeriod;
-		this.quantity = quantity;
 		this.description = description;
-		this.price= price;
-		this.status=status;
-		if (category!=null)
-		this.category = new Category(category);
-		this.dimensionList = new ArrayList<>(dimensionList);
-		this.materialList = new ArrayList<>(materialList);
+		this.status = status;
+		if (category != null)
+			this.category = new Category(category);
+		this.productPrice = new ArrayList<>(productPrice);
+	}
+
+	public Product(int id, String name, int warrantyPeriod, String description, Category category) {
+		this.productId = id;
+		this.name = name;
+		this.warrantyPeriod = warrantyPeriod;
+		this.description = description;
+		if (category != null)
+			this.category = new Category(category);
+	}
+
+
+	public Product(Product product) {
+		this.productId = product.productId;
+		this.name = product.name;
+		this.warrantyPeriod = product.warrantyPeriod;
+		this.description = product.description;
+		this.status = product.status;
+		this.category = new Category(product.category);
+		this.imagePathList = new ArrayList<>(product.imagePathList);
+		this.productPrice = new ArrayList<>(product.productPrice);
+	}
+
+	public Product(
+			int id,
+			String name, int warrantyPeriod, String description, boolean status,
+			Category category,
+			 List<ImagePath> imagePathList, ProductPrice productPrice) {
+		this.productId = id;
+		this.name = name;
+		this.warrantyPeriod = warrantyPeriod;
+		this.description = description;
+		this.status = status;
+		if (category != null)
+			this.category = new Category(category);
 		this.imagePathList = new ArrayList<>(imagePathList);
 	}
 
@@ -123,14 +90,6 @@ public class Product {
 		this.warrantyPeriod = warrantyPeriod;
 	}
 
-	public int getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -147,12 +106,21 @@ public class Product {
 		this.category = category;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Product product = (Product) o;
-		return productId == product.productId;
+
+	public List<ImagePath> getImagePathList() {
+		return imagePathList;
+	}
+
+	public void setImagePathList(List<ImagePath> imagePathList) {
+		this.imagePathList = imagePathList;
+	}
+
+	public List<ProductPrice> getProductPrice() {
+		return productPrice;
+	}
+
+	public void setProductPrice(List<ProductPrice> productPrice) {
+		this.productPrice = productPrice;
 	}
 
 	@Override
@@ -160,12 +128,12 @@ public class Product {
 		return Objects.hash(productId);
 	}
 
-	public int getPrice() {
-		return price;
-	}
-
-	public void setPrice(int price) {
-		this.price = price;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Product product = (Product) o;
+		return productId == product.productId;
 	}
 
 	public boolean isStatus() {

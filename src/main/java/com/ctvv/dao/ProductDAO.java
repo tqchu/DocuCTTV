@@ -69,7 +69,7 @@ public class ProductDAO
 
 	@Override
 	public Product create(Product product) {
-		String sql = "INSERT INTO product(product_name, warranty_period, quantity, description, category_id, price, " +
+		/*String sql = "INSERT INTO product(product_name, warranty_period, quantity, description, category_id, price, " +
 				"status) VALUES(?,?,?,?,?,?,?)";
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -111,14 +111,14 @@ public class ProductDAO
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 		return null;
 
 	}
 
 	@Override
 	public Product update(Product product) {
-		String sql = "UPDATE product SET product_name=?, warranty_period=?,  description=?, " +
+		/*String sql = "UPDATE product SET product_name=?, warranty_period=?,  description=?, " +
 				"category_id=?," +
 				" price=? WHERE product_id=?";
 		Connection connection = null;
@@ -149,7 +149,7 @@ public class ProductDAO
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 		return null;
 	}
 
@@ -160,7 +160,7 @@ public class ProductDAO
 
 	@Override
 	public Product map(ResultSet resultSet) {
-		try {
+		/*try {
 			int productId = resultSet.getInt("product_id");
 			String productName = resultSet.getString("product_name");
 			boolean status = resultSet.getBoolean("status");
@@ -179,7 +179,7 @@ public class ProductDAO
 					category, dimensionList, materialList, imagePathList);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}*/
 		return null;
 
 	}
