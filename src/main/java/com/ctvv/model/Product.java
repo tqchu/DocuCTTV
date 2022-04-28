@@ -12,22 +12,29 @@ public class Product {
 	private String description;
 	private Category category;
 	private List<ImagePath> imagePathList;
-	private boolean status;
-	private List<ProductPrice> productPrice;
+	private List<ProductPrice> productPriceList;
 
 	public Product() {
 	}
 
 	public Product(
-			String name, int warrantyPeriod, String description, Category category,
-			boolean status,List<ProductPrice> productPrice) {
+			String name, int warrantyPeriod, String description, Category category) {
 		this.name = name;
 		this.warrantyPeriod = warrantyPeriod;
 		this.description = description;
-		this.status = status;
 		if (category != null)
 			this.category = new Category(category);
-		this.productPrice = new ArrayList<>(productPrice);
+	}
+
+	public Product(
+			String name, int warrantyPeriod, String description, Category category,
+			List<ProductPrice> productPriceList) {
+		this.name = name;
+		this.warrantyPeriod = warrantyPeriod;
+		this.description = description;
+		if (category != null)
+			this.category = new Category(category);
+		this.productPriceList = new ArrayList<>(productPriceList);
 	}
 
 	public Product(int id, String name, int warrantyPeriod, String description, Category category) {
@@ -45,25 +52,24 @@ public class Product {
 		this.name = product.name;
 		this.warrantyPeriod = product.warrantyPeriod;
 		this.description = product.description;
-		this.status = product.status;
 		this.category = new Category(product.category);
 		this.imagePathList = new ArrayList<>(product.imagePathList);
-		this.productPrice = new ArrayList<>(product.productPrice);
+		this.productPriceList = new ArrayList<>(product.productPriceList);
 	}
 
 	public Product(
 			int id,
-			String name, int warrantyPeriod, String description, boolean status,
+			String name, int warrantyPeriod, String description,
 			Category category,
-			 List<ImagePath> imagePathList, ProductPrice productPrice) {
+			List<ImagePath> imagePathList, List<ProductPrice> productPriceList) {
 		this.productId = id;
 		this.name = name;
 		this.warrantyPeriod = warrantyPeriod;
 		this.description = description;
-		this.status = status;
 		if (category != null)
 			this.category = new Category(category);
 		this.imagePathList = new ArrayList<>(imagePathList);
+		this.productPriceList = new ArrayList<>(productPriceList);
 	}
 
 	public int getProductId() {
@@ -115,12 +121,12 @@ public class Product {
 		this.imagePathList = imagePathList;
 	}
 
-	public List<ProductPrice> getProductPrice() {
-		return productPrice;
+	public List<ProductPrice> getProductPriceList() {
+		return productPriceList;
 	}
 
-	public void setProductPrice(List<ProductPrice> productPrice) {
-		this.productPrice = productPrice;
+	public void setProductPriceList(List<ProductPrice> productPriceList) {
+		this.productPriceList = productPriceList;
 	}
 
 	@Override
@@ -136,11 +142,4 @@ public class Product {
 		return productId == product.productId;
 	}
 
-	public boolean isStatus() {
-		return status;
-	}
-
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
 }

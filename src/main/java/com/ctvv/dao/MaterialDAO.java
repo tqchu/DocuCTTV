@@ -14,32 +14,23 @@ public class MaterialDAO
 		super(dataSource);
 	}
 
-	public List<Material> getGroup(int productId) {
-		List<Material> materialList = new ArrayList<>();
-		String sql = "SELECT * FROM material " +
-				"JOIN product_material ON material.material_id = product_material.material_id " +
-				"JOIN product p on product_material.product_id = p.product_id  WHERE p.product_id=? ";
+	@Override
+	public Material get(int id) {
+		String sql = "SELECT * FROM material WHERE material_id=?";
+		Material returnMaterial = null;
 		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql);) {
-			statement.setInt(1, productId);
+			statement.setInt(1, id);
 			ResultSet resultSet = statement.executeQuery();
-			// loop the result set
 			while (resultSet.next()) {
-				int id = resultSet.getInt("material_id");
-				String name = resultSet.getString("material_name");
-				materialList.add(new Material(id, name));
-
+				returnMaterial = map(resultSet);
 			}
-
+			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return materialList;
-	}
+		return returnMaterial;
 
-	@Override
-	public Material get(int id) {
-		return null;
 	}
 
 	@Override

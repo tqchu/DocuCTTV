@@ -23,6 +23,7 @@
     <!-- APP -->
     <link rel="stylesheet" href="${context}/css/base.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/admin/product/common.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/admin/addForm.css?rd=${rand}">
     <!-- FONT AWESOME -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
@@ -32,7 +33,6 @@
 <body>
 <jsp:include page="../../common/header.jsp"/>
 <div class="content">
-
     <form action="${context}/admin/products" enctype="multipart/form-data" method="post" class="products__add-form">
         <input type="hidden" name="action" value="create">
         <div class="form-group">
@@ -54,7 +54,6 @@
         <div class="form-group dimen-mater-price-group">
             <div class="dimension-form-group">
                 <span class="dimension-form-group__label form-group__label">Kích thước</span>
-
                 <div class="dimension-form-group__input">
                     <div class="dimension-form-item">
                         <input type="number" name="length">
@@ -73,11 +72,12 @@
                 </div>
             </div>
             <div class="material-form-group">
-                <span class="material-form-group__label form-group__label">
-                    Chất liệu
-                </span>
+                             <span class="material-form-group__label form-group__label">
+                                Chất liệu
+                             </span>
                 <div class="material-form-group__input">
-                    <input type="text" name="material" id="material">
+                    <input type="text" name="material" id="material"
+                    >
                 </div>
             </div>
             <div class="price-form-group">
@@ -85,16 +85,15 @@
                 <div class="price-form-group__input">
                     <input type="text" name="price">
                 </div>
-            </div>
 
+            </div>
             <div class="form-group__minus-row-btn">
                 <i class="fa-solid fa-minus"></i>
             </div>
         </div>
         <div class="form-group__add-row-btn">
-                <i class="las la-plus-circle"></i>
+            <i class="las la-plus-circle"></i>
         </div>
-
 
         <div class="form-group">
             <span class="form-group__label">Thời gian bảo hành</span>
@@ -123,6 +122,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="${context}/js/admin/product/image-picker.js?rd=${rand}"></script>
+<script src="${context}/js/admin/product/common.js?rd=${rand}"></script>
 <script src="${context}/js/admin/product/addProduct.js?rd=${rand}"></script>
 
 </body>

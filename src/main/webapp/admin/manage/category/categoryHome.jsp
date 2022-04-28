@@ -1,5 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script src="${context}/js/admin/category/category.js?rd=${rand}"></script>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <div class="tab__content">
     <div class="search">
@@ -73,6 +72,17 @@
         <c:remove var="errorMessage" scope="session"/>
 
     </c:if>
+    <div class="order-bar">
+        <span class="order-bar__text-heading">
+            Sắp xếp theo
+        </span>
+        <input type="hidden" name="query-string"
+               value="${not empty param.keyword?'keyword='+=param.keyword:''}">
+        <span class="order-bar__option ${param.orderBy=='default'|| empty param.orderBy?'active':''}"
+              data-sort="default">Mới
+            nhất</span>
+        <span class="order-bar__option  ${param.orderBy=='name'?'active':''}" data-sort="name">Tên</span>
+    </div>
     <div class="list">
         <table class="data-table   table table-hover table-bordered ">
             <thead>
@@ -187,3 +197,4 @@
         </table>
     </div>
 </div>
+<script src="${context}/js/admin/category/category.js?rd=${rand}"></script>

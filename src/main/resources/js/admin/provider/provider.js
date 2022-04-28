@@ -1,5 +1,5 @@
 $(function () {
-    const sortOptions = $('.provider__order-bar__option')
+    const sortOptions = $('.order-bar__option')
     sortOptions.click(function () {
         const dataSort = $(this).attr('data-sort')
         const link = window.location.href
