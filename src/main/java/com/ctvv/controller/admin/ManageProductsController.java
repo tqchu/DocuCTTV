@@ -15,7 +15,6 @@ import javax.servlet.http.*;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -63,6 +62,13 @@ public class ManageProductsController
 			RequestDispatcher dispatcher = request.getRequestDispatcher(path);
 			dispatcher.forward(request, response);
 		}
+	}
+
+	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String keyword = request.getParameter("keyword");
+		List<Product> productList = productDAO.search(keyword);
+		request.setAttribute("list", productList);
+		goHome(request, response);
 	}
 
 	private void listProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException,
