@@ -95,10 +95,10 @@ Danh mục</span>
                                                     <div class="product__name">
                                                             ${product.name}
                                                     </div>
-                                                    <div class="product__price">
-                                                        <fmt:formatNumber value="${product.price}"
-                                                                          type="number" maxFractionDigits="0"/>
-                                                    </div>
+<%--                                                    <div class="product__price">--%>
+<%--                                                        <fmt:formatNumber value="${product.price}"--%>
+<%--                                                                          type="number" maxFractionDigits="0"/>--%>
+<%--                                                    </div>--%>
                                                 </a>
                                             </div>
                                         </c:forEach>

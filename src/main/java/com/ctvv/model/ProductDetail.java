@@ -13,7 +13,6 @@ public class ProductDetail {
 		material = new Material(productDetail.material);
 		dimension = new Dimension(productDetail.dimension);
 		productDetailId = productDetail.productDetailId;
-
 	}
 
 	public ProductDetail(int productDetailId, int productId, Material material, Dimension dimension) {

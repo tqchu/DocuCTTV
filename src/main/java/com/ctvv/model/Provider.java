@@ -1,97 +1,78 @@
 package com.ctvv.model;
 
-import java.util.Objects;
-
 public class Provider {
-	int providerId;
-	String providerName;
-	String address;
+    int providerId;
+    String providerName;
+    String address;
+    String phoneNumber;
+    String email;
+    String taxId;
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Provider provider = (Provider) o;
-		return providerId == provider.providerId || providerName.equals(provider.providerName)  || phoneNumber.equals(provider.phoneNumber) || email.equals(provider.email) && taxId.equals(provider.taxId);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(providerId, providerName, address, phoneNumber, email, taxId);
-	}
-
-	String phoneNumber;
-	String email;
-	String taxId;
-
-	public Provider(
-			int providerId, String providerName, String address, String phoneNumber, String email,
-			String taxId) {
-		this.providerId = providerId;
-		this.providerName = providerName;
-		this.address = address;
-		this.phoneNumber = phoneNumber;
-		this.email = email;
-		this.taxId = taxId;
-	}
-
-	public Provider(String providerName, String address, String phoneNumber, String email, String taxId) {
-		this.providerName = providerName;
-		this.address = address;
-		this.phoneNumber = phoneNumber;
-		this.email = email;
-		this.taxId = taxId;
-	}
-
-	public Provider() {
+	public  Provider(){
 
 	}
+    public Provider(int providerId, String providerName, String address, String phoneNumber, String email, String taxIdNumber) {
+        this.providerId = providerId;
+        this.providerName = providerName;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.taxId = taxIdNumber;
+    }
 
-	public int getProviderId() {
-		return providerId;
-	}
+    public Provider(String providerName, String address, String phoneNumber, String email, String taxIdNumber) {
+        this.providerName = providerName;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.taxId = taxIdNumber;
+    }
 
-	public void setProviderId(int providerId) {
-		this.providerId = providerId;
-	}
+    public int getProviderId() {
+        return providerId;
+    }
 
-	public String getProviderName() {
-		return providerName;
-	}
+    public void setProviderId(int providerId) {
+        this.providerId = providerId;
+    }
 
-	public void setProviderName(String providerName) {
-		this.providerName = providerName;
-	}
+    public String getProviderName() {
+        return providerName;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+    public String getAddress() {
+        return address;
+    }
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public String getTaxId() {
-		return taxId;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setTaxId(String taxId) {
-		this.taxId = taxId;
-	}
+    public String getTaxId() {
+        return taxId;
+    }
+
+    public void setTaxId(String taxId) {
+        this.taxId = taxId;
+    }
 }

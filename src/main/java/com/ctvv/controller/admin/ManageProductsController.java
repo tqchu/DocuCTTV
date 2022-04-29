@@ -41,32 +41,38 @@ public class ManageProductsController
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession();
 		String action = request.getParameter("action");
-		if (action == null) {
-			listProducts(request, response);
-		} else {
-			String path = "";
-			List<Category> categoryList = categoryDAO.getAll();
-			request.setAttribute("categoryList", categoryList);
-			switch (action) {
-				case "create":
-					path = "/admin/manage/product/addForm.jsp";
-					break;
-				case "update":
-					int id = Integer.parseInt(request.getParameter("id"));
-					Product product = productDAO.get(id);
-					request.setAttribute("product", product);
-					request.setAttribute("categoryList", categoryList);
-					path = "/admin/manage/product/editForm.jsp";
-					break;
+		String uri = request.getRequestURI();
+		if (uri.equals(request.getContextPath()+"/admin/products/search"))
+			search(request, response);
+		else {
+			if (action == null) {
+				listProducts(request, response);
+			} else {
+				String path = "";
+				List<Category> categoryList = categoryDAO.getAll();
+				request.setAttribute("categoryList", categoryList);
+				switch (action) {
+					case "create":
+						path = "/admin/manage/product/addForm.jsp";
+						break;
+					case "update":
+						int id = Integer.parseInt(request.getParameter("id"));
+						Product product = productDAO.get(id);
+						request.setAttribute("product", product);
+						request.setAttribute("categoryList", categoryList);
+						path = "/admin/manage/product/editForm.jsp";
+						break;
+				}
+				RequestDispatcher dispatcher = request.getRequestDispatcher(path);
+				dispatcher.forward(request, response);
 			}
-			RequestDispatcher dispatcher = request.getRequestDispatcher(path);
-			dispatcher.forward(request, response);
 		}
 	}
 
 	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
-		List<Product> productList = productDAO.search(keyword);
+		List<Product> productList;
+		productList = productDAO.search(keyword);
 		request.setAttribute("list", productList);
 		goHome(request, response);
 	}
