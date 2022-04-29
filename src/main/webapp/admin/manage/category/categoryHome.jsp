@@ -3,7 +3,8 @@
 <div class="tab__content">
     <div class="search">
         <form action="${context}/admin/categories/search" class="search__form" method="get">
-            <input type="search" class="search__bar form-control" name="keyword" placeholder="Nhập tên doanh mục">
+            <input type="search" class="search__bar form-control" name="keyword" placeholder="Nhập tên doanh mục"
+                   value="${param.keyword}">
             <button type="submit" class="btn btn-primary btn-search">
                 <i class="las la-search"></i>
             </button>
