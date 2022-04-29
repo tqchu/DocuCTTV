@@ -2,6 +2,7 @@ package com.ctvv.dao;
 
 import com.ctvv.model.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -36,6 +37,21 @@ public class ProductDAO
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public List<Product> getAll(String orderBy) {
+		List<Product> productList = new ArrayList<>();
+		String sql = "SELECT * FROM product ORDER BY " + orderBy;
+		try(Connection connection = dataSource.getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()){
+				productList.add(map(resultSet));
+			}
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+		return productList;
 	}
 
 	@Override
@@ -163,7 +179,6 @@ public class ProductDAO
 
 	}
 
-
 	public List<Product> getAllByCategory(int categoryId) {
 		List<Product> productList = new ArrayList<>();
 		String sql = "SELECT * FROM product WHERE category_id=?";
@@ -181,9 +196,9 @@ public class ProductDAO
 		return productList;
 	}
 
-	public List<Product> search(String keyword) {
+	public List<Product> search(String keyword, String orderBy) {
 		List<Product> productList = new ArrayList<>();
-		String sql = "SELECT * FROM product WHERE product_name LIKE ?";
+		String sql = "SELECT * FROM product WHERE product_name LIKE ? "+ (orderBy != null ?"ORDER BY "+ orderBy:"");
 		try (Connection connection = dataSource.getConnection();
 			 PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, "%"+keyword + "%");
@@ -196,6 +211,5 @@ public class ProductDAO
 			e.printStackTrace();
 		}
 		return productList;
-
 	}
 }
