@@ -67,7 +67,15 @@ public class ProductDetailDAO
 
 	@Override
 	public void delete(int id) {
-
+		String sql = "DELETE FROM product_detail WHERE product_id = ?";
+		try(Connection connection = dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setInt(1,id);
+			statement.executeUpdate();
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
 	}
 
 	@Override

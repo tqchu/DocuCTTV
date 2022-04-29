@@ -104,4 +104,14 @@ public class DimensionDAO
 		}
 		return returnDimension;
 	}
+	public void removeUnusedDimension(){
+		String sql = "DELETE FROM dimension WHERE dimension_id NOT IN "+
+				"(SELECT DISTINCT dimension_id FROM product_detail)";
+		try(Connection connection = dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.executeUpdate();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
 }

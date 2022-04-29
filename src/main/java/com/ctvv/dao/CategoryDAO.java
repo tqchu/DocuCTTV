@@ -141,12 +141,12 @@ public class CategoryDAO
 		return category;
 	}
 
-	public List<Category> search(String keyword) {
+	public List<Category> search(String keyword, String orderBy) {
 		List<Category> categoryList = new ArrayList<>();
-		String sql = "SELECT * FROM category WHERE category_name LIKE ?";
+		String sql = "SELECT * FROM category WHERE category_name LIKE ? "+ (orderBy!=null ?"ORDER BY "+ orderBy:"");
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setString(1, "%"+keyword + "%");
+			statement.setString(1, "%" + keyword + "%");
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				categoryList.add(map(resultSet));

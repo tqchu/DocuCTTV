@@ -2,6 +2,7 @@ package com.ctvv.dao;
 
 import com.ctvv.model.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,8 +24,8 @@ public class ProductDAO
 	@Override
 	public Product get(int id) {
 		String sql = "SELECT * FROM product WHERE product_id=?";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement =
-				connection.prepareStatement(sql);) {
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
 			preparedStatement.setInt(1, id);
 			ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -36,6 +37,21 @@ public class ProductDAO
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public List<Product> getAll(String orderBy) {
+		List<Product> productList = new ArrayList<>();
+		String sql = "SELECT * FROM product ORDER BY " + orderBy;
+		try(Connection connection = dataSource.getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()){
+				productList.add(map(resultSet));
+			}
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+		return productList;
 	}
 
 	@Override
@@ -102,14 +118,10 @@ public class ProductDAO
 
 	@Override
 	public Product update(Product product) {
-		/*String sql = "UPDATE product SET product_name=?, warranty_period=?,  description=?, " +
-				"category_id=?," +
-				" price=? WHERE product_id=?";
-		Connection connection = null;
-		PreparedStatement statement = null;
-		try {
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(sql);
+		String sql = "UPDATE product SET product_name=?, warranty_period=?,  description=?, "+
+				"category_id=? WHERE product_id=?";
+		try (Connection connection = dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql)){
 			statement.setString(1, product.getName());
 			statement.setInt(2, product.getWarrantyPeriod());
 			statement.setString(3, product.getDescription());
@@ -117,23 +129,12 @@ public class ProductDAO
 				statement.setNull(4, Types.INTEGER);
 			} else
 				statement.setInt(4, product.getCategory().getCategoryId());
-			statement.setInt(5, product.getPrice());
-			statement.setInt(6, product.getProductId());
+			statement.setInt(5, product.getProductId());
 			statement.executeUpdate();
-
 			return product;
-
 		} catch (SQLException e) {
-
 			e.printStackTrace();
-		} finally {
-			try {
-				if (statement != null) statement.close();
-				if (connection != null) connection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}*/
+		}
 		return null;
 	}
 
@@ -163,13 +164,29 @@ public class ProductDAO
 
 	}
 
-
 	public List<Product> getAllByCategory(int categoryId) {
 		List<Product> productList = new ArrayList<>();
 		String sql = "SELECT * FROM product WHERE category_id=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, categoryId);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				productList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return productList;
+	}
+
+	public List<Product> search(String keyword, String orderBy) {
+		List<Product> productList = new ArrayList<>();
+		String sql = "SELECT * FROM product WHERE product_name LIKE ? "+ (orderBy != null ?"ORDER BY "+ orderBy:"");
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, "%"+keyword + "%");
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				productList.add(map(resultSet));
