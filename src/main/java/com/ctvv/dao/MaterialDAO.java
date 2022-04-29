@@ -95,4 +95,15 @@ public class MaterialDAO
 		}
 		return returnMaterial;
 	}
+	public void removeUnusedMaterial(){
+		String sql = "DELETE FROM material WHERE material_id NOT IN "+
+				"(SELECT DISTINCT material_id FROM product_detail)";
+		try(Connection connection = dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.executeUpdate();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
 }
