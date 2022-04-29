@@ -1,0 +1,25 @@
+.inventory__tab {
+    display: block;
+}
+.inventory__tabs {
+    color: #000;
+
+    margin-left: 40px;
+    font-size: 14px;
+    margin-top: 6px;
+}
+.inventory_tabs__item {
+    margin-top: 2px;
+}
+.inventory_tabs__item.active{
+    color: var(--primary-color);
+}
+.inventory__tab.active .inventory__tabs{
+    display: block;
+}
+.inventory__tabs {
+    color: #000;
+    margin-left: 40px;
+    font-size: 14px;
+    margin-top: 6px;
+}

@@ -15,7 +15,6 @@ import javax.servlet.http.*;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -42,9 +41,10 @@ public class ManageProductsController
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession();
 		String action = request.getParameter("action");
-		if (action == null) {
-			listProducts(request, response);
-		} else {
+		String uri = request.getRequestURI();
+		if (uri.equals(request.getContextPath()+ "/admin/products/search")){
+			search(request,response);
+		} else if (action != null){
 			String path = "";
 			List<Category> categoryList = categoryDAO.getAll();
 			request.setAttribute("categoryList", categoryList);
@@ -62,12 +62,26 @@ public class ManageProductsController
 			}
 			RequestDispatcher dispatcher = request.getRequestDispatcher(path);
 			dispatcher.forward(request, response);
+		} else {
+			listProducts(request, response);
 		}
 	}
 
-	private void listProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                           IOException {
-		List<Product> productList = productDAO.getAll();
+	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String keyword = request.getParameter("keyword");
+		String orderBy = getOrderBy(request);
+		List<Product> productList;
+		productList = productDAO.search(keyword, orderBy);
+		request.setAttribute("list", productList);
+		goHome(request, response);
+	}
+
+	private void listProducts(
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String orderBy = getOrderBy(request);
+		List<Product> productList;
+		if (orderBy != null) productList = productDAO.getAll(orderBy);
+		else productList = productDAO.getAll();
 		request.setAttribute("list", productList);
 		goHome(request, response);
 	}
@@ -304,6 +318,21 @@ public class ManageProductsController
 
 		session.setAttribute("successMessage", "Đã cập nhật số lượng thành công");
 		response.sendRedirect(request.getContextPath() + HOME);
+	}
+
+	public String getOrderBy(HttpServletRequest request){
+		String orderBy = request.getParameter("orderBy");
+		if(orderBy != null) {
+			switch (orderBy){
+				case "default" :
+					orderBy = null;
+					break;
+				case "name":
+					orderBy = "product_name";
+					break;
+			}
+		}
+		return orderBy;
 	}
 
 	private void delete(HttpServletRequest request, HttpServletResponse response) {

@@ -164,3 +164,7 @@ img.product__main-image {
     border-radius: 2px;
     cursor: pointer;
 }
+
+.inventory__tabs{
+    display: none;
+}

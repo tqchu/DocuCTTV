@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ProviderDAO
+
 		extends GenericDAO<Provider> {
 
 	public ProviderDAO(DataSource dataSource) {
