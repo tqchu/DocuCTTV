@@ -29,6 +29,7 @@ public class ManageProviderController
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession();
 		String uri = request.getRequestURI();
 		if (uri.equals(request.getContextPath() + SEARCH_SERVLET)) {
 			search(request, response);
@@ -81,6 +82,7 @@ public class ManageProviderController
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession();
 		String action = request.getParameter("action");
 		switch (action) {
 			case "create":

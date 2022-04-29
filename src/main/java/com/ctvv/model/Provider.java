@@ -8,6 +8,9 @@ public class Provider {
     String email;
     String taxId;
 
+	public  Provider(){
+
+	}
     public Provider(int providerId, String providerName, String address, String phoneNumber, String email, String taxIdNumber) {
         this.providerId = providerId;
         this.providerName = providerName;
