@@ -35,8 +35,9 @@ public class ManageCategoriesController
 
 	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
+		String orderBy = getOrder(request);
 		List<Category> categoryList;
-		categoryList = categoryDAO.search(keyword);
+		categoryList = categoryDAO.search(keyword, orderBy);
 		request.setAttribute("list", categoryList);
 		goHome(request, response);
 	}

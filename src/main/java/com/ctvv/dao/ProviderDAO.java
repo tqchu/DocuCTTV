@@ -188,7 +188,7 @@ public class ProviderDAO
     }
 
     public List<Provider> search(String keyword, String fieldName, String orderBy){
-        String sql = "SELECT * FROM provider WHERE "+fieldName+" LIKE ?" + (orderBy!=null ?"ORDER BY "+ orderBy:"");
+        String sql = "SELECT * FROM provider WHERE "+fieldName+" LIKE ? " + (orderBy!=null ?"ORDER BY "+ orderBy:"");
         List<Provider> providerList = new ArrayList<>();
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)){
