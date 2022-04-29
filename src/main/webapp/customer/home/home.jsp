@@ -1,9 +1,32 @@
+<%@ page import="com.ctvv.model.ProductPrice" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.ctvv.model.Product" %>
+<%!
+    int maxPrice(List<ProductPrice> productPrice) {
+        int maxPrice = 0;
+        for (ProductPrice price : productPrice) {
+            if (price.getPrice() > maxPrice) maxPrice = price.getPrice();
+        }
+
+        return maxPrice;
+    }
+
+    int minPrice(List<ProductPrice> productPrice) {
+        int minPrice = Integer.MAX_VALUE;
+        for (ProductPrice price : productPrice) {
+            if (price.getPrice() < minPrice) minPrice = price.getPrice();
+        }
+
+        return minPrice;
+    }
+%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%-- set context path--%>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
-<c:set var="rand" scope="request"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %></c:set>
+<c:set var="rand" scope="request"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %>
+</c:set>
 
 <html>
 <head>
@@ -47,7 +70,7 @@ Danh mục</span>
                         <c:forEach items="${categoryList}" var="category">
                             <a href="${context}/products?category=${category.categoryName}" class="category-item
                             ${category.categoryName==param.category?'active':''}">
-                                ${category.categoryName}
+                                    ${category.categoryName}
                             </a>
                         </c:forEach>
 
@@ -86,6 +109,8 @@ Danh mục</span>
                                 <c:choose>
                                     <c:when test="${not empty productList}">
                                         <c:forEach items="${productList}" var="product">
+                                            <c:set var="currentProduct" scope="request" value="${product}"/>
+
                                             <div class="col col-3">
 
                                                 <a href="${context}/products?id=${product.productId}" class="product">
@@ -95,10 +120,14 @@ Danh mục</span>
                                                     <div class="product__name">
                                                             ${product.name}
                                                     </div>
-<%--                                                    <div class="product__price">--%>
-<%--                                                        <fmt:formatNumber value="${product.price}"--%>
-<%--                                                                          type="number" maxFractionDigits="0"/>--%>
-<%--                                                    </div>--%>
+                                                    <div class="product__price">
+                                                        <%=
+                                                        minPrice(((Product)request.getAttribute("currentProduct")).getProductPriceList()) %> - <%=
+                                                    maxPrice(((Product)request.getAttribute("currentProduct")).getProductPriceList()) %>
+
+
+
+                                                    </div>
                                                 </a>
                                             </div>
                                         </c:forEach>
@@ -119,7 +148,6 @@ Danh mục</span>
     </div>
 </div>
 <jsp:include page="../../common/footer.jsp"/>
-
 
 </body>
 </html>
