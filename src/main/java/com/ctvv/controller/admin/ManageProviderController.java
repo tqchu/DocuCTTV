@@ -21,9 +21,9 @@ import java.util.Objects;
 @WebServlet(name = "ManageProviderController", value = "/admin/providers/*")
 public class ManageProviderController
 		extends HttpServlet {
-	private final String HOME_PAGE = "/admin/manage/home.jsp";
-	private final String SEARCH_SERVLET = "/admin/providers/search";
 	private ProviderDAO providerDAO;
+    final String HOME_PAGE = "/admin/manage/home.jsp";
+	final String SEARCH_SERVLET ="/admin/providers/search";
 	private HttpSession session;
 
 	@Override
@@ -56,7 +56,6 @@ public class ManageProviderController
 		}
 		String orderBy= getOrder(request);
 		List<Provider> providerList;
-
 		providerList = providerDAO.search(keyword, field, orderBy);
 		request.setAttribute("providerList", providerList);
 		goHome(request, response);
@@ -95,7 +94,6 @@ public class ManageProviderController
 				break;
 		}
 	}
-
 	private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
 		String providerName = request.getParameter("name");
@@ -165,7 +163,6 @@ public class ManageProviderController
 		String taxId = request.getParameter("taxId");
 		session = request.getSession();
 
-
 		// Lưu ý: nếu phần người dùng nhập không khác gì dữ liệu cũ thì khỏi cần find và trả về true, nếu dùng thì
 		// tiếp tục kiểm tra điều kiện của find (để xem thử trùng với provider khác không)
 		boolean isEmailValid =
@@ -230,7 +227,6 @@ public class ManageProviderController
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 	public String getOrder(HttpServletRequest request){
 		String orderBy = request.getParameter("orderBy");
@@ -244,7 +240,7 @@ public class ManageProviderController
 					break;
 			}
 		}
-		return  orderBy;
+		return orderBy;
 	}
 	@Override
 	public void init() throws ServletException {

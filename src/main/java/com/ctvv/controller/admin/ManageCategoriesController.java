@@ -29,24 +29,26 @@ public class ManageCategoriesController
 		String uri = request.getRequestURI();
 		if (uri.equals(request.getContextPath()+ "/admin/categories/search")){
 			search(request,response);
-		}
-		else
-		listCategory(request,response);
+		} else
+			listCategory(request,response);
 	}
 
 	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
-		List<Category> categoryList = categoryDAO.search(keyword);
+		List<Category> categoryList;
+		categoryList = categoryDAO.search(keyword);
 		request.setAttribute("list", categoryList);
 		goHome(request, response);
 	}
 
-	private void listCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                           IOException {
-		List<Category> categoryList = categoryDAO.getAll();
+	private void listCategory(
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String orderBy = getOrder(request);
+		List<Category> categoryList;
+		if(orderBy != null) categoryList = categoryDAO.getAll(orderBy);
+		else categoryList = categoryDAO.getAll();
 		request.setAttribute("list", categoryList);
 		goHome(request,response);
-
 	}
 
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -117,7 +119,6 @@ public class ManageCategoriesController
 
 		} else {
 			session.setAttribute("errorMessage", "Tên doanh mục đã tồn tại");
-
 		}
 		try {
 			response.sendRedirect(request.getContextPath() + "/admin/categories");
@@ -125,18 +126,29 @@ public class ManageCategoriesController
 			e.printStackTrace();
 		}
 	}
-
+	public String getOrder(HttpServletRequest request){
+		String orderBy = request.getParameter("orderBy");
+		if (orderBy != null) {
+			switch (orderBy) {
+				case "default":
+					orderBy = null;
+					break;
+				case "name":
+					orderBy = "category_name";
+					break;
+			}
+		}
+		return orderBy;
+	}
 	@Override
 	public void init() throws ServletException {
 		super.init();
 		try {
 			Context context = new InitialContext();
-			// Tạo và gán dataSource cho adminDAO
 			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
 			categoryDAO = new CategoryDAO(dataSource);
 		} catch (NamingException e) {
-
-			e.printStackTrace();
+			throw new ServletException();
 		}
 	}
 
