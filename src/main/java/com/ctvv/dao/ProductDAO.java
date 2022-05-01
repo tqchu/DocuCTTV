@@ -10,14 +10,12 @@ import java.util.List;
 
 public class ProductDAO
 		extends GenericDAO<Product> {
-	private ProductPriceDAO productPriceDAO;
 	private ImagePathDAO imagePathDAO;
 	private CategoryDAO categoryDAO;
 
 	public ProductDAO(DataSource dataSource) {
 		super(dataSource);
 		categoryDAO = new CategoryDAO(dataSource);
-		productPriceDAO = new ProductPriceDAO(dataSource);
 		imagePathDAO = new ImagePathDAO(dataSource);
 	}
 
@@ -145,7 +143,7 @@ public class ProductDAO
 
 	@Override
 	public Product map(ResultSet resultSet) {
-		try {
+		/*try {
 			int productId = resultSet.getInt("product_id");
 			String productName = resultSet.getString("product_name");
 			int warrantyPeriod = resultSet.getInt("warranty_period");
@@ -153,13 +151,12 @@ public class ProductDAO
 			int categoryId = resultSet.getInt("category_id");
 			Category category = categoryDAO.get(categoryId);
 			List<ImagePath> imagePathList = imagePathDAO.getGroup(productId);
-			List<ProductPrice> productPriceList = productPriceDAO.getGroup(productId);
 
 			return new Product(productId, productName, warrantyPeriod, description,
 					category, imagePathList, productPriceList);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		}*/
 		return null;
 
 	}

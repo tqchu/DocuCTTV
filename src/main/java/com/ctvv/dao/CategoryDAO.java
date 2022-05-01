@@ -30,20 +30,7 @@ public class CategoryDAO
 		}
 		return null;
 	}
-	public List<Category> getAll(String orderBy){
-		List<Category> categoryList = new ArrayList<>();
-		String sql = "SELECT * FROM category ORDER BY " + orderBy;
-		try(Connection connection = dataSource.getConnection();
-			PreparedStatement statement = connection.prepareStatement(sql)) {
-			ResultSet resultSet = statement.executeQuery();
-			while(resultSet.next()){
-				categoryList.add(map(resultSet));
-			}
-		}catch (SQLException e){
-			e.printStackTrace();
-		}
-		return categoryList;
-	}
+
 	@Override
 	public List<Category> getAll() {
 		List<Category> categoryList = new ArrayList<>();
@@ -77,7 +64,7 @@ public class CategoryDAO
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return  null;
+		return null;
 	}
 
 	@Override
@@ -123,6 +110,38 @@ public class CategoryDAO
 		return category;
 	}
 
+	public List<Category> getAll(String orderBy) {
+		List<Category> categoryList = new ArrayList<>();
+		String sql = "SELECT * FROM category ORDER BY " + orderBy;
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				categoryList.add(map(resultSet));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return categoryList;
+	}
+
+	public List<Category> get(int begin, int end, String sortBy, String order) {
+		List<Category> categoryList = new ArrayList<>();
+		String sql = "SELECT * FROM category" + (sortBy != null ? " ORDER BY " + sortBy + " " + order : "") +
+				" LIMIT " + begin + "," + end;
+		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+				connection.prepareStatement(sql);) {
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				categoryList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return categoryList;
+	}
+
 	public Category find(String categoryName) {
 		String sql = "SELECT * FROM category WHERE category_name = ?";
 		Category category = null;
@@ -141,9 +160,10 @@ public class CategoryDAO
 		return category;
 	}
 
-	public List<Category> search(String keyword, String orderBy) {
+	public List<Category> search(int begin, int end, String keyword, String orderBy) {
 		List<Category> categoryList = new ArrayList<>();
-		String sql = "SELECT * FROM category WHERE category_name LIKE ? "+ (orderBy!=null ?"ORDER BY "+ orderBy:"");
+		String sql = "SELECT * FROM category WHERE category_name LIKE ? " + (orderBy != null ? "ORDER BY " + orderBy :
+				"") + " LIMIT " + begin + "," + end;
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, "%" + keyword + "%");
