@@ -16,12 +16,6 @@ $(function () {
             "previous": "Sau"
         }
     }
-    $(".data-table").DataTable({
-        ordering: false,
-        searching: false,
-        "lengthChange": false,
-        "language": languageOption
-    });
 
 
 

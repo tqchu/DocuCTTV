@@ -51,49 +51,25 @@
 
             <textarea name="description" id="" cols="60" rows="8"></textarea>
         </div>
-        <div class="form-group dimen-mater-price-group">
-            <div class="dimension-form-group">
-                <span class="dimension-form-group__label form-group__label">Kích thước</span>
-                <div class="dimension-form-group__input">
-                    <div class="dimension-form-item">
-                        <input type="number" name="length">
-                        <span class="dimension-form-item__text-label">D</span>
-                    </div>
-                    <div class="dimension-form-item">
-
-                        <input type="text" name="width">
-                        <span class="dimension-form-item__text-label">R</span>
-                    </div>
-                    <div class="dimension-form-item">
-
-                        <input type="text" name="height">
-                        <span class="dimension-form-item__text-label">C</span>
-                    </div>
-                </div>
-            </div>
-            <div class="material-form-group">
-                             <span class="material-form-group__label form-group__label">
+        <div class="form-group">
+            <span class="form-group__label">Kích thước</span>
+            <input type="text" name="dimension">
+        </div>
+        <div class="form-group">
+                             <span class="form-group__label">
                                 Chất liệu
                              </span>
-                <div class="material-form-group__input">
-                    <input type="text" name="material" id="material"
-                    >
-                </div>
-            </div>
-            <div class="price-form-group">
-                <span class="price-form-group__label form-group__label">Đơn giá</span>
-                <div class="price-form-group__input">
-                    <input type="text" name="price">
-                </div>
 
-            </div>
-            <div class="form-group__minus-row-btn">
-                <i class="fa-solid fa-minus"></i>
-            </div>
+            <input type="text" name="material" id="material"
+            >
         </div>
-        <div class="form-group__add-row-btn">
-            <i class="las la-plus-circle"></i>
+        <div class="form-group">
+            <span class="form-group__label">Đơn giá</span>
+
+            <input type="text" name="price">
+
         </div>
+
 
         <div class="form-group">
             <span class="form-group__label">Thời gian bảo hành</span>

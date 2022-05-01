@@ -53,7 +53,7 @@
         <span class="order-bar__option  ${param.orderBy=='name'?'active':''}" data-sort="name">Tên</span>
     </div>
     <div class="list">
-        <table class="data-table   table table-hover table-bordered ">
+        <table class="table table-hover table-bordered ">
             <thead>
             <tr>
                 <th>STT</th>

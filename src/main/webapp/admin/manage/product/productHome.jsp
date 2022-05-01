@@ -28,7 +28,7 @@
         <c:remove var="successMessage" scope="session"/>
     </c:if>
     <div class="list">
-        <table class="data-table  table table-hover table-bordered">
+        <table class="table table-hover table-bordered">
             <thead>
             <tr>
                 <th>STT</th>

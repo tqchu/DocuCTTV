@@ -26,13 +26,10 @@ import java.util.UUID;
 public class ManageProductsController
 		extends HttpServlet {
 	private static final String HOME = "/admin/products";
+	final int NUMBER_OF_RECORDS_PER_PAGE = 10;
 	HttpSession session;
 	private ProductDAO productDAO;
 	private CategoryDAO categoryDAO;
-	private DimensionDAO dimensionDAO;
-	private MaterialDAO materialDAO;
-	private  ProductDetailDAO productDetailDAO;
-	private ProductPriceDAO productPriceDAO ;
 	private ImagePathDAO imagePathDAO;
 	private ImportDAO importDAO;
 
@@ -42,46 +39,67 @@ public class ManageProductsController
 		session = request.getSession();
 		String action = request.getParameter("action");
 		String uri = request.getRequestURI();
-		if (uri.equals(request.getContextPath()+"/admin/products/search"))
-			search(request, response);
-		else {
-			if (action == null) {
-				listProducts(request, response);
-			} else {
-				String path = "";
-				List<Category> categoryList = categoryDAO.getAll();
-				request.setAttribute("categoryList", categoryList);
-				switch (action) {
-					case "create":
-						path = "/admin/manage/product/addForm.jsp";
-						break;
-					case "update":
-						int id = Integer.parseInt(request.getParameter("id"));
-						Product product = productDAO.get(id);
-						request.setAttribute("product", product);
-						request.setAttribute("categoryList", categoryList);
-						path = "/admin/manage/product/editForm.jsp";
-						break;
-				}
-				RequestDispatcher dispatcher = request.getRequestDispatcher(path);
-				dispatcher.forward(request, response);
+		if (action != null) {
+			String path = "";
+			List<Category> categoryList = categoryDAO.getAll();
+			request.setAttribute("categoryList", categoryList);
+			switch (action) {
+				case "create":
+					path = "/admin/manage/product/addForm.jsp";
+					break;
+				case "update":
+					int id = Integer.parseInt(request.getParameter("id"));
+					Product product = productDAO.get(id);
+					request.setAttribute("product", product);
+					request.setAttribute("categoryList", categoryList);
+					path = "/admin/manage/product/editForm.jsp";
+					break;
 			}
+			RequestDispatcher dispatcher = request.getRequestDispatcher(path);
+			dispatcher.forward(request, response);
+		} else {
+			listProducts(request, response);
 		}
 	}
 
-	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	private void listProducts(
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
+		String orderBy = getOrderBy(request);
 		List<Product> productList;
-		productList = productDAO.search(keyword);
+		int begin = getBegin(request);
+		productList = productDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, null, orderBy, null);
+		int numberOfPages = productDAO.count(keyword, null) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("list", productList);
 		goHome(request, response);
 	}
 
-	private void listProducts(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                           IOException {
-		List<Product> productList = productDAO.getAll();
-		request.setAttribute("list", productList);
-		goHome(request, response);
+	public String getOrderBy(HttpServletRequest request) {
+		String orderBy = request.getParameter("orderBy");
+		if (orderBy != null) {
+			switch (orderBy) {
+				case "default":
+					orderBy = null;
+					break;
+				case "name":
+					orderBy = "product_name";
+					break;
+			}
+		}
+		return orderBy;
+	}
+
+	public int getBegin(HttpServletRequest request) {
+		String pageParam = request.getParameter("page");
+		int page;
+		if (pageParam == null) {
+			page = 1;
+		} else {
+			page = Integer.parseInt(pageParam);
+		}
+		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
 	}
 
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
@@ -130,7 +148,8 @@ public class ManageProductsController
 			category = categoryDAO.get(Integer.parseInt(request.getParameter("categoryId")));
 		}
 
-		Product product = new Product(name, warrantyPeriod, description, category);
+		Product product = null;
+		//		Product product = new Product(name, warrantyPeriod, description, category);
 		int productId = productDAO.create(product).getProductId();
 
 		int productPriceListLength = lengthList.length;
@@ -149,37 +168,9 @@ public class ManageProductsController
 			materialList[i] = new Material(materialParamList[i]);
 		}
 
-		for (int i = 0; i < productPriceListLength ; i++) {
-			int dimensionId, materialId;
-			Dimension foundDimension = dimensionDAO.find(dimensionList[i]);
-			// Nếu không có thì tạo mới dimension
-			if (foundDimension == null) {
-				dimensionId = dimensionDAO.create(dimensionList[i]).getDimensionId();
-			} else {
-				dimensionId = foundDimension.getDimensionId();
-			}
-			Dimension dimension  = new Dimension();
-			dimension.setDimensionId(dimensionId);
-			Material foundMaterial = materialDAO.find(materialList[i]);
-			// Nếu không có thì tạo mới material
-			if (foundMaterial == null) {
-				materialId = materialDAO.create(materialList[i]).getMaterialId();
-			} else {
-				materialId = foundMaterial.getMaterialId();
-			}
-
-			Material material = new Material();
-			material.setMaterialId(materialId);
-
-			ProductDetail productDetail = new ProductDetail(productId, material, dimension);
-			productDetail.setProductDetailId(productDetailDAO.create(productDetail).getProductDetailId());
-
-			ProductPrice productPrice = new ProductPrice(productDetail, priceList[i]);
-			productPriceDAO.create(productPrice);
-		}
 		String imageFolder = "images/products";
 		for (Part part : request.getParts()) {
-			if (part.getName().equals("images") && !Objects.equals(part.getSubmittedFileName(), "")){
+			if (part.getName().equals("images") && !Objects.equals(part.getSubmittedFileName(), "")) {
 				String uniqueId = UUID.randomUUID().toString();
 				String submittedFileName = part.getSubmittedFileName();
 				String baseName = FilenameUtils.getBaseName(submittedFileName);
@@ -194,7 +185,8 @@ public class ManageProductsController
 		response.sendRedirect(request.getContextPath() + HOME);
 	}
 
-	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                     IOException {
 		int productId = Integer.parseInt(request.getParameter("productId"));
 		Product product = productDAO.get(productId);
 
@@ -218,11 +210,11 @@ public class ManageProductsController
 
 		int productPriceListLength = lengthList.length;
 		int[] priceList = new int[productPriceListLength];
-			for (int i = 0; i < productPriceListLength; i++) {
+		for (int i = 0; i < productPriceListLength; i++) {
 			priceList[i] = Integer.parseInt(priceParamList[i]);
 		}
 		Dimension[] dimensionList = new Dimension[productPriceListLength];
-			for (int i = 0; i < productPriceListLength; i++) {
+		for (int i = 0; i < productPriceListLength; i++) {
 			dimensionList[i] = new Dimension(Double.parseDouble(lengthList[i]), Double.parseDouble(widthList[i]),
 					Double.parseDouble(heightList[i]));
 		}
@@ -231,48 +223,6 @@ public class ManageProductsController
 		for (int i = 0; i < productPriceListLength; i++) {
 			materialList[i] = new Material(materialParamList[i]);
 		}
-		//xóa các bản ghi product_detail của productId trước khi tạo mới
-		productDetailDAO.delete(productId);
-		//ON DELETE CASCADE trong bảng product_price để xóa luôn anh này
-
-		//dimension và material không đúng riêng mà chung trong một bộ product_detail
-
-		//List<ProductPrice> productPriceList = new ArrayList<>();
-
-		for (int i = 0; i < productPriceListLength ; i++) {
-			int dimensionId, materialId;
-
-			Dimension foundDimension = dimensionDAO.find(dimensionList[i]);
-			// Không có -> tạo mới dimension
-			if (foundDimension == null) {
-				dimensionId = dimensionDAO.create(dimensionList[i]).getDimensionId();
-			} else {
-				dimensionId = foundDimension.getDimensionId();
-			}
-			Dimension dimension  = new Dimension();
-			dimension.setDimensionId(dimensionId);
-
-			Material foundMaterial = materialDAO.find(materialList[i]);
-			// Không có -> tạo mới material
-			if (foundMaterial == null) {
-				materialId = materialDAO.create(materialList[i]).getMaterialId();
-			} else {
-				materialId = foundMaterial.getMaterialId();
-			}
-			Material material = new Material();
-			material.setMaterialId(materialId);
-
-			ProductDetail productDetail = new ProductDetail(productId, material, dimension);
-			productDetail.setProductDetailId(productDetailDAO.create(productDetail).getProductDetailId());
-
-			ProductPrice productPrice = new ProductPrice(productDetail, priceList[i]);
-			productPriceDAO.create(productPrice);
-			//productPriceList.add(productPrice);
-		}
-		//product.setProductPriceList(productPriceList);
-		//xóa các dimension và material không còn dùng
-		dimensionDAO.removeUnusedDimension();
-		materialDAO.removeUnusedMaterial();
 
 		//List<ImagePath> imagePathList = new ArrayList<>();
 		String imageFolder = "images/products";
@@ -330,11 +280,7 @@ public class ManageProductsController
 			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
 			productDAO = new ProductDAO(dataSource);
 			categoryDAO = new CategoryDAO(dataSource);
-			dimensionDAO = new DimensionDAO(dataSource);
-			materialDAO = new MaterialDAO(dataSource);
 			imagePathDAO = new ImagePathDAO(dataSource);
-			productDetailDAO = new ProductDetailDAO(dataSource);
-			productPriceDAO = new ProductPriceDAO(dataSource);
 			importDAO = new ImportDAO(dataSource);
 		} catch (NamingException e) {
 

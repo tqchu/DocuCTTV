@@ -20,39 +20,59 @@ import java.util.List;
 @WebServlet(name = "ManageCategoriesController", value = "/admin/categories/*")
 public class ManageCategoriesController
 		extends HttpServlet {
+	final int NUMBER_OF_RECORDS_PER_PAGE = 10;
 	private CategoryDAO categoryDAO;
 	private HttpSession session;
 
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String uri = request.getRequestURI();
-		if (uri.equals(request.getContextPath()+ "/admin/categories/search")){
-			search(request,response);
-		} else
-			listCategory(request,response);
+
+		listCategory(request, response);
 	}
 
-	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void listCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                           IOException {
 		String keyword = request.getParameter("keyword");
 		String orderBy = getOrder(request);
 		List<Category> categoryList;
-		categoryList = categoryDAO.search(keyword, orderBy);
+		int begin = getBegin(request);
+		categoryList = categoryDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, null, orderBy, null);
+		int numberOfPages = categoryDAO.count(keyword, null) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("list", categoryList);
 		goHome(request, response);
 	}
 
-	private void listCategory(
-			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String orderBy = getOrder(request);
-		List<Category> categoryList;
-		if(orderBy != null) categoryList = categoryDAO.getAll(orderBy);
-		else categoryList = categoryDAO.getAll();
-		request.setAttribute("list", categoryList);
-		goHome(request,response);
+	public String getOrder(HttpServletRequest request) {
+		String orderBy = request.getParameter("orderBy");
+		if (orderBy != null) {
+			switch (orderBy) {
+				case "default":
+					orderBy = null;
+					break;
+				case "name":
+					orderBy = "category_name";
+					break;
+			}
+		}
+		return orderBy;
 	}
 
-	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	public int getBegin(HttpServletRequest request) {
+		String pageParam = request.getParameter("page");
+		int page;
+		if (pageParam == null) {
+			page = 1;
+		} else {
+			page = Integer.parseInt(pageParam);
+		}
+		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
+	}
+
+	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                     IOException {
+		request.setAttribute("requestURI", request.getRequestURI());
 		request.setAttribute("tab", "categories");
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/manage/home.jsp");
 		dispatcher.forward(request, response);
@@ -68,31 +88,37 @@ public class ManageCategoriesController
 				create(request, response);
 				break;
 			case "update":
-				update(request,response);
+				update(request, response);
 				break;
 			case "delete":
-				delete(request,response);
+				delete(request, response);
 		}
 	}
 
-	private void delete(HttpServletRequest request, HttpServletResponse response) {
-		int categoryId= Integer.parseInt(request.getParameter("categoryId"));
+	private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                     IOException {
+		String categoryName = request.getParameter("categoryName");
+		session = request.getSession();
 
-		categoryDAO.delete(categoryId);
-		session=request.getSession();
-		session.setAttribute("successMessage", "Xóa doanh mục thành công");
+		if (categoryDAO.find(categoryName) == null) {
+			Category category = new Category(categoryName);
+			categoryDAO.create(category);
+			session.setAttribute("successMessage", "Thêm doanh mục thành công");
+
+		} else {
+			session.setAttribute("errorMessage", "Tên doanh mục đã tồn tại");
+		}
 		try {
 			response.sendRedirect(request.getContextPath() + "/admin/categories");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private void update(HttpServletRequest request, HttpServletResponse response) {
 		String categoryName = request.getParameter("categoryName");
 		int categoryId = Integer.parseInt(request.getParameter("categoryId"));
-		session= request.getSession();
+		session = request.getSession();
 
 		if (categoryDAO.find(categoryName) == null) {
 			Category category = new Category(categoryId, categoryName);
@@ -109,38 +135,20 @@ public class ManageCategoriesController
 		}
 	}
 
-	private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String categoryName = request.getParameter("categoryName");
-		session= request.getSession();
+	private void delete(HttpServletRequest request, HttpServletResponse response) {
+		int categoryId = Integer.parseInt(request.getParameter("categoryId"));
 
-		if (categoryDAO.find(categoryName) == null) {
-			Category category = new Category(categoryName);
-			categoryDAO.create(category);
-			session.setAttribute("successMessage", "Thêm doanh mục thành công");
-
-		} else {
-			session.setAttribute("errorMessage", "Tên doanh mục đã tồn tại");
-		}
+		categoryDAO.delete(categoryId);
+		session = request.getSession();
+		session.setAttribute("successMessage", "Xóa doanh mục thành công");
 		try {
 			response.sendRedirect(request.getContextPath() + "/admin/categories");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 	}
-	public String getOrder(HttpServletRequest request){
-		String orderBy = request.getParameter("orderBy");
-		if (orderBy != null) {
-			switch (orderBy) {
-				case "default":
-					orderBy = null;
-					break;
-				case "name":
-					orderBy = "category_name";
-					break;
-			}
-		}
-		return orderBy;
-	}
+
 	@Override
 	public void init() throws ServletException {
 		super.init();

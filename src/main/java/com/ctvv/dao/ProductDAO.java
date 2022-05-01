@@ -2,6 +2,7 @@ package com.ctvv.dao;
 
 import com.ctvv.model.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,14 +10,12 @@ import java.util.List;
 
 public class ProductDAO
 		extends GenericDAO<Product> {
-	private ProductPriceDAO productPriceDAO;
 	private ImagePathDAO imagePathDAO;
 	private CategoryDAO categoryDAO;
 
 	public ProductDAO(DataSource dataSource) {
 		super(dataSource);
 		categoryDAO = new CategoryDAO(dataSource);
-		productPriceDAO = new ProductPriceDAO(dataSource);
 		imagePathDAO = new ImagePathDAO(dataSource);
 	}
 
@@ -27,7 +26,6 @@ public class ProductDAO
 			 PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
 			preparedStatement.setInt(1, id);
 			ResultSet resultSet = preparedStatement.executeQuery();
-
 			while (resultSet.next()) {
 				return map(resultSet);
 			}
@@ -38,17 +36,42 @@ public class ProductDAO
 		return null;
 	}
 
+	public List<Product> getAll(String orderBy) {
+		List<Product> productList = new ArrayList<>();
+		String sql = "SELECT * FROM product ORDER BY " + orderBy;
+		try(Connection connection = dataSource.getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()){
+				productList.add(map(resultSet));
+			}
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+		return productList;
+	}
+
 	@Override
 	public List<Product> getAll() {
+
+		return null;
+	}
+	public List<Product> get(int begin, int numberOfRec, String keyword, String field, String sortBy, String order) {
+		if (order==null) order="ASC";
+		if (field==null) field="product_name";
 		List<Product> productList = new ArrayList<>();
-		String sql = "SELECT * FROM product";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement =
-				connection.prepareStatement(sql);) {
-			ResultSet resultSet = preparedStatement.executeQuery();
+		String sql =
+				"SELECT * FROM product " +
+						(keyword != null ? " WHERE " + field + " LIKE '%" + keyword + "%' " : "") +
+						(sortBy != null ? "ORDER BY " + sortBy +" " + order: "") +
+						" LIMIT " + begin + "," + numberOfRec;
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				productList.add(map(resultSet));
 			}
-
+			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -133,21 +156,21 @@ public class ProductDAO
 			int productId = resultSet.getInt("product_id");
 			String productName = resultSet.getString("product_name");
 			int warrantyPeriod = resultSet.getInt("warranty_period");
+			String material = resultSet.getString("material");
+			String dimension = resultSet.getString("dimension");
 			String description = resultSet.getString("description");
 			int categoryId = resultSet.getInt("category_id");
 			Category category = categoryDAO.get(categoryId);
 			List<ImagePath> imagePathList = imagePathDAO.getGroup(productId);
-			List<ProductPrice> productPriceList = productPriceDAO.getGroup(productId);
 
-			return new Product(productId, productName, warrantyPeriod, description,
-					category, imagePathList, productPriceList);
+			return new Product(productId, productName, warrantyPeriod,material,dimension, description,
+					category, imagePathList);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 
 	}
-
 
 	public List<Product> getAllByCategory(int categoryId) {
 		List<Product> productList = new ArrayList<>();
@@ -166,21 +189,22 @@ public class ProductDAO
 		return productList;
 	}
 
-	public List<Product> search(String keyword) {
+	public int count(String keyword, String field){
+		int count = 0;
+		if (field==null) field="product_name";
 		List<Product> productList = new ArrayList<>();
-		String sql = "SELECT * FROM product WHERE product_name LIKE ?";
+		String sql =
+				"SELECT COUNT(product_id) AS no FROM product " +
+						(keyword != null ? " WHERE " + field + " LIKE '%" + keyword + "%' " : "") ;
 		try (Connection connection = dataSource.getConnection();
-			 PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setString(1, "%"+keyword + "%");
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				productList.add(map(resultSet));
-			}
+			resultSet.next();
+			count = resultSet.getInt("no");
 			resultSet.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return productList;
-
+		return  count;
 	}
 }
