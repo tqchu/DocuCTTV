@@ -1,6 +1,7 @@
 package com.ctvv.dao;
 
 import com.ctvv.model.Import;
+import com.ctvv.model.ImportDetail;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -10,54 +11,38 @@ import java.util.List;
 
 public class ImportDAO
 		extends GenericDAO<Import> {
-
+	private  ImportDetailDAO importDetailDAO;
 	public ImportDAO(DataSource dataSource) {
+
 		super(dataSource);
+		importDetailDAO  = new ImportDetailDAO(dataSource);
 	}
 
 	@Override
 	public Import get(int id) {
+		String sql = "SELECT * FROM import WHERE import_id=?";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+			preparedStatement.setInt(1, id);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				return map(resultSet);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
+
 	}
 
 	@Override
 	public List<Import> getAll() {
 		return null;
 	}
-	public List<Import> getGroup(int id){
-		List<Import> importList= new ArrayList<>();
-		String sql = "SELECT * FROM import WHERE product_id = ?";
-		try (Connection connection = dataSource.getConnection();
-		     PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setInt(1,id);
-			ResultSet resultSet = statement.executeQuery();
-			while(resultSet.next()){
-				int price = resultSet.getInt("import_price");
-				LocalDate date = resultSet.getDate("import_day").toLocalDate();
-				int quantity = resultSet.getInt("quantity");
-				importList.add(new Import(id,price,date,quantity));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return importList;
-	}
-
 	@Override
 	public Import create(Import pImport) {
-		String sql = "INSERT INTO import VALUES(?,?,?,?)";
-		try(Connection connection = dataSource.getConnection();
-		    PreparedStatement statement = connection.prepareStatement(sql)){
-			statement.setInt(1,pImport.getProductId());
-			statement.setInt(2,pImport.getPrice());
-			statement.setDate(3,Date.valueOf(pImport.getImportDay()));
-			statement.setInt(4,pImport.getQuantity());
-			statement.execute();
-		}
-		catch(SQLException e){
-			e.printStackTrace();
-		}
-		return pImport ;
+		return null;
 	}
 
 	@Override
@@ -80,15 +65,26 @@ public class ImportDAO
 	@Override
 	public Import map(ResultSet resultSet) {
 		try {
-			int productId = resultSet.getInt("product_id");
-			int price = resultSet.getInt("import_price");
-			int quantity = resultSet.getInt("quantity");
-			LocalDate importDay = resultSet.getDate("import_day").toLocalDate();
-			return new Import(productId, price, importDay, quantity);
+			int importId = resultSet.getInt("import_id");
+			String importerName = resultSet.getString("importer_name");
+			int providerId = resultSet.getInt("provider_id");
+			String providerName = resultSet.getString("provider_name");
+			LocalDate importDate = resultSet.getDate("import_date").toLocalDate();
+			List<ImportDetail> importDetailList = importDetailDAO.getGroup(importId);
+			int totalPrice = totalPrice(importDetailList);
+
+			return new Import(importId, importerName, providerId, providerName, importDate, totalPrice, importDetailList);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 
+	}
+	private int totalPrice(List<ImportDetail> importDetailList){
+		int totalPrice = 0;
+		for (ImportDetail importDetail :importDetailList) {
+			totalPrice+= importDetail.getPrice()* importDetail.getQuantity()*(1-importDetail.getTax());
+		}
+		return totalPrice;
 	}
 }
