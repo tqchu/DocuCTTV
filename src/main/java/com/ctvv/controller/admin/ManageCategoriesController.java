@@ -27,32 +27,19 @@ public class ManageCategoriesController
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String uri = request.getRequestURI();
-		if (uri.equals(request.getContextPath() + "/admin/categories/search")) {
-			search(request, response);
-		} else
-			listCategory(request, response);
+
+		listCategory(request, response);
 	}
 
-	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                     IOException {
+	private void listCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                           IOException {
 		String keyword = request.getParameter("keyword");
 		String orderBy = getOrder(request);
 		List<Category> categoryList;
 		int begin = getBegin(request);
-		int end = NUMBER_OF_RECORDS_PER_PAGE + begin;
-		categoryList = categoryDAO.search(begin, end, keyword, orderBy);
-		request.setAttribute("list", categoryList);
-		goHome(request, response);
-	}
-
-	private void listCategory(
-			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String sortBy = getOrder(request);
-		int begin = getBegin(request);
-		int end = begin + NUMBER_OF_RECORDS_PER_PAGE;
-		List<Category> categoryList;
-		categoryList = categoryDAO.get(begin, end, sortBy, "ASC");
+		categoryList = categoryDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, null, orderBy, null);
+		int numberOfPages = categoryDAO.count(keyword, null) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("list", categoryList);
 		goHome(request, response);
 	}
@@ -71,19 +58,20 @@ public class ManageCategoriesController
 		}
 		return orderBy;
 	}
-	public int getBegin(HttpServletRequest request){
+
+	public int getBegin(HttpServletRequest request) {
 		String pageParam = request.getParameter("page");
 		int page;
 		if (pageParam == null) {
 			page = 1;
-		}
-		else {
-			page=Integer.parseInt(pageParam);
+		} else {
+			page = Integer.parseInt(pageParam);
 		}
 		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
 	}
+
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                         IOException {
+	                                                                                     IOException {
 		request.setAttribute("requestURI", request.getRequestURI());
 		request.setAttribute("tab", "categories");
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/manage/home.jsp");
