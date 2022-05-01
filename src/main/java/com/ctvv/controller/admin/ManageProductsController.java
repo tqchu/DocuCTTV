@@ -136,37 +136,18 @@ public class ManageProductsController
 		// Lấy danh sách tham số và chuyển về đối  tượng
 		String name = request.getParameter("productName");
 		String description = request.getParameter("description");
-		String[] lengthList = request.getParameterValues("length");
-		String[] widthList = request.getParameterValues("width");
-		String[] heightList = request.getParameterValues("height");
-		String[] priceParamList = request.getParameterValues("price");
-
+		String material = request.getParameter("material");
+		String dimension = request.getParameter("dimension");
 		int warrantyPeriod = Integer.parseInt(request.getParameter("warrantyPeriod"));
 		Category category = null;
 		if (!Objects.equals(request.getParameter("categoryId"), "")) {
-
 			category = categoryDAO.get(Integer.parseInt(request.getParameter("categoryId")));
 		}
 
-		Product product = null;
+		Product product = new Product(name,warrantyPeriod,material,dimension,description,category);
+		productDAO.create(product);
 		//		Product product = new Product(name, warrantyPeriod, description, category);
-		int productId = productDAO.create(product).getProductId();
-
-		int productPriceListLength = lengthList.length;
-		int[] priceList = new int[productPriceListLength];
-		for (int i = 0; i < productPriceListLength; i++) {
-			priceList[i] = Integer.parseInt(priceParamList[i]);
-		}
-		Dimension[] dimensionList = new Dimension[productPriceListLength];
-		for (int i = 0; i < productPriceListLength; i++) {
-			dimensionList[i] = new Dimension(Double.parseDouble(lengthList[i]), Double.parseDouble(widthList[i]),
-					Double.parseDouble(heightList[i]));
-		}
-		Material[] materialList = new Material[productPriceListLength];
-		String[] materialParamList = request.getParameterValues("material");
-		for (int i = 0; i < productPriceListLength; i++) {
-			materialList[i] = new Material(materialParamList[i]);
-		}
+		/*int productId = productDAO.create(product).getProductId();
 
 		String imageFolder = "images/products";
 		for (Part part : request.getParts()) {
@@ -180,8 +161,8 @@ public class ManageProductsController
 				part.write(this.getInitParameter("targetImageFolder") + "\\" + fileName);
 				imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
 			}
-		}
-		session.setAttribute("successMessage", "Sản phẩm đã sửa thêm thành công");
+		}*/
+		session.setAttribute("successMessage", "Sản phẩm đã thêm thành công");
 		response.sendRedirect(request.getContextPath() + HOME);
 	}
 
@@ -269,6 +250,16 @@ public class ManageProductsController
 	}
 
 	private void delete(HttpServletRequest request, HttpServletResponse response) {
+		int productId = Integer.parseInt(request.getParameter("productId"));
+
+		productDAO.delete(productId);
+		session = request.getSession();
+		session.setAttribute("successMessage", "Xóa sản phẩm thành công");
+		try{
+			response.sendRedirect(request.getContextPath() + HOME );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
