@@ -58,22 +58,21 @@
             <tr>
                 <th>STT</th>
                 <th>Người nhập</th>
-                <th>Mã sản phẩm</th>
-                <th>Tên sản phẩm</th>
                 <th>Nhà cung cấp</th>
                 <th>Thành tiền</th>
                 <th>Ngày nhập</th>
-                <th class="column__action">Xem chi tiết</th>
+                <th class="column__action"></th>
             </tr>
             </thead>
             <tbody>
-            <c:if test="${not empty list}">
-                <c:forEach items="${list}" var="currentRow" varStatus="loop">
+            <c:if test="${not empty importList}">
+                <c:forEach items="${importList}" var="currentRow" varStatus="loop">
                     <tr>
                         <td>${loop.count}</td>
-                        <td>${currentRow.product.productId}</td>
-                        <td>${currentRow.product.productName}</td>
-                        <td>Tổng số lượng</td>
+                        <td>${currentRow.importerName}</td>
+                        <td>${currentRow.providerName}</td>
+                        <td>${currentRow.totalPrice}</td>
+                        <td>${currentRow.importDate}</td>
                         <td class="">
                             <a href="">Xem chi tiết</a>
                         </td>

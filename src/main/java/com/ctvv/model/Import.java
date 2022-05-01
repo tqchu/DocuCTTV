@@ -1,58 +1,103 @@
 package com.ctvv.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Import {
-	private int productId;
-	private int price;
-	private LocalDate importDay;
-	private int quantity;
+	private int importId;
+	private String importerName;
+	private int providerId;
+	private String providerName;
+	private LocalDate importDate;
+	private int totalPrice;
+	private List<ImportDetail> importDetailList;
 
-	public Import(){
+	public Import() {
 
 	}
-	public Import(Import pImport){
-		this.productId = pImport.productId;
-		this.price = pImport.price;
-		this.importDay = pImport.importDay;
-		this.quantity = pImport.quantity;
-	}
-	public Import(int productId, int price, LocalDate importDay, int quantity) {
-		this.productId = productId;
-		this.price = price;
-		this.importDay = importDay;
-		this.quantity = quantity;
+
+	public Import(
+			int importId, String importerName, int providerId, String providerName, LocalDate importDate,
+			int totalPrice,
+			List<ImportDetail> importDetailList) {
+		this.importId = importId;
+		this.importerName = importerName;
+		this.providerId = providerId;
+		this.providerName = providerName;
+		this.importDate = importDate;
+		this.totalPrice = totalPrice;
+		this.importDetailList = new ArrayList<>(importDetailList);
+
 	}
 
-	public int getProductId() {
-		return productId;
+	public Import(
+			String importerName, int providerId, String providerName, LocalDate importDate,
+			int totalPrice,
+			List<ImportDetail> importDetailList) {
+		this.importerName = importerName;
+		this.providerId = providerId;
+		this.providerName = providerName;
+		this.importDate = importDate;
+		this.totalPrice = totalPrice;
+		this.importDetailList = new ArrayList<>(importDetailList);
+
 	}
 
-	public void setProductId(int productId) {
-		this.productId = productId;
+
+	public int getImportId() {
+		return importId;
 	}
 
-	public int getPrice() {
-		return price;
+	public void setImportId(int importId) {
+		this.importId = importId;
 	}
 
-	public void setPrice(int price) {
-		this.price = price;
+	public String getImporterName() {
+		return importerName;
 	}
 
-	public LocalDate getImportDay() {
-		return importDay;
+	public void setImporterName(String importerName) {
+		this.importerName = importerName;
 	}
 
-	public void setImportDay(LocalDate importDay) {
-		this.importDay = importDay;
+	public int getProviderId() {
+		return providerId;
 	}
 
-	public int getQuantity() {
-		return quantity;
+	public void setProviderId(int providerId) {
+		this.providerId = providerId;
 	}
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
+	public String getProviderName() {
+		return providerName;
+	}
+
+	public void setProviderName(String providerName) {
+		this.providerName = providerName;
+	}
+
+	public LocalDate getImportDate() {
+		return importDate;
+	}
+
+	public void setImportDate(LocalDate importDate) {
+		this.importDate = importDate;
+	}
+
+	public int getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(int totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
+	public List<ImportDetail> getImportDetailList() {
+		return importDetailList;
+	}
+
+	public void setImportDetailList(List<ImportDetail> importDetailList) {
+		this.importDetailList = new ArrayList<>(importDetailList);
 	}
 }
