@@ -101,50 +101,23 @@
 
             <textarea name="description" id="" cols="60" rows="8">${product.description}</textarea>
         </div>
-        <c:forEach items="${product.productPriceList}" var="productPrice">
-            <div class="form-group dimen-mater-price-group">
-                <div class="dimension-form-group">
-                    <span class="dimension-form-group__label form-group__label">Kích thước</span>
-                    <div class="dimension-form-group__input">
-                        <div class="dimension-form-item">
-                            <input type="number" name="length" value="${productPrice.productDetail.dimension.length}">
-                            <span class="dimension-form-item__text-label">D</span>
-                        </div>
-                        <div class="dimension-form-item">
-
-                            <input type="text" name="width" value="${productPrice.productDetail.dimension.width}">
-                            <span class="dimension-form-item__text-label">R</span>
-                        </div>
-                        <div class="dimension-form-item">
-
-                            <input type="text" name="height" value="${productPrice.productDetail.dimension.height}">
-                            <span class="dimension-form-item__text-label">C</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="material-form-group">
-            <span class="material-form-group__label form-group__label">
+        <div class="form-group">
+            <span class="form-group__label">Kích thước</span>
+            <input type="text" name="dimension" value="${product.dimension}">
+        </div>
+        <div class="form-group">
+                             <span class="form-group__label">
                                 Chất liệu
                              </span>
-                    <div class="material-form-group__input">
-                        <input type="text" name="material" id="material"
-                               value="${productPrice.productDetail.material.materialName}">
-                    </div>
-                </div>
-                <div class="price-form-group">
-                    <span class="price-form-group__label form-group__label">Đơn giá</span>
-                    <div class="price-form-group__input">
-                        <input type="text" name="price" value="${productPrice.price}">
-                    </div>
-                </div>
-                <div class="form-group__minus-row-btn">
-                    <i class="fa-solid fa-minus"></i>
-                </div>
-            </div>
-        </c:forEach>
 
-        <div class="form-group__add-row-btn">
-            <i class="las la-plus-circle"></i>
+            <input type="text" name="material" id="material" value="${product.material}"
+            >
+        </div>
+        <div class="form-group">
+            <span class="form-group__label">Đơn giá</span>
+
+            <input type="text" name="price" value="${product.price}">
+
         </div>
 
         <div class="form-group">

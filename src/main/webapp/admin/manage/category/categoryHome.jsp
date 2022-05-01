@@ -3,7 +3,8 @@
 <div class="tab__content">
     <div class="search">
         <form action="${context}/admin/categories/search" class="search__form" method="get">
-            <input type="search" class="search__bar form-control" name="keyword" placeholder="Nhập tên doanh mục">
+            <input type="search" class="search__bar form-control" name="keyword" placeholder="Nhập tên doanh mục"
+                   value="${param.keyword}">
             <button type="submit" class="btn btn-primary btn-search">
                 <i class="las la-search"></i>
             </button>
@@ -84,7 +85,7 @@
         <span class="order-bar__option  ${param.orderBy=='name'?'active':''}" data-sort="name">Tên</span>
     </div>
     <div class="list">
-        <table class="data-table   table table-hover table-bordered ">
+        <table class="table table-hover table-bordered ">
             <thead>
             <tr>
                 <th>STT</th>
@@ -196,5 +197,30 @@
             </tbody>
         </table>
     </div>
+    <c:set var="queryString" scope="page"><%= request.getQueryString() %></c:set>
+    <nav>
+        <ul class="pagination justify-content-center pagination-lg">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+           <%-- <li class="page-item"><a class="page-link"
+                                     href="${requestURI+=(not empty keyword?"?keyword="+=keyword+"&":"?")+=(not empty
+                                     field?"&field="+=field+"&":"")+=(not empty orderBy?"orderBy+="+=orderBy)}">
+                1</a></li>--%>
+
+            <li class="page-item"><a class="page-link"
+                                     href="${queryString!="null"
+                                     ?requestURI+="?"+=queryString+="&page=1":requestURI+="&page=2"}">2
+            </a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 <script src="${context}/js/admin/category/category.js?rd=${rand}"></script>

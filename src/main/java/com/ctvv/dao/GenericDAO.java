@@ -14,6 +14,8 @@ abstract public class GenericDAO<T> {
 		this.dataSource = dataSource;
 	}
 
+	// ham count
+
 	/**
 	 * Return null if no entity with the id was found
 	 *
