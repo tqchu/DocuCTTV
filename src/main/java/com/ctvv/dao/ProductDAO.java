@@ -80,7 +80,7 @@ public class ProductDAO
 
 	@Override
 	public Product create(Product product) {
-		String sql = "INSERT INTO product(product_name, warranty_period, description, category_id) VALUES (?,?,?,?)";
+		String sql = "INSERT INTO product(product_name, warranty_period, description,dimension,material,price,category_id) VALUES (?,?,?,?,?,?,?)";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
@@ -90,10 +90,13 @@ public class ProductDAO
 			statement.setString(1, product.getName());
 			statement.setInt(2, product.getWarrantyPeriod());
 			statement.setString(3, product.getDescription());
+			statement.setString(4,product.getDimension());
+			statement.setString(5,product.getMaterial());
+			statement.setInt(6,product.getPrice());
 			if (product.getCategory() == null) {
-				statement.setNull(4, Types.INTEGER);
+				statement.setNull(7, Types.INTEGER);
 			} else
-				statement.setInt(4, product.getCategory().getCategoryId());
+				statement.setInt(7, product.getCategory().getCategoryId());
 			statement.execute();
 			ResultSet resultSet = statement.getGeneratedKeys();
 			while (resultSet.next()) {
@@ -126,17 +129,20 @@ public class ProductDAO
 	@Override
 	public Product update(Product product) {
 		String sql = "UPDATE product SET product_name=?, warranty_period=?,  description=?, "+
-				"category_id=? WHERE product_id=?";
+				"dimension = ?, material = ?, price = ?, category_id=? WHERE product_id=?";
 		try (Connection connection = dataSource.getConnection();
 		PreparedStatement statement = connection.prepareStatement(sql)){
 			statement.setString(1, product.getName());
 			statement.setInt(2, product.getWarrantyPeriod());
 			statement.setString(3, product.getDescription());
+			statement.setString(4,product.getDimension());
+			statement.setString(5,product.getMaterial());
+			statement.setInt(6,product.getPrice());
 			if (product.getCategory() == null) {
-				statement.setNull(4, Types.INTEGER);
+				statement.setNull(7, Types.INTEGER);
 			} else
-				statement.setInt(4, product.getCategory().getCategoryId());
-			statement.setInt(5, product.getProductId());
+				statement.setInt(7, product.getCategory().getCategoryId());
+			statement.setInt(8, product.getProductId());
 			statement.executeUpdate();
 			return product;
 		} catch (SQLException e) {
@@ -147,8 +153,16 @@ public class ProductDAO
 
 	@Override
 	public void delete(int id) {
-
+		String sql = "DELETE FROM product WHERE product_id ='"+id+"'";
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.executeUpdate();
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
 	}
+
 
 	@Override
 	public Product map(ResultSet resultSet) {
@@ -159,12 +173,13 @@ public class ProductDAO
 			String material = resultSet.getString("material");
 			String dimension = resultSet.getString("dimension");
 			String description = resultSet.getString("description");
+			int price = resultSet.getInt("price");
 			int categoryId = resultSet.getInt("category_id");
 			Category category = categoryDAO.get(categoryId);
 			List<ImagePath> imagePathList = imagePathDAO.getGroup(productId);
 
 			return new Product(productId, productName, warrantyPeriod,material,dimension, description,
-					category, imagePathList);
+					price, category, imagePathList);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
