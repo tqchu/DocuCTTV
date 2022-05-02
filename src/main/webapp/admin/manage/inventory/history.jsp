@@ -57,6 +57,7 @@
             <thead>
             <tr>
                 <th>STT</th>
+                <th>Mã đơn nhập</th>
                 <th>Người nhập</th>
                 <th>Nhà cung cấp</th>
                 <th>Thành tiền</th>
@@ -69,6 +70,7 @@
                 <c:forEach items="${importList}" var="currentRow" varStatus="loop">
                     <tr>
                         <td>${loop.count}</td>
+                        <td>${currentRow.importId}</td>
                         <td>${currentRow.importerName}</td>
                         <td>${currentRow.providerName}</td>
                         <td>${currentRow.totalPrice}</td>
@@ -84,5 +86,32 @@
             </tbody>
         </table>
     </div>
+    <c:set var="queryString" scope="page"><%= request.getQueryString() %></c:set>
+    <nav>
+        <ul class="pagination justify-content-center pagination-lg">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+<%--            <li class="page-item"><a class="page-link"--%>
+<%--                                      href="${requestURI+=(not empty keyword?"?keyword="+=keyword+"&":"?")+=(not empty--%>
+<%--                                      field?"&field="+=field+"&":"")+=(not empty orderBy?"orderBy+="+=orderBy)}">--%>
+<%--                 1--%>
+<%--                </a>--%>
+<%--            </li>--%>
+
+            <li class="page-item"><a class="page-link"
+                                     href="${queryString!="null"
+                                     ?requestURI+="?"+=queryString+="&page=1":requestURI+="&page=2"}">2
+            </a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 <script src="${context}/js/admin/inventory/inventory.js?rd=${rand}"></script>
