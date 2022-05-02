@@ -1,32 +1,31 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8"%>
-<%-- set context path--%>
-<c:set var="context" value="${pageContext.request.contextPath}" scope="request"/>
-<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %></c:set>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
-    <link rel="shortcut icon" href="/favicon.ico">
-    <!-- RESET CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
-          integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    
-    <!-- FONT   -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet">
-    <!-- APP -->
-    <link rel="stylesheet" href="/css/base.css?rd=">
-    <link rel="stylesheet" href="/css/style.css?rd=">
-</head>
-<body>
-<jsp:include page="../../common/header.jsp"/>
-
-<jsp:include page="../../common/footer.jsp"/>
-
-
-</body>
-</html>
+<!-- SURROGATE FORM -->
+<form action="${requestURI}" id="surrogateForm">
+    <input type="hidden" name="keyword" value="${param.keyword}" ${empty param.keyword?'disabled':''}>
+    <input type="hidden" name="field" value="${param.field}" ${empty param.field?'disabled':''}>
+    <input type="hidden" name="page" value="${not empty param.page? param.page: 1}">
+    <input type="hidden" name="sortBy" value="${param.sortBy}" ${empty param.sortBy?'disabled':''}>
+    <input type="hidden" name="order" value="${param.order}" ${empty param.order?'disabled':''}>
+</form>
+<!-- PAGINATION -->
+<nav>
+    <ul class="pagination justify-content-center">
+        <li class="page-item ${(empty param.page|| param.page=='1')?'disabled':''}">
+            <button class="page-link " aria-label="Trước">
+                <span aria-hidden="true"><</span>
+            </button>
+        </li>
+        <c:forEach begin="1" end="${numberOfPages}" var="i">
+            <li class="page-item ${param.page==i||(empty param.page && i==1)?'active':''}">
+                <button class="page-link" data-page="${i}"
+                >${i}
+                </button>
+            </li>
+        </c:forEach>
+        <li class="page-item  ${(param.page==numberOfPages||numberOfPages==1)?'disabled':''}">
+            <button class="page-link" aria-label="Sau">
+                <span aria-hidden="true">></span>
+            </button>
+        </li>
+    </ul>
+</nav>

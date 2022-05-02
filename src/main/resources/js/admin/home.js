@@ -1,22 +1,28 @@
 $(function () {
-    const languageOption = {
-        "decimal": "",
-        "emptyTable": "Không có dữ liệu",
-        "info": "Hiển thị  dòng _START_ đến _END_ trong _TOTAL_ dòng",
-        "infoPostFix": "",
-        "thousands": ".",
-        "infoEmpty":      "",
-        "lengthMenu": "Hiển thị _MENU_ dòng/ trang",
-        "loadingRecords": "Đang tải...",
-        "processing": "Đang xử lý...",
-        "paginate": {
-            "first": "Trang đầu",
-            "last": "Trang cuối",
-            "next": "Trước",
-            "previous": "Sau"
-        }
-    }
 
+
+    // HANDLE SEARCH, SORT, PAGE FORM
+    const surrogateForm = $('#surrogateForm')
+    const pageInput = surrogateForm.find('input[name=page]')
+    const sortByInput = surrogateForm.find('input[name=sortBy]')
+    const pageBtn = $('.page-link')
+    pageBtn.click(function () {
+        if (pageInput.attr('disabled')) {
+            pageInput.removeAttr('disabled');
+        }
+        pageInput.val($(this).attr('data-page'))
+        surrogateForm.submit()
+    })
+
+
+    const sortOptions = $('.order-bar__option')
+    sortOptions.click(function () {
+        if (sortByInput.attr('disabled')) {
+            sortByInput.removeAttr('disabled');
+        }
+        sortByInput.val($(this).attr('data-sort'))
+        surrogateForm.submit()
+    })
 
 
 });

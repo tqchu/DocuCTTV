@@ -55,18 +55,18 @@ public class ManageProviderController
 				field = "tax_id_number";
 				break;
 		}
-		String orderBy= getOrder(request);
+		String sortBy= getOrder(request);
 		List<Provider> providerList;
-		providerList = providerDAO.search(keyword, field, orderBy);
+		providerList = providerDAO.search(keyword, field, sortBy);
 		request.setAttribute("providerList", providerList);
 		goHome(request, response);
 	}
 
 	private void listProviders(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String orderBy =getOrder(request);
+		String sortBy =getOrder(request);
 		List<Provider> providerList;
-		if (orderBy != null) providerList = providerDAO.getAll(orderBy);
+		if (sortBy != null) providerList = providerDAO.getAll(sortBy);
 		else providerList = providerDAO.getAll();
 		request.setAttribute("providerList", providerList);
 		goHome(request, response);
@@ -231,18 +231,18 @@ public class ManageProviderController
 		}
 	}
 	public String getOrder(HttpServletRequest request){
-		String orderBy = request.getParameter("orderBy");
-		if (orderBy != null) {
-			switch (orderBy) {
+		String sortBy = request.getParameter("sortBy");
+		if (sortBy != null) {
+			switch (sortBy) {
 				case "default":
-					orderBy = null;
+					sortBy = null;
 					break;
 				case "name":
-					orderBy = "provider_name";
+					sortBy = "provider_name";
 					break;
 			}
 		}
-		return orderBy;
+		return sortBy;
 	}
 	@Override
 	public void init() throws ServletException {

@@ -66,29 +66,29 @@ public class ManageProductsController
 	private void listProducts(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
-		String orderBy = getOrderBy(request);
+		String sortBy = getsortBy(request);
 		List<Product> productList;
 		int begin = getBegin(request);
-		productList = productDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, null, orderBy, null);
-		int numberOfPages = productDAO.count(keyword, null) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		productList = productDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, null, sortBy, null);
+		int numberOfPages = (productDAO.count(keyword, null) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
 		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("list", productList);
 		goHome(request, response);
 	}
 
-	public String getOrderBy(HttpServletRequest request) {
-		String orderBy = request.getParameter("orderBy");
-		if (orderBy != null) {
-			switch (orderBy) {
+	public String getsortBy(HttpServletRequest request) {
+		String sortBy = request.getParameter("sortBy");
+		if (sortBy != null) {
+			switch (sortBy) {
 				case "default":
-					orderBy = null;
+					sortBy = null;
 					break;
 				case "name":
-					orderBy = "product_name";
+					sortBy = "product_name";
 					break;
 			}
 		}
-		return orderBy;
+		return sortBy;
 	}
 
 	public int getBegin(HttpServletRequest request) {
