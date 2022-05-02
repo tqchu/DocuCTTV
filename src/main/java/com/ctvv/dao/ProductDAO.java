@@ -1,8 +1,9 @@
 package com.ctvv.dao;
 
-import com.ctvv.model.*;
+import com.ctvv.model.Category;
+import com.ctvv.model.ImagePath;
+import com.ctvv.model.Product;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class ProductDAO
 
 	@Override
 	public Product create(Product product) {
-		String sql = "INSERT INTO product(product_name, warranty_period, description, category_id) VALUES (?,?,?,?)";
+		String sql = "INSERT INTO product(product_name, warranty_period,material, dimension, description, category_id) VALUES (?,?,?,?,?,?)";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
@@ -90,10 +91,12 @@ public class ProductDAO
 			statement.setString(1, product.getName());
 			statement.setInt(2, product.getWarrantyPeriod());
 			statement.setString(3, product.getDescription());
+			statement.setString(4,product.getMaterial());
+			statement.setString(5, product.getDimension());
 			if (product.getCategory() == null) {
-				statement.setNull(4, Types.INTEGER);
+				statement.setNull(6, Types.INTEGER);
 			} else
-				statement.setInt(4, product.getCategory().getCategoryId());
+				statement.setInt(6, product.getCategory().getCategoryId());
 			statement.execute();
 			ResultSet resultSet = statement.getGeneratedKeys();
 			while (resultSet.next()) {
@@ -147,7 +150,14 @@ public class ProductDAO
 
 	@Override
 	public void delete(int id) {
-
+		String sql = "DELETE FROM product WHERE product_id = ?";
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, id);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

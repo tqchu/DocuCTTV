@@ -132,54 +132,36 @@ public class ManageProductsController
 		// Lấy danh sách tham số và chuyển về đối  tượng
 		String name = request.getParameter("productName");
 		String description = request.getParameter("description");
-		String[] lengthList = request.getParameterValues("length");
-		String[] widthList = request.getParameterValues("width");
-		String[] heightList = request.getParameterValues("height");
-		String[] priceParamList = request.getParameterValues("price");
-
+		String material = request.getParameter("material");
+		String dimension = request.getParameter("dimension");
 		int warrantyPeriod = Integer.parseInt(request.getParameter("warrantyPeriod"));
 		Category category = null;
 		if (!Objects.equals(request.getParameter("categoryId"), "")) {
-
 			category = categoryDAO.get(Integer.parseInt(request.getParameter("categoryId")));
 		}
 
-		Product product = null;
-		//		Product product = new Product(name, warrantyPeriod, description, category);
-		int productId = productDAO.create(product).getProductId();
 
-		int productPriceListLength = lengthList.length;
-		int[] priceList = new int[productPriceListLength];
-		for (int i = 0; i < productPriceListLength; i++) {
-			priceList[i] = Integer.parseInt(priceParamList[i]);
-		}
-		/*Dimension[] dimensionList = new Dimension[productPriceListLength];
-		for (int i = 0; i < productPriceListLength; i++) {
-			dimensionList[i] = new Dimension(Double.parseDouble(lengthList[i]), Double.parseDouble(widthList[i]),
-					Double.parseDouble(heightList[i]));
-		}
-		Material[] materialList = new Material[productPriceListLength];
-		String[] materialParamList = request.getParameterValues("material");
-		for (int i = 0; i < productPriceListLength; i++) {
-			materialList[i] = new Material(materialParamList[i]);
-		}*/
+			Product product = new Product(name, warrantyPeriod, material, dimension, description, category);
+			int productId = productDAO.create(product).getProductId();
 
-		String imageFolder = "images/products";
-		for (Part part : request.getParts()) {
-			if (part.getName().equals("images") && !Objects.equals(part.getSubmittedFileName(), "")) {
-				String uniqueId = UUID.randomUUID().toString();
-				String submittedFileName = part.getSubmittedFileName();
-				String baseName = FilenameUtils.getBaseName(submittedFileName);
-				String extensionName = FilenameUtils.getExtension(submittedFileName);
-				String fileName = baseName + uniqueId + "." + extensionName;
-				part.write(this.getInitParameter("sourceImageFolder") + "\\" + fileName);
-				part.write(this.getInitParameter("targetImageFolder") + "\\" + fileName);
-				imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
+
+			String imageFolder = "images/products";
+			for (Part part : request.getParts()) {
+				if (part.getName().equals("images") && !Objects.equals(part.getSubmittedFileName(), "")) {
+					String uniqueId = UUID.randomUUID().toString();
+					String submittedFileName = part.getSubmittedFileName();
+					String baseName = FilenameUtils.getBaseName(submittedFileName);
+					String extensionName = FilenameUtils.getExtension(submittedFileName);
+					String fileName = baseName + uniqueId + "." + extensionName;
+					part.write(this.getInitParameter("sourceImageFolder") + "\\" + fileName);
+					part.write(this.getInitParameter("targetImageFolder") + "\\" + fileName);
+					imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
+				}
 			}
+			session.setAttribute("successMessage", "Sản phẩm đã thêm thành công");
+			response.sendRedirect(request.getContextPath() + HOME);
 		}
-		session.setAttribute("successMessage", "Sản phẩm đã sửa thêm thành công");
-		response.sendRedirect(request.getContextPath() + HOME);
-	}
+
 
 	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
@@ -237,6 +219,17 @@ public class ManageProductsController
 	}
 
 	private void delete(HttpServletRequest request, HttpServletResponse response) {
+		int productId = Integer.parseInt(request.getParameter("productId"));
+
+		imagePathDAO.delete(productId);
+		productDAO.delete(productId);
+		session = request.getSession();
+		session.setAttribute("successMessage", "Xóa sản phẩm thành công");
+		try{
+			response.sendRedirect(request.getContextPath() + HOME );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
