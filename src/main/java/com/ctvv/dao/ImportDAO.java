@@ -1,5 +1,6 @@
 package com.ctvv.dao;
 
+import com.ctvv.model.Category;
 import com.ctvv.model.Import;
 import com.ctvv.model.ImportDetail;
 
@@ -33,9 +34,27 @@ public class ImportDAO
 			e.printStackTrace();
 		}
 		return null;
-
 	}
-
+	public List<Import> get(int begin, int numberOfRec, String keyword, String sortBy, String order) {
+		if (order==null) order="ASC";
+		List<Import> importList = new ArrayList<>();
+		String sql =
+				"SELECT * FROM import " +
+						(keyword != null ? " WHERE provider_name LIKE '%" + keyword + "%' " : "") +
+						(sortBy != null ? "ORDER BY " + sortBy +" " + order: "") +
+						" LIMIT " + begin + "," + numberOfRec;
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				importList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return importList;
+	}
 	@Override
 	public List<Import> getAll() {
 		return null;
@@ -79,6 +98,22 @@ public class ImportDAO
 		}
 		return null;
 
+	}
+	public int count(String keyword){
+		int count = 0;
+		String sql =
+				"SELECT COUNT(import_id) AS no FROM import " +
+						(keyword != null ? " WHERE import.provider_name LIKE '%" + keyword + "%' " : "") ;
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			count = resultSet.getInt("no");
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return  count;
 	}
 	private int totalPrice(List<ImportDetail> importDetailList){
 		int totalPrice = 0;

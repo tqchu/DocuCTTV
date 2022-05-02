@@ -1,6 +1,7 @@
 package com.ctvv.controller.admin;
 
 import com.ctvv.dao.ImportDAO;
+import com.ctvv.model.Category;
 import com.ctvv.model.Import;
 
 import javax.naming.Context;
@@ -18,6 +19,7 @@ import java.util.List;
 public class ManageInventoryController
 		extends HttpServlet {
 	private ImportDAO importDAO;
+	final int NUMBER_OF_RECORDS_PER_PAGE = 5  ;
 	final String HOME_PAGE = "/admin/manage/home.jsp";
 
 	@Override
@@ -29,13 +31,50 @@ public class ManageInventoryController
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
 		if (request.getRequestURI().equals(request.getContextPath()+"/admin/inventory/history")) {
-//			List<Import> importList =  importDAO.get
 			request.setAttribute("tab", "inventoryHistory");
+			listImport(request,response);
+			request.setAttribute("requestURI", request.getRequestURI());
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/manage/home.jsp");
+			dispatcher.forward(request, response);
 		}
 		else
 			request.setAttribute("tab", "inventory");
-		RequestDispatcher requestDispatcher = request.getRequestDispatcher(HOME_PAGE);
-		requestDispatcher.forward(request, response);
+
+	}
+	private void listImport(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String keyword = request.getParameter("keyword");
+		String orderBy = getOrder(request);
+		List<Import> importList;
+		int begin = getBegin(request);
+		importList = importDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, orderBy, null);
+		//int numberOfPages = importDAO.count(keyword) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		//request.setAttribute("numberOfPages", numberOfPages);
+		request.setAttribute("importList", importList);
+		//goHome(request, response);
+	}
+	public int getBegin(HttpServletRequest request) {
+		String pageParam = request.getParameter("page");
+		int page;
+		if (pageParam == null) {
+			page = 1;
+		} else {
+			page = Integer.parseInt(pageParam);
+		}
+		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
+	}
+	public String getOrder(HttpServletRequest request) {
+		String orderBy = request.getParameter("orderBy");
+		if (orderBy != null) {
+			switch (orderBy) {
+				case "default":
+					orderBy = null;
+					break;
+				case "name":
+					orderBy = "provider_name";
+					break;
+			}
+		}
+		return orderBy;
 	}
 
 	@Override
