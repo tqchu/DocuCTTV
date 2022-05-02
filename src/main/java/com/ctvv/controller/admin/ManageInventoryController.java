@@ -22,6 +22,7 @@ public class ManageInventoryController
 	final int NUMBER_OF_RECORDS_PER_PAGE = 5  ;
 	final String HOME_PAGE = "/admin/manage/home.jsp";
 
+
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
