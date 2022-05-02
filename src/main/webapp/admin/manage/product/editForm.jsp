@@ -116,7 +116,7 @@
         <div class="form-group">
             <span class="form-group__label">Đơn giá</span>
 
-            <input type="text" name="price" value="${product.price}">
+<%--            <input type="text" name="price" value="${product.price}">--%>
 
         </div>
 

@@ -126,7 +126,7 @@ public class ProductDAO
 	@Override
 	public Product update(Product product) {
 		String sql = "UPDATE product SET product_name=?, warranty_period=?,  description=?, "+
-				"category_id=? WHERE product_id=?";
+				"category_id=?, material=?, dimension=? WHERE product_id=?";
 		try (Connection connection = dataSource.getConnection();
 		PreparedStatement statement = connection.prepareStatement(sql)){
 			statement.setString(1, product.getName());
@@ -136,7 +136,9 @@ public class ProductDAO
 				statement.setNull(4, Types.INTEGER);
 			} else
 				statement.setInt(4, product.getCategory().getCategoryId());
-			statement.setInt(5, product.getProductId());
+			statement.setString(5, product.getMaterial());
+			statement.setString(6, product.getDimension());
+			statement.setInt(7, product.getProductId());
 			statement.executeUpdate();
 			return product;
 		} catch (SQLException e) {

@@ -15,6 +15,7 @@ import javax.servlet.http.*;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -121,7 +122,6 @@ public class ManageProductsController
 			case "update":
 				update(request, response);
 				break;
-
 			case "addQuantity":
 				addQuantity(request, response);
 				break;
@@ -157,16 +157,6 @@ public class ManageProductsController
 		for (int i = 0; i < productPriceListLength; i++) {
 			priceList[i] = Integer.parseInt(priceParamList[i]);
 		}
-		Dimension[] dimensionList = new Dimension[productPriceListLength];
-		for (int i = 0; i < productPriceListLength; i++) {
-			dimensionList[i] = new Dimension(Double.parseDouble(lengthList[i]), Double.parseDouble(widthList[i]),
-					Double.parseDouble(heightList[i]));
-		}
-		Material[] materialList = new Material[productPriceListLength];
-		String[] materialParamList = request.getParameterValues("material");
-		for (int i = 0; i < productPriceListLength; i++) {
-			materialList[i] = new Material(materialParamList[i]);
-		}
 
 		String imageFolder = "images/products";
 		for (Part part : request.getParts()) {
@@ -188,46 +178,37 @@ public class ManageProductsController
 	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
 		int productId = Integer.parseInt(request.getParameter("productId"));
-		Product product = productDAO.get(productId);
 
+		Product product = productDAO.get(productId);
 		String name = request.getParameter("productName");
-		String description = request.getParameter("description");
 		int warrantyPeriod = Integer.parseInt(request.getParameter("warrantyPeriod"));
-		String[] lengthList = request.getParameterValues("length");
-		String[] widthList = request.getParameterValues("width");
-		String[] heightList = request.getParameterValues("height");
-		String[] priceParamList = request.getParameterValues("price");
+		String description = request.getParameter("description");
 		Category category = null;
 		if (!Objects.equals(request.getParameter("categoryId"), "")) {
 			category = categoryDAO.get(Integer.parseInt(request.getParameter("categoryId")));
 		}
+		String material = request.getParameter("material");
+		String dimension = request.getParameter("dimension");
+
+//		boolean isNameValid = Objects.equals(name, product.getName());
+//		boolean isWarrantyPeriodValid = Objects.equals(warrantyPeriod, product.getWarrantyPeriod());
+//		boolean isDescriptionValid = Objects.equals(description, product.getDescription());
+//		boolean isMaterialValid = Objects.equals(material, product.getMaterial());
+//		boolean isDimensionValid = Objects.equals(dimension, product.getDimension());
+//		boolean isCategoryValid = Objects.equals(category, product.getCategory());
 
 		product.setCategory(category);
 		product.setName(name);
-		product.setDescription(description);
 		product.setWarrantyPeriod(warrantyPeriod);
+		product.setDescription(description);
+		product.setMaterial(material);
+		product.setDimension(dimension);
 		productDAO.update(product);
-
-		int productPriceListLength = lengthList.length;
-		int[] priceList = new int[productPriceListLength];
-		for (int i = 0; i < productPriceListLength; i++) {
-			priceList[i] = Integer.parseInt(priceParamList[i]);
-		}
-		Dimension[] dimensionList = new Dimension[productPriceListLength];
-		for (int i = 0; i < productPriceListLength; i++) {
-			dimensionList[i] = new Dimension(Double.parseDouble(lengthList[i]), Double.parseDouble(widthList[i]),
-					Double.parseDouble(heightList[i]));
-		}
-		Material[] materialList = new Material[productPriceListLength];
-		String[] materialParamList = request.getParameterValues("material");
-		for (int i = 0; i < productPriceListLength; i++) {
-			materialList[i] = new Material(materialParamList[i]);
-		}
 
 		//List<ImagePath> imagePathList = new ArrayList<>();
 		String imageFolder = "images/products";
 		//xóa các ảnh cũ của productId;
-		imagePathDAO.delete(productId);
+		//imagePathDAO.delete(productId);
 
 		for (Part part : request.getParts()) {
 			if (part.getName().equals("images") && !Objects.equals(part.getSubmittedFileName(), "")) {
@@ -240,9 +221,9 @@ public class ManageProductsController
 				part.write(this.getInitParameter("targetImageFolder") + "\\" + fileName);
 				imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
 
-				//ImagePath imagePath = new ImagePath(productId, imageFolder + "/" + fileName);
-				//imagePathDAO.create(imagePath);
-				//imagePathList.add(imagePath);
+//				ImagePath imagePath = new ImagePath(productId, imageFolder + "/" + fileName);
+//				imagePathDAO.create(imagePath);
+//				imagePathList.add(imagePath);
 			}
 		}
 		//product.setImagePathList(imagePathList);

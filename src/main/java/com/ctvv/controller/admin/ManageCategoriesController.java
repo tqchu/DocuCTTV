@@ -124,7 +124,6 @@ public class ManageCategoriesController
 			Category category = new Category(categoryId, categoryName);
 			categoryDAO.update(category);
 			session.setAttribute("successMessage", "Sửa doanh mục thành công");
-
 		} else {
 			session.setAttribute("errorMessage", "Tên doanh mục đã tồn tại");
 		}

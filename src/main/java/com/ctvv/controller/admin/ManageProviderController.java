@@ -212,7 +212,6 @@ public class ManageProviderController
 			session.setAttribute("errorMessage", errorMessage);
 			response.sendRedirect(request.getContextPath() + "/admin/providers");
 		}
-
 	}
 
 	private void delete(HttpServletRequest request, HttpServletResponse response) {
