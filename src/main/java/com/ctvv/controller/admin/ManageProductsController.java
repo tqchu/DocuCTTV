@@ -121,10 +121,6 @@ public class ManageProductsController
 			case "update":
 				update(request, response);
 				break;
-
-			case "addQuantity":
-				addQuantity(request, response);
-				break;
 			case "delete":
 				delete(request, response);
 				break;
@@ -147,6 +143,7 @@ public class ManageProductsController
 
 			Product product = new Product(name, warrantyPeriod, material, dimension, description, category);
 			int productId = productDAO.create(product).getProductId();
+
 
 			String imageFolder = "images/products";
 			for (Part part : request.getParts()) {
@@ -194,16 +191,6 @@ public class ManageProductsController
 		for (int i = 0; i < productPriceListLength; i++) {
 			priceList[i] = Integer.parseInt(priceParamList[i]);
 		}
-		Dimension[] dimensionList = new Dimension[productPriceListLength];
-		for (int i = 0; i < productPriceListLength; i++) {
-			dimensionList[i] = new Dimension(Double.parseDouble(lengthList[i]), Double.parseDouble(widthList[i]),
-					Double.parseDouble(heightList[i]));
-		}
-		Material[] materialList = new Material[productPriceListLength];
-		String[] materialParamList = request.getParameterValues("material");
-		for (int i = 0; i < productPriceListLength; i++) {
-			materialList[i] = new Material(materialParamList[i]);
-		}
 
 		//List<ImagePath> imagePathList = new ArrayList<>();
 		String imageFolder = "images/products";
@@ -228,24 +215,6 @@ public class ManageProductsController
 		}
 		//product.setImagePathList(imagePathList);
 		session.setAttribute("successMessage", "Sản phẩm đã được sửa thành công");
-		response.sendRedirect(request.getContextPath() + HOME);
-	}
-
-	private void addQuantity(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		int id = Integer.parseInt(request.getParameter("productId"));
-		int price = Integer.parseInt(request.getParameter("price"));
-		int quantity = Integer.parseInt(request.getParameter("quantity"));
-		LocalDate importDay = LocalDate.now();
-
-		// Lưu import
-		importDAO.create(new Import(id, price, importDay, quantity));
-
-		// Tăng số lượng trong bảng product??
-		Product product = productDAO.get(id);
-		//		product.setQuantity(product.getQuantity() + quantity);
-		productDAO.update(product);
-
-		session.setAttribute("successMessage", "Đã cập nhật số lượng thành công");
 		response.sendRedirect(request.getContextPath() + HOME);
 	}
 
