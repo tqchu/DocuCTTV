@@ -18,10 +18,9 @@ import java.util.List;
 @WebServlet(name = "ManageInventoryController", value = "/admin/inventory/*")
 public class ManageInventoryController
 		extends HttpServlet {
-	private ImportDAO importDAO;
-	final int NUMBER_OF_RECORDS_PER_PAGE = 5  ;
+	final int NUMBER_OF_RECORDS_PER_PAGE = 5;
 	final String HOME_PAGE = "/admin/manage/home.jsp";
-
+	private ImportDAO importDAO;
 
 	@Override
 	protected void doGet(
@@ -31,38 +30,46 @@ public class ManageInventoryController
 
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
-		if (request.getRequestURI().equals(request.getContextPath()+"/admin/inventory/history")) {
+		String page;
+		// INVENTORY HISTORY HOME
+		if (request.getRequestURI().equals(request.getContextPath() + "/admin/inventory/history")) {
+			page = "/admin/manage/home.jsp";
 			request.setAttribute("tab", "inventoryHistory");
-			listImport(request,response);
-			request.setAttribute("requestURI", request.getRequestURI());
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/manage/home.jsp");
-			dispatcher.forward(request, response);
+			listImport(request, response);
 		}
-		else
+		// VIEW HISTORY DETAIL
+		else if (request.getRequestURI().equals(request.getContextPath() + "/admin/inventory/history/view")) {
+			viewHistoryDetail(request, response);
+			page = "/admin/manage/inventory/historyDetail.jsp";
+		}
+		// INVENTORY HOME
+		else {
+			page = "/admin/manage/home.jsp";
 			request.setAttribute("tab", "inventory");
+		}
+		RequestDispatcher dispatcher = request.getRequestDispatcher(page);
+		dispatcher.forward(request, response);
 
 	}
-	private void listImport(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	private void viewHistoryDetail(HttpServletRequest request, HttpServletResponse response) {
+		int id = Integer.parseInt(request.getParameter("id"));
+		Import anImport  = importDAO.get(id);
+		request.setAttribute("import", anImport);
+	}
+
+	private void listImport(
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
 		String orderBy = getOrder(request);
 		List<Import> importList;
 		int begin = getBegin(request);
 		importList = importDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, orderBy, null);
-		//int numberOfPages = importDAO.count(keyword) / NUMBER_OF_RECORDS_PER_PAGE + 1;
-		//request.setAttribute("numberOfPages", numberOfPages);
+		int numberOfPages = (importDAO.count(keyword, null) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("importList", importList);
-		//goHome(request, response);
 	}
-	public int getBegin(HttpServletRequest request) {
-		String pageParam = request.getParameter("page");
-		int page;
-		if (pageParam == null) {
-			page = 1;
-		} else {
-			page = Integer.parseInt(pageParam);
-		}
-		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
-	}
+
 	public String getOrder(HttpServletRequest request) {
 		String orderBy = request.getParameter("orderBy");
 		if (orderBy != null) {
@@ -78,6 +85,17 @@ public class ManageInventoryController
 		return orderBy;
 	}
 
+	public int getBegin(HttpServletRequest request) {
+		String pageParam = request.getParameter("page");
+		int page;
+		if (pageParam == null) {
+			page = 1;
+		} else {
+			page = Integer.parseInt(pageParam);
+		}
+		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
+	}
+
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -90,8 +108,8 @@ public class ManageInventoryController
 		try {
 			Context context = new InitialContext();
 			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			importDAO= new ImportDAO(dataSource);
-		} catch (NamingException e){
+			importDAO = new ImportDAO(dataSource);
+		} catch (NamingException e) {
 			e.printStackTrace();
 		}
 	}

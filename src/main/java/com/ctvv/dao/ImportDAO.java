@@ -12,11 +12,12 @@ import java.util.List;
 
 public class ImportDAO
 		extends GenericDAO<Import> {
-	private  ImportDetailDAO importDetailDAO;
+	private ImportDetailDAO importDetailDAO;
+
 	public ImportDAO(DataSource dataSource) {
 
 		super(dataSource);
-		importDetailDAO  = new ImportDetailDAO(dataSource);
+		importDetailDAO = new ImportDetailDAO(dataSource);
 	}
 
 	@Override
@@ -35,31 +36,12 @@ public class ImportDAO
 		}
 		return null;
 	}
-	public List<Import> get(int begin, int numberOfRec, String keyword, String sortBy, String order) {
-		if (order==null) order="ASC";
-		List<Import> importList = new ArrayList<>();
-		String sql =
-				"SELECT * FROM import " +
-						(keyword != null ? " WHERE provider_name LIKE '%" + keyword + "%' " : "") +
-						(sortBy != null ? "ORDER BY " + sortBy +" " + order: "") +
-						" LIMIT " + begin + "," + numberOfRec;
-		try (Connection connection = dataSource.getConnection();
-			 PreparedStatement statement = connection.prepareStatement(sql)) {
-			ResultSet resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				importList.add(map(resultSet));
-			}
-			resultSet.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return importList;
-	}
 
 	@Override
 	public List<Import> getAll() {
 		return null;
 	}
+
 	@Override
 	public Import create(Import pImport) {
 		return null;
@@ -93,20 +75,51 @@ public class ImportDAO
 			List<ImportDetail> importDetailList = importDetailDAO.getGroup(importId);
 			int totalPrice = totalPrice(importDetailList);
 
-			return new Import(importId, importerName, providerId, providerName, importDate, totalPrice, importDetailList);
+			return new Import(importId, importerName, providerId, providerName, importDate, totalPrice,
+					importDetailList);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 
 	}
-	public int count(String keyword){
+
+	private int totalPrice(List<ImportDetail> importDetailList) {
+		int totalPrice = 0;
+		for (ImportDetail importDetail : importDetailList) {
+			totalPrice += importDetail.getPrice() * importDetail.getQuantity() * (1 - importDetail.getTax());
+		}
+		return totalPrice;
+	}
+
+	public List<Import> get(int begin, int numberOfRec, String keyword, String sortBy, String order) {
+		if (order == null) order = "ASC";
+		List<Import> importList = new ArrayList<>();
+		String sql =
+				"SELECT * FROM import " +
+						(keyword != null ? " WHERE provider_name LIKE '%" + keyword + "%' " : "") +
+						(sortBy != null ? "ORDER BY " + sortBy + " " + order : "") +
+						" LIMIT " + begin + "," + numberOfRec;
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				importList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return importList;
+	}
+
+	public int count(String keyword, String field) {
 		int count = 0;
 		String sql =
 				"SELECT COUNT(import_id) AS no FROM import " +
-						(keyword != null ? " WHERE import.provider_name LIKE '%" + keyword + "%' " : "") ;
+						(keyword != null ? " WHERE " + field + " LIKE '%" + keyword + "%' " : "");
 		try (Connection connection = dataSource.getConnection();
-			 PreparedStatement statement = connection.prepareStatement(sql)) {
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
 			count = resultSet.getInt("no");
@@ -114,13 +127,6 @@ public class ImportDAO
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return  count;
-	}
-	private int totalPrice(List<ImportDetail> importDetailList){
-		int totalPrice = 0;
-		for (ImportDetail importDetail :importDetailList) {
-			totalPrice+= importDetail.getPrice()* importDetail.getQuantity()*(1-importDetail.getTax());
-		}
-		return totalPrice;
+		return count;
 	}
 }

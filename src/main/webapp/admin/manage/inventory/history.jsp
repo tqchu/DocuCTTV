@@ -70,33 +70,23 @@
                     Không có dữ liệu
                 </td>
             </tr>
-                <th>STT</th>
-                <th>Mã đơn nhập</th>
-                <th>Người nhập</th>
-                <th>Nhà cung cấp</th>
-                <th>Thành tiền</th>
-                <th>Ngày nhập</th>
-                <th class="column__action"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:if test="${not empty importList}">
-                <c:forEach items="${importList}" var="currentRow" varStatus="loop">
-                    <tr>
-                        <td>${loop.count}</td>
-                        <td>${currentRow.importId}</td>
-                        <td>${currentRow.importerName}</td>
-                        <td>${currentRow.providerName}</td>
-                        <td>${currentRow.totalPrice}</td>
-                        <td>${currentRow.importDate}</td>
-                        <td class="">
-                            <a href="">Xem chi tiết</a>
-                        </td>
+        </c:if>
+        <c:if test="${not empty importList}">
+            <c:forEach items="${importList}" var="currentRow" varStatus="loop">
+                <tr>
+                    <td>${loop.count}</td>
+                    <td>${currentRow.importerName}</td>
+                    <td>${currentRow.providerName}</td>
+                    <td>${currentRow.totalPrice}</td>
+                    <td>${currentRow.importDate}</td>
+                    <td class="">
+                        <a href="${context}/admin/inventory/history/view?id=${currentRow.importId}">Xem chi tiết</a>
+                    </td>
 
                 </tr>
             </c:forEach>
         </c:if>
         </tbody>
     </table>
-    </div>
+</div>
 <script src="${context}/js/admin/inventory/inventory.js?rd=${rand}"></script>

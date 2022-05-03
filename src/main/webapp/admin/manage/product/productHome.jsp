@@ -48,7 +48,6 @@
             <th>Đánh giá</th>
             <th></th>
             <th></th>
-            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -107,9 +106,9 @@
                     <td class="product__rating">-</td>
                     <td>
                         <form action="${context}/admin/products" method="get">
-                            <input type="hidden" name="action" value="update">
+                            <input type="hidden" name="action" value="view">
                             <input type="hidden" value="${product.productId}" name="id">
-                            <button type="submit" class="btn-edit btn btn-primary">Chỉnh sửa</button>
+                            <button type="submit" class="btn-edit btn btn-primary">Xem chi tiết</button>
                         </form>
                     </td>
                     <td>

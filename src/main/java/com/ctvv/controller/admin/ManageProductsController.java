@@ -14,7 +14,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -31,8 +30,6 @@ public class ManageProductsController
 	private ProductDAO productDAO;
 	private CategoryDAO categoryDAO;
 	private ImagePathDAO imagePathDAO;
-	private ImportDAO importDAO;
-
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -47,12 +44,12 @@ public class ManageProductsController
 				case "create":
 					path = "/admin/manage/product/addForm.jsp";
 					break;
-				case "update":
+				case "view":
 					int id = Integer.parseInt(request.getParameter("id"));
 					Product product = productDAO.get(id);
 					request.setAttribute("product", product);
 					request.setAttribute("categoryList", categoryList);
-					path = "/admin/manage/product/editForm.jsp";
+					path = "/admin/manage/product/view_editForm.jsp";
 					break;
 			}
 			RequestDispatcher dispatcher = request.getRequestDispatcher(path);
@@ -140,7 +137,7 @@ public class ManageProductsController
 		if (!Objects.equals(request.getParameter("categoryId"), "")) {
 			category = categoryDAO.get(Integer.parseInt(request.getParameter("categoryId")));
 		}
-		Product product = new Product(name, warrantyPeriod, description, dimension,material,price, category);
+		Product product = new Product(name, warrantyPeriod, description, dimension, material, price, category);
 		int productId = productDAO.create(product).getProductId();
 
 		String imageFolder = "images/products";
@@ -155,41 +152,37 @@ public class ManageProductsController
 				part.write(this.getInitParameter("targetImageFolder") + "\\" + fileName);
 				imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
 			}
-			session.setAttribute("successMessage", "Sản phẩm đã thêm thành công");
-			response.sendRedirect(request.getContextPath() + HOME);
 		}
+		session.setAttribute("successMessage", "Sản phẩm đã thêm thành công");
+		response.sendRedirect(request.getContextPath() + HOME);
 
-
+	}
 	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
 		int productId = Integer.parseInt(request.getParameter("productId"));
-		Product product = productDAO.get(productId);
 
+		Product product = productDAO.get(productId);
 		String name = request.getParameter("productName");
-		String description = request.getParameter("description");
 		int warrantyPeriod = Integer.parseInt(request.getParameter("warrantyPeriod"));
-		String[] lengthList = request.getParameterValues("length");
-		String[] widthList = request.getParameterValues("width");
-		String[] heightList = request.getParameterValues("height");
-		String[] priceParamList = request.getParameterValues("price");
+		String description = request.getParameter("description");
 		Category category = null;
 		if (!Objects.equals(request.getParameter("categoryId"), "")) {
 			category = categoryDAO.get(Integer.parseInt(request.getParameter("categoryId")));
 		}
+		String material = request.getParameter("material");
+		String dimension = request.getParameter("dimension");
+		int price = Integer.parseInt(request.getParameter("price"));
+
 
 		product.setCategory(category);
 		product.setName(name);
-		product.setDescription(description);
 		product.setWarrantyPeriod(warrantyPeriod);
+		product.setDescription(description);
+		product.setMaterial(material);
+		product.setDimension(dimension);
+		product.setPrice(price);
 		productDAO.update(product);
 
-		int productPriceListLength = lengthList.length;
-		int[] priceList = new int[productPriceListLength];
-		for (int i = 0; i < productPriceListLength; i++) {
-			priceList[i] = Integer.parseInt(priceParamList[i]);
-		}
-
-		//List<ImagePath> imagePathList = new ArrayList<>();
 		String imageFolder = "images/products";
 		//xóa các ảnh cũ của productId;
 		imagePathDAO.delete(productId);
@@ -204,13 +197,8 @@ public class ManageProductsController
 				part.write(this.getInitParameter("sourceImageFolder") + "\\" + fileName);
 				part.write(this.getInitParameter("targetImageFolder") + "\\" + fileName);
 				imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
-
-				//ImagePath imagePath = new ImagePath(productId, imageFolder + "/" + fileName);
-				//imagePathDAO.create(imagePath);
-				//imagePathList.add(imagePath);
 			}
 		}
-		//product.setImagePathList(imagePathList);
 		session.setAttribute("successMessage", "Sản phẩm đã được sửa thành công");
 		response.sendRedirect(request.getContextPath() + HOME);
 	}
@@ -239,7 +227,6 @@ public class ManageProductsController
 			productDAO = new ProductDAO(dataSource);
 			categoryDAO = new CategoryDAO(dataSource);
 			imagePathDAO = new ImagePathDAO(dataSource);
-			importDAO = new ImportDAO(dataSource);
 		} catch (NamingException e) {
 
 			e.printStackTrace();
