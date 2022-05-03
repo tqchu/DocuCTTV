@@ -1,24 +1,23 @@
-<%@ page import="com.ctvv.model.ProductPrice" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.ctvv.model.Product" %>
 <%!
-    int maxPrice(List<ProductPrice> productPrice) {
-        int maxPrice = 0;
-        for (ProductPrice price : productPrice) {
-            if (price.getPrice() > maxPrice) maxPrice = price.getPrice();
-        }
-
-        return maxPrice;
-    }
-
-    int minPrice(List<ProductPrice> productPrice) {
-        int minPrice = Integer.MAX_VALUE;
-        for (ProductPrice price : productPrice) {
-            if (price.getPrice() < minPrice) minPrice = price.getPrice();
-        }
-
-        return minPrice;
-    }
+//    int maxPrice(List<ProductPrice> productPrice) {
+//        int maxPrice = 0;
+//        for (ProductPrice price : productPrice) {
+//            if (price.getPrice() > maxPrice) maxPrice = price.getPrice();
+//        }
+//
+//        return maxPrice;
+//    }
+//
+//    int minPrice(List<ProductPrice> productPrice) {
+//        int minPrice = Integer.MAX_VALUE;
+//        for (ProductPrice price : productPrice) {
+//            if (price.getPrice() < minPrice) minPrice = price.getPrice();
+//        }
+//
+//        return minPrice;
+//    }
 %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -121,11 +120,9 @@ Danh mục</span>
                                                             ${product.name}
                                                     </div>
                                                     <div class="product__price">
-                                                        <%=
-                                                        minPrice(((Product)request.getAttribute("currentProduct")).getProductPriceList()) %> - <%=
-                                                    maxPrice(((Product)request.getAttribute("currentProduct")).getProductPriceList()) %>
-
-
+<%--                                                        =minPrice(((Product)request.getAttribute("currentProduct")).getProductPriceList()) %> - <%=--%>
+<%--                                                    maxPrice(((Product)request.getAttribute("currentProduct")).getProductPriceList()) %>--%>
+                                                        ${product.price}
 
                                                     </div>
                                                 </a>

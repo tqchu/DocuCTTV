@@ -132,31 +132,28 @@ public class ManageProductsController
 		// Lấy danh sách tham số và chuyển về đối  tượng
 		String name = request.getParameter("productName");
 		String description = request.getParameter("description");
-		String material = request.getParameter("material");
 		String dimension = request.getParameter("dimension");
+		String material = request.getParameter("material");
+		int price = Integer.parseInt(request.getParameter("price"));
 		int warrantyPeriod = Integer.parseInt(request.getParameter("warrantyPeriod"));
 		Category category = null;
 		if (!Objects.equals(request.getParameter("categoryId"), "")) {
 			category = categoryDAO.get(Integer.parseInt(request.getParameter("categoryId")));
 		}
+		Product product = new Product(name, warrantyPeriod, description, dimension,material,price, category);
+		int productId = productDAO.create(product).getProductId();
 
-
-			Product product = new Product(name, warrantyPeriod, material, dimension, description, category);
-			int productId = productDAO.create(product).getProductId();
-
-
-			String imageFolder = "images/products";
-			for (Part part : request.getParts()) {
-				if (part.getName().equals("images") && !Objects.equals(part.getSubmittedFileName(), "")) {
-					String uniqueId = UUID.randomUUID().toString();
-					String submittedFileName = part.getSubmittedFileName();
-					String baseName = FilenameUtils.getBaseName(submittedFileName);
-					String extensionName = FilenameUtils.getExtension(submittedFileName);
-					String fileName = baseName + uniqueId + "." + extensionName;
-					part.write(this.getInitParameter("sourceImageFolder") + "\\" + fileName);
-					part.write(this.getInitParameter("targetImageFolder") + "\\" + fileName);
-					imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
-				}
+		String imageFolder = "images/products";
+		for (Part part : request.getParts()) {
+			if (part.getName().equals("images") && !Objects.equals(part.getSubmittedFileName(), "")) {
+				String uniqueId = UUID.randomUUID().toString();
+				String submittedFileName = part.getSubmittedFileName();
+				String baseName = FilenameUtils.getBaseName(submittedFileName);
+				String extensionName = FilenameUtils.getExtension(submittedFileName);
+				String fileName = baseName + uniqueId + "." + extensionName;
+				part.write(this.getInitParameter("sourceImageFolder") + "\\" + fileName);
+				part.write(this.getInitParameter("targetImageFolder") + "\\" + fileName);
+				imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
 			}
 			session.setAttribute("successMessage", "Sản phẩm đã thêm thành công");
 			response.sendRedirect(request.getContextPath() + HOME);
