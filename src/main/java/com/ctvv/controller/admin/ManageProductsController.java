@@ -138,7 +138,6 @@ public class ManageProductsController
 		int warrantyPeriod = Integer.parseInt(request.getParameter("warrantyPeriod"));
 		Category category = null;
 		if (!Objects.equals(request.getParameter("categoryId"), "")) {
-
 			category = categoryDAO.get(Integer.parseInt(request.getParameter("categoryId")));
 		}
 		Product product = new Product(name, warrantyPeriod, description, dimension,material,price, category);
@@ -156,10 +155,10 @@ public class ManageProductsController
 				part.write(this.getInitParameter("targetImageFolder") + "\\" + fileName);
 				imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
 			}
+			session.setAttribute("successMessage", "Sản phẩm đã thêm thành công");
+			response.sendRedirect(request.getContextPath() + HOME);
 		}
-		session.setAttribute("successMessage", "Sản phẩm đã sửa thêm thành công");
-		response.sendRedirect(request.getContextPath() + HOME);
-	}
+
 
 	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
@@ -217,6 +216,17 @@ public class ManageProductsController
 	}
 
 	private void delete(HttpServletRequest request, HttpServletResponse response) {
+		int productId = Integer.parseInt(request.getParameter("productId"));
+
+		imagePathDAO.delete(productId);
+		productDAO.delete(productId);
+		session = request.getSession();
+		session.setAttribute("successMessage", "Xóa sản phẩm thành công");
+		try{
+			response.sendRedirect(request.getContextPath() + HOME );
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

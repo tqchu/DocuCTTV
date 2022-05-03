@@ -58,6 +58,15 @@ public class Product {
 
 	}
 
+	public Product(String name, int warrantyPeriod, String material, String dimension, String description, Category category) {
+		this.name = name;
+		this.warrantyPeriod = warrantyPeriod;
+		this.material = material;
+		this.dimension = dimension;
+		this.description = description;
+		this.category = category;
+	}
+
 	public int getProductId() {
 		return productId;
 	}

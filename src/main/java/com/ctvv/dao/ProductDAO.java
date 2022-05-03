@@ -1,8 +1,9 @@
 package com.ctvv.dao;
 
-import com.ctvv.model.*;
+import com.ctvv.model.Category;
+import com.ctvv.model.ImagePath;
+import com.ctvv.model.Product;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
@@ -153,12 +154,12 @@ public class ProductDAO
 
 	@Override
 	public void delete(int id) {
-		String sql = "DELETE FROM product WHERE product_id ='"+id+"'";
+		String sql = "DELETE FROM product WHERE product_id = ?";
 		try (Connection connection = dataSource.getConnection();
-			 PreparedStatement statement = connection.prepareStatement(sql)){
+			 PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, id);
 			statement.executeUpdate();
-		}
-		catch (SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
