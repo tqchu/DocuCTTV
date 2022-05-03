@@ -57,10 +57,12 @@
                             <span class="navbar__tab__text-description">Kho hàng</span>
                             <div class="inventory__tabs">
                                 <div class="inventory_tabs__item ${tab=='inventory'?'active':''}"
-                                   href="${context}/admin/inventory">Kho</div>
+                                     href="${context}/admin/inventory">Kho
+                                </div>
                                 <div class="inventory_tabs__item ${tab=='inventoryHistory'?'active':''}"
-                                   href="${context}/admin/inventory/history">Lịch
-                                    sử</div>
+                                     href="${context}/admin/inventory/history">Lịch
+                                    sử
+                                </div>
                             </div>
 
                         </a>
@@ -93,24 +95,29 @@
                 </div>
             </div>
             <div class="col col-9-6">
-                <c:if test="${tab=='products'}">
-                    <jsp:include page="product/productHome.jsp"/>
-                </c:if>
-                <c:if test="${tab=='inventory'}">
-                    <jsp:include page="inventory/inventoryHome.jsp"/>
-                </c:if>
-                <c:if test="${tab=='inventoryHistory'}">
-                    <jsp:include page="inventory/history.jsp"/>
-                </c:if>
-                <c:if test="${tab=='categories'}">
-                    <jsp:include page="category/categoryHome.jsp"/>
-                </c:if>
-                <c:if test="${tab=='admins'}">
-                    <jsp:include page="admins/adminHome.jsp"/>
-                </c:if>
-                <c:if test="${tab=='providers'}">
-                    <jsp:include page="provider/providerHome.jsp"/>
-                </c:if>
+                <div class="tab__content">
+                    <c:if test="${tab=='products'}">
+                        <jsp:include page="product/productHome.jsp"/>
+                    </c:if>
+                    <c:if test="${tab=='inventory'}">
+                        <jsp:include page="inventory/inventoryHome.jsp"/>
+                    </c:if>
+                    <c:if test="${tab=='inventoryHistory'}">
+                        <jsp:include page="inventory/history.jsp"/>
+                    </c:if>
+                    <c:if test="${tab=='categories'}">
+                        <jsp:include page="category/categoryHome.jsp"/>
+                    </c:if>
+                    <c:if test="${tab=='admins'}">
+                        <jsp:include page="admins/adminHome.jsp"/>
+                    </c:if>
+                    <c:if test="${tab=='providers'}">
+                        <jsp:include page="provider/providerHome.jsp"/>
+                    </c:if>
+                    <!-- PAGINATION -->
+                    <jsp:include page="../../common/pagination.jsp"/>
+                </div>
+
             </div>
         </div>
     </div>

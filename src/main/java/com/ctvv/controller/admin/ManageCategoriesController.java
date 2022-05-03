@@ -34,29 +34,29 @@ public class ManageCategoriesController
 	private void listCategory(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                           IOException {
 		String keyword = request.getParameter("keyword");
-		String orderBy = getOrder(request);
+		String sortBy = getOrder(request);
 		List<Category> categoryList;
 		int begin = getBegin(request);
-		categoryList = categoryDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, null, orderBy, null);
-		int numberOfPages = categoryDAO.count(keyword, null) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		categoryList = categoryDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, null, sortBy, null);
+		int numberOfPages = (categoryDAO.count(keyword, null) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
 		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("list", categoryList);
 		goHome(request, response);
 	}
 
 	public String getOrder(HttpServletRequest request) {
-		String orderBy = request.getParameter("orderBy");
-		if (orderBy != null) {
-			switch (orderBy) {
+		String sortBy = request.getParameter("sortBy");
+		if (sortBy != null) {
+			switch (sortBy) {
 				case "default":
-					orderBy = null;
+					sortBy = null;
 					break;
 				case "name":
-					orderBy = "category_name";
+					sortBy = "category_name";
 					break;
 			}
 		}
-		return orderBy;
+		return sortBy;
 	}
 
 	public int getBegin(HttpServletRequest request) {

@@ -168,3 +168,25 @@ img.product__main-image {
 .inventory__tabs{
     display: none;
 }
+
+.no-records {
+    text-align: center;
+    font-weight: 500;
+}
+
+/*PAGINATION*/
+.pagination{
+    margin-top: 40px;
+}
+.page-link {
+    color: var(--primary-color);
+    padding: 10px 20px;
+    font-size: 18px;
+    font-weight: 500;
+}
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
