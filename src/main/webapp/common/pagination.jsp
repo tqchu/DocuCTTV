@@ -10,8 +10,10 @@
 <!-- PAGINATION -->
 <nav>
     <ul class="pagination justify-content-center">
-        <li class="page-item ${(empty param.page|| param.page=='1')?'disabled':''}">
-            <button class="page-link " aria-label="Trước">
+        <li class="page-item ${(empty param.page|| param.page=='1')?'disabled':''}"
+        >
+            <button class="page-link "
+                    aria-label="Trước" ${(empty param.page|| param.page=='1')?'':'data-page='+='\"'+=param.page-1+='\"'}>
                 <span aria-hidden="true"><</span>
             </button>
         </li>
@@ -22,8 +24,11 @@
                 </button>
             </li>
         </c:forEach>
-        <li class="page-item  ${(param.page==numberOfPages||numberOfPages==1)?'disabled':''}">
-            <button class="page-link" aria-label="Sau">
+        <li class="page-item
+         ${(param.page==numberOfPages||numberOfPages==1)?'disabled':''}"
+        >
+            <button class="page-link"
+                    aria-label="Sau" ${(param.page==numberOfPages||numberOfPages==1)?'':'data-page='+='\"'+=param.page+1+='\"'}>
                 <span aria-hidden="true">></span>
             </button>
         </li>
