@@ -84,7 +84,7 @@ public class ImportDAO
 
 	}
 
-	private int totalPrice(List<ImportDetail> importDetailList) {
+	public int totalPrice(List<ImportDetail> importDetailList) {
 		int totalPrice = 0;
 		for (ImportDetail importDetail : importDetailList) {
 			totalPrice += importDetail.getPrice() * importDetail.getQuantity() * (1 - importDetail.getTax());
