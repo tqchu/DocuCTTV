@@ -1,6 +1,6 @@
 package com.ctvv.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +9,7 @@ public class Import {
 	private String importerName;
 	private int providerId;
 	private String providerName;
-	private LocalDate importDate;
+	private LocalDateTime importDate;
 	private int totalPrice;
 	private List<ImportDetail> importDetailList;
 
@@ -18,7 +18,7 @@ public class Import {
 	}
 
 	public Import(
-			int importId, String importerName, int providerId, String providerName, LocalDate importDate,
+			int importId, String importerName, int providerId, String providerName, LocalDateTime importDate,
 			int totalPrice,
 			List<ImportDetail> importDetailList) {
 		this.importId = importId;
@@ -32,7 +32,7 @@ public class Import {
 	}
 
 	public Import(
-			String importerName, int providerId, String providerName, LocalDate importDate,
+			String importerName, int providerId, String providerName, LocalDateTime importDate,
 			int totalPrice,
 			List<ImportDetail> importDetailList) {
 		this.importerName = importerName;
@@ -77,11 +77,11 @@ public class Import {
 		this.providerName = providerName;
 	}
 
-	public LocalDate getImportDate() {
+	public LocalDateTime getImportDate() {
 		return importDate;
 	}
 
-	public void setImportDate(LocalDate importDate) {
+	public void setImportDate(LocalDateTime importDate) {
 		this.importDate = importDate;
 	}
 

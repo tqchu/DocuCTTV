@@ -7,6 +7,7 @@ import com.ctvv.model.ImportDetail;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +45,47 @@ public class ImportDAO
 
 	@Override
 	public Import create(Import pImport) {
+		String sql = "INSERT INTO import(importer_name, provider_id, provider_name, import_date) VALUES (?,?,?,?)";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			connection.setAutoCommit(false);
+			statement.setString(1, pImport.getImporterName());
+			statement.setInt(2, pImport.getProviderId());
+			statement.setString(3, pImport.getProviderName());
+			statement.setTime(4, Time.valueOf(pImport.getImportDate().toLocalTime()));
+			statement.execute();
+			ResultSet resultSet = statement.getGeneratedKeys();
+			while (resultSet.next()) {
+				int importId = resultSet.getInt(1);
+				pImport.setImportId(importId);
+			}
+			connection.commit();
+			resultSet.close();
+			// IMPORT DETAIL
+			for (ImportDetail importDetail : pImport.getImportDetailList()) {
+				importDetail.setImportId(pImport.getImportId());
+				importDetailDAO.create(importDetail);
+			}
+			return pImport;
+
+		} catch (SQLException e) {
+			try {
+				if (connection != null) connection.rollback();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			try {
+				if (statement != null) statement.close();
+				if (connection != null) connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 
@@ -71,7 +113,7 @@ public class ImportDAO
 			String importerName = resultSet.getString("importer_name");
 			int providerId = resultSet.getInt("provider_id");
 			String providerName = resultSet.getString("provider_name");
-			LocalDate importDate = resultSet.getDate("import_date").toLocalDate();
+			LocalDateTime importDate = resultSet.get("import_date");
 			List<ImportDetail> importDetailList = importDetailDAO.getGroup(importId);
 			int totalPrice = totalPrice(importDetailList);
 
@@ -100,6 +142,37 @@ public class ImportDAO
 						(keyword != null ? " WHERE provider_name LIKE '%" + keyword + "%' " : "") +
 						(sortBy != null ? "ORDER BY " + sortBy + " " + order : "") +
 						" LIMIT " + begin + "," + numberOfRec;
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				importList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return importList;
+	}
+
+	public List<Import> get(
+			int begin, int numberOfRec, String keyword, LocalDateTime from, LocalDateTime to, String sortBy,
+			String order) {
+		boolean isSearch = (keyword != null) || (from != null) || (to != null);
+		if (from == null) from = LocalDateTime.of(1000, 1, 1, 0, 0, 0);
+		if (to == null) to = LocalDateTime.of(3000, 12, 31, 0, 0, 0);
+		if (order == null) order = "ASC";
+
+		List<Import> importList = new ArrayList<>();
+		String sql =
+				"SELECT * FROM import " +
+						(isSearch ? " WHERE " + (keyword != null ? " provider_name LIKE '%" + keyword + "%' " :
+								"") + (keyword != null ? " AND" + " import_date BETWEEN '" + from + "' AND '" + to+"'" :
+								"")
+								: "") +
+						(sortBy != null ? "ORDER BY " + sortBy + " " + order : "") +
+						" LIMIT " + begin + "," + numberOfRec;
+		System.out.print(sql);
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
