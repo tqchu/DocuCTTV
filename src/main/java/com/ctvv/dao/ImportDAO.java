@@ -55,7 +55,7 @@ public class ImportDAO
 			statement.setString(1, pImport.getImporterName());
 			statement.setInt(2, pImport.getProviderId());
 			statement.setString(3, pImport.getProviderName());
-			statement.setTime(4, Time.valueOf(pImport.getImportDate().toLocalTime()));
+			statement.setTimestamp(4, Timestamp.valueOf(pImport.getImportDate()));
 			statement.execute();
 			ResultSet resultSet = statement.getGeneratedKeys();
 			while (resultSet.next()) {
@@ -113,7 +113,7 @@ public class ImportDAO
 			String importerName = resultSet.getString("importer_name");
 			int providerId = resultSet.getInt("provider_id");
 			String providerName = resultSet.getString("provider_name");
-			LocalDateTime importDate = resultSet.get("import_date");
+			LocalDateTime importDate = resultSet.getTimestamp("import_date").toLocalDateTime();
 			List<ImportDetail> importDetailList = importDetailDAO.getGroup(importId);
 			int totalPrice = totalPrice(importDetailList);
 
