@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class ManageInventoryController
 	final String HOME_PAGE = "/admin/manage/home.jsp";
 	final String INVENTORY_SERVLET = "/admin/inventory";
 	final String HISTORY_SERVLET = "/admin/inventory/history";
-	private HttpSession httpSession ;
+	private HttpSession httpSession;
 	private ImportDAO importDAO;
 	private ProductDAO productDAO;
 	private ProviderDAO providerDAO;
@@ -86,7 +87,7 @@ public class ManageInventoryController
 		Provider provider = providerDAO.get(providerId);
 		String importerName = request.getParameter("importerName");
 
-		LocalDate importDate = LocalDate.now();
+		LocalDateTime importDate = LocalDateTime.now();
 		String[] productIdParams = request.getParameterValues("productId");
 		String[] quantityParams = request.getParameterValues("quantity");
 		String[] priceParams = request.getParameterValues("price");
