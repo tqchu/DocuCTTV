@@ -49,13 +49,13 @@
     <span class="order-bar__option ${param.sortBy=='default'|| empty param.sortBy?'active':''}"
           data-sort="default">Mới
             nhất</span>
-    <span class="order-bar__option  ${param.sortBy=='name'?'active':''}" data-sort="name">Tên</span>
+<%--    <span class="order-bar__option  ${param.sortBy=='name'?'active':''}" data-sort="name">Tên</span>--%>
 </div>
 <div class="list">
     <table class="table table-hover table-bordered ">
         <thead>
         <tr>
-            <th>STT</th>
+            <th>Mã đơn</th>
             <th>Người nhập</th>
             <th>Nhà cung cấp</th>
             <th>Thành tiền</th>
@@ -74,7 +74,7 @@
         <c:if test="${not empty importList}">
             <c:forEach items="${importList}" var="currentRow" varStatus="loop">
                 <tr>
-                    <td>${loop.count}</td>
+                    <td>DN${currentRow.importId}</td>
                     <td>${currentRow.importerName}</td>
                     <td>${currentRow.providerName}</td>
                     <td>${currentRow.totalPrice}</td>

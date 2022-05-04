@@ -29,6 +29,22 @@ public class ImportDetailDAO
 
 	@Override
 	public ImportDetail create(ImportDetail importDetail) {
+		String sql = "INSERT INTO import_detail VALUES (?, ?, ?,?,?,?)";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1,importDetail.getImportId());
+			statement.setInt(2, importDetail.getProductId());
+			statement.setString(3, importDetail.getProductName());
+			statement.setInt(4, importDetail.getQuantity());
+			statement.setInt(5, importDetail.getPrice());
+			statement.setDouble(6, importDetail.getTax());
+			statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 

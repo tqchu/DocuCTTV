@@ -40,7 +40,18 @@ public class ProductDAO
 	@Override
 	public List<Product> getAll() {
 
-		return null;
+		List<Product> productList = new ArrayList<>();
+		String sql = "SELECT * FROM product ";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				productList.add(map(resultSet));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return productList;
 	}
 
 	@Override
@@ -150,21 +161,6 @@ public class ProductDAO
 		}
 		return null;
 
-	}
-
-	public List<Product> getAll(String orderBy) {
-		List<Product> productList = new ArrayList<>();
-		String sql = "SELECT * FROM product ORDER BY " + orderBy;
-		try (Connection connection = dataSource.getConnection();
-		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
-			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
-				productList.add(map(resultSet));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return productList;
 	}
 
 	public List<Product> get(int begin, int numberOfRec, String keyword, String field, String sortBy, String order) {

@@ -4,7 +4,6 @@ $(function () {
         e.preventDefault()
         e.stopPropagation()
 
-
         window.location.href = $(this).attr('href')
     })
 

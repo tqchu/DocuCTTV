@@ -1,0 +1,45 @@
+form#addInventoryForm {
+    margin-left: 40px;
+}
+.form-group {
+    width: unset;
+    display: flex;
+    margin-bottom: 2px;
+    margin-left: 80px;
+    margin-top: 10px;
+}
+.form-group__label {
+    width: 160px;
+    display: block;
+}
+.product-row {
+    margin-top: 10px;
+    border: 1px solid #000;
+    display: flex;
+    flex-wrap: wrap;
+    width: 960px;
+    align-items: center;
+    padding: 10px 0;
+}
+.form-group__minus-row-btn {
+    margin-left: auto;
+    margin-right: 10px;
+    font-size: 20px;
+}
+.form-group__add-row-btn {
+    font-size: 20px;
+    margin-top: 20px;
+    margin-left: 80px;
+}
+.submit-btn {
+    background-color: #37BDDB !important;
+    color: #fff !important;
+    width: 160px;
+    margin-top: 20px;
+    padding: 10px;
+    margin-left: 400px;
+    cursor: pointer;
+}
+input[name=tax]{
+    margin-right: 4px;
+}

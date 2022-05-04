@@ -44,6 +44,47 @@ public class ImportDAO
 
 	@Override
 	public Import create(Import pImport) {
+		String sql = "INSERT INTO import(importer_name, provider_id, provider_name, import_date) VALUES (?,?,?,?)";
+		Connection connection = null;
+		PreparedStatement statement = null;
+		try {
+			connection = dataSource.getConnection();
+			statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			connection.setAutoCommit(false);
+			statement.setString(1, pImport.getImporterName());
+			statement.setInt(2, pImport.getProviderId());
+			statement.setString(3, pImport.getProviderName());
+			statement.setDate(4, Date.valueOf(pImport.getImportDate()));
+			statement.execute();
+			ResultSet resultSet = statement.getGeneratedKeys();
+			while (resultSet.next()) {
+				int importId = resultSet.getInt(1);
+				pImport.setImportId(importId);
+			}
+			connection.commit();
+			resultSet.close();
+			// IMPORT DETAIL
+			for (ImportDetail importDetail : pImport.getImportDetailList()) {
+				importDetail.setImportId(pImport.getImportId());
+				importDetailDAO.create(importDetail);
+			}
+			return pImport;
+
+		} catch (SQLException e) {
+			try {
+				if (connection != null) connection.rollback();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			try {
+				if (statement != null) statement.close();
+				if (connection != null) connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		return null;
 	}
 

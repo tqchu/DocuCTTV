@@ -17,6 +17,14 @@ public class ImportDetail {
 		this.tax = tax;
 	}
 
+	public ImportDetail(int productId, String productName, int quantity, int price, double tax) {
+		this.productId = productId;
+		this.productName = productName;
+		this.quantity = quantity;
+		this.price = price;
+		this.tax = tax;
+	}
+
 	public int getImportId() {
 		return importId;
 	}

@@ -101,38 +101,19 @@
                                 <span class="product__info__text-heading">
                                     Kích thước
                                 </span>
-                                <ul class="dimension-group">
-                                    <c:forEach items="${product.dimensionList}" var="dimension">
-                                        <li class="product__info__text-content">
-                                                ${dimension.length}D x ${dimension.width}R x ${dimension.height}C (cm)
-                                        </li>
-                                    </c:forEach>
-                                </ul>
+                                <span>${product.dimension}</span>
                             </div>
                             <div class="product__info">
 <span class="product__info__text-heading">
                                     Vật liệu
                                 </span>
-                                <ul class="material-group">
-                                    <c:forEach items="${product.materialList}" var="material">
-                                        <li class="product__info__text-content">${material.materialName}</li>
-                                    </c:forEach>
-                                </ul>
+                                <span>${product.material}</span>
                             </div>
                             <div class="product__info">
 <span class="product__info__text-heading">
                                     Bảo hành
                                 </span>
                                 <span class="product__info__text-content">${product.warrantyPeriod} tháng</span>
-                            </div>
-                            <div class="product__quantity">
-                                <span class="product__action__text-description">Số lượng</span>
-                                <div class="product__quantity__spinner">
-                                    <input type="number" value="1" min="1" max="${product.quantity}" step="1"/>
-                                </div>
-                                <span class="product__quantity__stock">
-                                    ${product.quantity} Sản phẩm có sẵn
-                                </span>
                             </div>
                             <div class="product__action">
                                 <div class="product__action__add-to-cart"><i
