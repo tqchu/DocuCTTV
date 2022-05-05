@@ -29,6 +29,9 @@
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/customer/common.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/customer/home.css?rd=${rand}">
+
+    <%--    SCRIPT--%>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <jsp:include page="../common/header.jsp"/>
@@ -37,24 +40,65 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col col-2-4">
-                <div class="category-wrapper">
-                    <div class="category__header">
-                        <i class="las la-bars category__header__menu-icon"></i>
-                        <span class="category__header__text">
+                <c:if test="${search==true}">
+                    <div class="search__filter">
+                        <div class="search__filter__heading">
+                            <span class="search__filter__heading-icon"><i class="las la-filter"></i></span>
+                            <span class="search__filter__heading-text">BỘ LỌC TÌM KIẾM</span>
+                        </div>
+                        <div class="search__filter__group">
+                            <div class="search__filter__group__text-descripton">Khoảng giá</div>
+                            <div class="search__filter__group__content search__filter__price-range">
+                                <input type="text" maxlength="13"
+                                       class="search__filter__price-range__input search__filter__price-range__input--min-price"
+                                       placeholder="₫ TỪ" value="">
+                                <div class="search__filter__price-range__line"><i class="las la-minus"></i></div>
+                                <input type="text" maxlength="13"
+                                       class="search__filter__price-range__input search__filter__price-range__input--max-price"
+                                       placeholder="₫ ĐẾN" value="">
+                            </div>
+                        </div>
+                        <button class="btn search__filter__apply-btn btn-primary">
+                            ÁP DỤNG
+                        </button>
+                        <!-- SURROGATE FORM -->
+                        <form action="${requestURI}" id="surrogateForm">
+                            <input type="hidden" name="keyword"
+                                   value="${param.keyword}" ${empty param.keyword?'disabled':''}>
+                            <input type="hidden" name="page" value="${not empty param.page? param.page: 1}">
+                            <input type="hidden" name="minPrice" value="${param.minPrice}"
+                                ${empty param.minPrice?'disabled':''}>
+                            <input type="hidden" name="maxPrice"
+                                   value="${param.maxPrice}"
+                                ${empty param.maxPrice?'disabled':''}>
+
+                            <input type="hidden" name="sortBy"
+                                   value="${param.sortBy}" ${empty param.sortBy?'disabled':''}>
+                            <input type="hidden" name="order" value="${param.order}" ${empty param.order?'disabled':''}>
+                        </form>
+                    </div>
+                </c:if>
+                <c:if test="${search!=true}">
+                    <div class="category-wrapper">
+                        <div class="category__header">
+                            <i class="las la-bars category__header__menu-icon"></i>
+                            <span class="category__header__text">
 Danh mục</span>
-                    </div>
-                    <div class="category-list">
-                        <a href="${context}" class="category-item ${empty param?'active':''}">Tất cả</a>
-                        <c:forEach items="${categoryList}" var="category">
-                            <a href="${context}/products?category=${category.categoryName}" class="category-item
+                        </div>
+                        <div class="category-list">
+                            <a href="${context}" class="category-item ${empty param?'active':''}">Tất cả</a>
+                            <c:forEach items="${categoryList}" var="category">
+                                <a href="${context}/products?category=${category.categoryName}" class="category-item
                             ${category.categoryName==param.category?'active':''}">
-                                    ${category.categoryName}
-                            </a>
-                        </c:forEach>
+                                        ${category.categoryName}
+                                </a>
+                            </c:forEach>
 
 
+                        </div>
                     </div>
-                </div>
+
+                </c:if>
             </div>
             <div class="col col-9-6">
                 <div class="products-wrapper">
@@ -62,12 +106,24 @@ Danh mục</span>
                         <div class="products__sort-selection__heading-text">
                             Sắp xếp theo
                         </div>
-                        <div class="products__sort-selection__item">
+                        <div class="products__sort-selection__item order-bar__option ${param.sortBy=='default'|| empty param.sortBy?'active':''}"
+                             data-sort="default">
                             Mới nhất
                         </div>
-                        <div class="products__sort-selection__price products__sort-selection__item">
+                        <div class="products__sort-selection__price products__sort-selection__item order-bar__option
+                        ${param.sortBy=='price'?'active':''}" data-sort="price">
                             <div class="products__sort-selection__price__selected">
-                                <span class="products__sort-selection__price__selected__text">Giá</span>
+                                <span class="products__sort-selection__price__selected__text">
+                                    <c:choose>
+                                        <c:when test="${param.sortBy=='price' && param.order== 'ASC'}">
+                                            Giá: Thấp đến cao
+                                        </c:when>
+                                        <c:when test="${param.sortBy=='price' && param.order== 'DESC'}">
+                                            Giá: Cao đến thấp
+                                        </c:when>
+                                        <c:otherwise>Giá</c:otherwise>
+                                    </c:choose>
+                                </span>
                                 <i class="las la-angle-down products__sort-selection__price__selected__icon">
                                 </i>
                             </div>
@@ -100,7 +156,7 @@ Danh mục</span>
                                                     </div>
                                                     <div class="product__price">
                                                         <fmt:formatNumber maxFractionDigits="0"
-                                                                          value="${product.price}" type="number" />
+                                                                          value="${product.price}" type="number"/>
 
                                                     </div>
                                                 </a>
@@ -118,10 +174,15 @@ Danh mục</span>
                         </div>
                     </div>
                 </div>
+                <jsp:include page="../../common/pagination.jsp"/>
             </div>
         </div>
     </div>
 </div>
+<c:if test="${search}">
+    <link rel="stylesheet" href="${context}/js/customer/search.js?rd=${rand}">
+</c:if>
+
 <jsp:include page="../../common/footer.jsp"/>
 
 </body>

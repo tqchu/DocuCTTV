@@ -188,3 +188,59 @@
     /* align-self: CENTER; */
     font-size: 20px;
 }
+
+/*FILTER*/
+.search__filter__heading {
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.search__filter__heading-text {
+    font-weight: 600;
+}
+
+.search__filter__group {
+    padding: 8px 0;
+}
+
+.search__filter__group__text-descripton {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 8px;
+}
+
+.search__filter__group__content.search__filter__price-range {
+    display: flex;
+}
+
+.search__filter__price-range__input {
+    font-size: 12px;
+    width: 100%;
+}
+
+.search__filter__price-range__line {
+    display: flex;
+    align-items: center;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.search__filter__apply-btn {
+    width: 100%;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+ /*ORDER BAR OPTION*/
+
+.order-bar__option.active {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+.order-bar__option {
+    background-color: #fff;
+    display: inline-block;
+    min-width: 88px;
+    border-radius: 2px;
+    cursor: pointer;
+}
