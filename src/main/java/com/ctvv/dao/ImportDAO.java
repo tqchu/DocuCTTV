@@ -55,7 +55,7 @@ public class ImportDAO
 			statement.setString(1, pImport.getImporterName());
 			statement.setInt(2, pImport.getProviderId());
 			statement.setString(3, pImport.getProviderName());
-			statement.setTime(4, Time.valueOf(pImport.getImportDate().toLocalTime()));
+			statement.setTimestamp(4, Timestamp.valueOf(pImport.getImportDate()));
 			statement.execute();
 			ResultSet resultSet = statement.getGeneratedKeys();
 			while (resultSet.next()) {
@@ -113,7 +113,7 @@ public class ImportDAO
 			String importerName = resultSet.getString("importer_name");
 			int providerId = resultSet.getInt("provider_id");
 			String providerName = resultSet.getString("provider_name");
-			LocalDateTime importDate = resultSet.get("import_date");
+			LocalDateTime importDate = resultSet.getTimestamp("import_date").toLocalDateTime();
 			List<ImportDetail> importDetailList = importDetailDAO.getGroup(importId);
 			int totalPrice = totalPrice(importDetailList);
 
@@ -126,7 +126,7 @@ public class ImportDAO
 
 	}
 
-	private int totalPrice(List<ImportDetail> importDetailList) {
+	public int totalPrice(List<ImportDetail> importDetailList) {
 		int totalPrice = 0;
 		for (ImportDetail importDetail : importDetailList) {
 			totalPrice += importDetail.getPrice() * importDetail.getQuantity() * (1 - importDetail.getTax());
@@ -166,13 +166,14 @@ public class ImportDAO
 		List<Import> importList = new ArrayList<>();
 		String sql =
 				"SELECT * FROM import " +
-						(isSearch ? " WHERE " + (keyword != null ? " provider_name LIKE '%" + keyword + "%' " :
-								"") + (keyword != null ? " AND" + " import_date BETWEEN '" + from + "' AND '" + to+"'" :
-								"")
+						(isSearch ?
+								" WHERE " + (keyword != null ? "( provider_name LIKE '%" + keyword + "%' OR " +
+										"importer_name  LIKE '%" + keyword + "%' OR " + "import_id  LIKE '%" + keyword +
+										"%')" : "") +
+										((keyword != null ? " AND" : "") + " import_date BETWEEN '" + from + "' AND '" + to + "'")
 								: "") +
 						(sortBy != null ? "ORDER BY " + sortBy + " " + order : "") +
 						" LIMIT " + begin + "," + numberOfRec;
-		System.out.print(sql);
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
@@ -186,11 +187,20 @@ public class ImportDAO
 		return importList;
 	}
 
-	public int count(String keyword, String field) {
+	public int count(String keyword, LocalDateTime from, LocalDateTime to) {
 		int count = 0;
+		boolean isSearch = (keyword != null) || (from != null) || (to != null);
+		if (from == null) from = LocalDateTime.of(1000, 1, 1, 0, 0, 0);
+		if (to == null) to = LocalDateTime.of(3000, 12, 31, 0, 0, 0);
 		String sql =
 				"SELECT COUNT(import_id) AS no FROM import " +
-						(keyword != null ? " WHERE " + field + " LIKE '%" + keyword + "%' " : "");
+						"SELECT * FROM import " +
+						(isSearch ?
+								" WHERE " + (keyword != null ? "( provider_name LIKE '%" + keyword + "%' OR " +
+										"importer_name  LIKE '%" + keyword + "%' OR " + "import_id  LIKE '%" + keyword +
+										"%')" : "") +
+										((keyword != null ? " AND" : "") + " import_date BETWEEN '" + from + "' AND '" + to + "'")
+								: "");
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
