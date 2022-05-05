@@ -108,6 +108,7 @@
     right: 0;
     background-color: #fff;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    color: #000;
 }
 
 .products__sort-selection__price-item:hover {

@@ -4,15 +4,6 @@
 <div class="search">
     <form action="${context}/admin/providers/search" class="search__form">
         <input type="search" class="search__bar form-control" name="keyword" value="${param.keyword}">
-        <select name="field" id="" class="provider__search-option">
-            <option value="name" ${param.field=='name'||empty param.field?'selected':''}>Theo tên nhà cung
-                cấp
-            </option>
-            <option value="address" ${param.field=='address'?'selected':''}>Theo địa chỉ</option>
-            <option value="phoneNumber" ${param.field=='phoneNumber'?'selected':''}>Theo số điện thoại</option>
-            <option value="email" ${param.field=='email'?'selected':''}>Theo email</option>
-            <option value="taxId" ${param.field=='taxId'?'selected':''}>Theo mã số thuế</option>
-        </select>
         <button type="submit" class="btn btn-primary btn-search">
             <i class="las la-search"></i>
         </button>

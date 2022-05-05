@@ -1,9 +1,10 @@
 $(function () {
     // HANDLE SEARCH, FILTER , SORT, PAGE FORM
-    console.log(1);
     const surrogateForm = $('#surrogateForm')
     const pageInput = surrogateForm.find('input[name=page]')
     const sortByInput = surrogateForm.find('input[name=sortBy]')
+    const orderInput =  surrogateForm.find('input[name=order]')
+
     const pageBtn = $('.page-link')
     pageBtn.click(function () {
         if (pageInput.attr('disabled')) {
@@ -13,21 +14,27 @@ $(function () {
         surrogateForm.submit()
     })
 
-
     const sortOptions = $('.order-bar__option')
-    sortOptions.click(function () {
+    sortOptions.click(function (e) {
         if (sortByInput.attr('disabled')) {
             sortByInput.removeAttr('disabled');
         }
-        sortByInput.val($(this).attr('data-sort'))
+        const sortByValue = $(this).attr('data-sort');
+        sortByInput.val(sortByValue)
+
+        // Price tăng hay giảm
+        if (sortByValue==='price'){
+            orderInput.val($(e.target).attr('data-order'))
+            if (orderInput.attr('disabled')) {
+                orderInput.removeAttr('disabled');
+            }
+        }
         surrogateForm.submit()
     })
     const minPriceSurrogateForm = surrogateForm.find('input[name=minPrice]')
     const maxPriceSurrogateForm = surrogateForm.find('input[name=maxPrice]')
     const applyFilterBtn = $('.search__filter__apply-btn')
-    console.log(applyFilterBtn)
     applyFilterBtn.click(function () {
-        console.log(1)
         const minPriceInput = $('.search__filter__price-range__input--min-price')
         const maxPriceInput = $('.search__filter__price-range__input--max-price')
 

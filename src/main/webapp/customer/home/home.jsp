@@ -51,11 +51,11 @@
                             <div class="search__filter__group__content search__filter__price-range">
                                 <input type="text" maxlength="13"
                                        class="search__filter__price-range__input search__filter__price-range__input--min-price"
-                                       placeholder="₫ TỪ" value="">
+                                       placeholder="₫ TỪ" value="${param.minPrice}">
                                 <div class="search__filter__price-range__line"><i class="las la-minus"></i></div>
                                 <input type="text" maxlength="13"
                                        class="search__filter__price-range__input search__filter__price-range__input--max-price"
-                                       placeholder="₫ ĐẾN" value="">
+                                       placeholder="₫ ĐẾN" value="${param.maxPrice}">
                             </div>
                         </div>
                         <button class="btn search__filter__apply-btn btn-primary">
@@ -128,12 +128,12 @@ Danh mục</span>
                                 </i>
                             </div>
                             <div class="products__sort-selection__price__popover">
-                                <a href="" class="products__sort-selection__price-item">
+                                <span class="products__sort-selection__price-item" data-order="ASC">
                                     Giá: Thấp đến cao
-                                </a>
-                                <a href="" class="products__sort-selection__price-item">
+                                </span>
+                                <span class="products__sort-selection__price-item" data-order="DESC">
                                     Giá: Cao đến thấp
-                                </a>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -180,7 +180,7 @@ Danh mục</span>
     </div>
 </div>
 <c:if test="${search}">
-    <link rel="stylesheet" href="${context}/js/customer/search.js?rd=${rand}">
+    <script src="${context}/js/customer/search.js?rd=${rand}"></script>
 </c:if>
 
 <jsp:include page="../../common/footer.jsp"/>
