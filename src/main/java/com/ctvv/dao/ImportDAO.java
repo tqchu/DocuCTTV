@@ -194,7 +194,6 @@ public class ImportDAO
 		if (to == null) to = LocalDateTime.of(3000, 12, 31, 0, 0, 0);
 		String sql =
 				"SELECT COUNT(import_id) AS no FROM import " +
-						"SELECT * FROM import " +
 						(isSearch ?
 								" WHERE " + (keyword != null ? "( provider_name LIKE '%" + keyword + "%' OR " +
 										"importer_name  LIKE '%" + keyword + "%' OR " + "import_id  LIKE '%" + keyword +

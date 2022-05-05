@@ -1,12 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!-- SURROGATE FORM -->
-<form action="${requestURI}" id="surrogateForm">
-    <input type="hidden" name="keyword" value="${param.keyword}" ${empty param.keyword?'disabled':''}>
-    <input type="hidden" name="field" value="${param.field}" ${empty param.field?'disabled':''}>
-    <input type="hidden" name="page" value="${not empty param.page? param.page: 1}">
-    <input type="hidden" name="sortBy" value="${param.sortBy}" ${empty param.sortBy?'disabled':''}>
-    <input type="hidden" name="order" value="${param.order}" ${empty param.order?'disabled':''}>
-</form>
 <!-- PAGINATION -->
 <nav>
     <ul class="pagination justify-content-center">

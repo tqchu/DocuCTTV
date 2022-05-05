@@ -132,3 +132,20 @@ input {
 
 }
 
+
+/*PAGINATION*/
+.pagination{
+    margin-top: 40px;
+}
+.page-link {
+    color: var(--primary-color);
+    padding: 4px 14px;
+    font-size: 18px;
+    font-weight: 500;
+}
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
