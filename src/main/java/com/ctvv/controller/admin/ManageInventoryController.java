@@ -17,6 +17,7 @@ import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class ManageInventoryController
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		httpSession = request.getSession();
 		// INVENTORY HISTORY HOME
-		if (request.getRequestURI().equals(request.getContextPath() + "/admin/inventory/history")) {
+		if (request.getRequestURI().startsWith(request.getContextPath() + "/admin/inventory/history")) {
 			listImport(request, response);
 		}
 		// VIEW HISTORY DETAIL
@@ -115,11 +116,16 @@ public class ManageInventoryController
 	private void listImport(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
+		LocalDateTime from = request.getParameter("from") != null ?
+				LocalDate.parse(request.getParameter("from")).atStartOfDay()
+				: null;
+		LocalDateTime to = request.getParameter("to") != null ?
+				LocalDate.parse(request.getParameter("to")).atTime(23, 59,59  ) : null;
 		String orderBy = getOrder(request);
 		List<Import> importList;
 		int begin = getBegin(request);
-		importList = importDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, orderBy, null);
-		int numberOfPages = (importDAO.count(keyword, null) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		importList = importDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, from, to, orderBy, null);
+		int numberOfPages = (importDAO.count(keyword, from, to) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
 		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("importList", importList);
 		goHistoryHome(request, response);

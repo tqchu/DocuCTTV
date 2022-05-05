@@ -166,13 +166,14 @@ public class ImportDAO
 		List<Import> importList = new ArrayList<>();
 		String sql =
 				"SELECT * FROM import " +
-						(isSearch ? " WHERE " + (keyword != null ? " provider_name LIKE '%" + keyword + "%' " :
-								"") + (keyword != null ? " AND" + " import_date BETWEEN '" + from + "' AND '" + to+"'" :
-								"")
+						(isSearch ?
+								" WHERE " + (keyword != null ? "( provider_name LIKE '%" + keyword + "%' OR " +
+										"importer_name  LIKE '%" + keyword + "%' OR " + "import_id  LIKE '%" + keyword +
+										"%')" : "") +
+										((keyword != null ? " AND" : "") + " import_date BETWEEN '" + from + "' AND '" + to + "'")
 								: "") +
 						(sortBy != null ? "ORDER BY " + sortBy + " " + order : "") +
 						" LIMIT " + begin + "," + numberOfRec;
-		System.out.print(sql);
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
@@ -186,11 +187,20 @@ public class ImportDAO
 		return importList;
 	}
 
-	public int count(String keyword, String field) {
+	public int count(String keyword, LocalDateTime from, LocalDateTime to) {
 		int count = 0;
+		boolean isSearch = (keyword != null) || (from != null) || (to != null);
+		if (from == null) from = LocalDateTime.of(1000, 1, 1, 0, 0, 0);
+		if (to == null) to = LocalDateTime.of(3000, 12, 31, 0, 0, 0);
 		String sql =
 				"SELECT COUNT(import_id) AS no FROM import " +
-						(keyword != null ? " WHERE " + field + " LIKE '%" + keyword + "%' " : "");
+						"SELECT * FROM import " +
+						(isSearch ?
+								" WHERE " + (keyword != null ? "( provider_name LIKE '%" + keyword + "%' OR " +
+										"importer_name  LIKE '%" + keyword + "%' OR " + "import_id  LIKE '%" + keyword +
+										"%')" : "") +
+										((keyword != null ? " AND" : "") + " import_date BETWEEN '" + from + "' AND '" + to + "'")
+								: "");
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
