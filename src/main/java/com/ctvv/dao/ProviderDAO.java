@@ -1,5 +1,7 @@
 package com.ctvv.dao;
 
+import com.ctvv.model.Category;
+import com.ctvv.model.Import;
 import com.ctvv.model.Provider;
 
 import javax.sql.DataSource;
@@ -33,6 +35,46 @@ public class ProviderDAO
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public List<Provider> get(int begin, int numberOfRec, String keyword, String sortBy, String order) {
+		if (order == null) order = "ASC";
+		List<Provider> providerList = new ArrayList<>();
+		String sql =
+				"SELECT * FROM provider " +
+						(keyword != null ? " WHERE provider_name LIKE '%" + keyword + "%' " : "") +
+						(sortBy != null ? "ORDER BY " + sortBy + " " + order : "") +
+						" LIMIT " + begin + "," + numberOfRec;
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				providerList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return providerList;
+	}
+
+	public int count(String keyword, String field){
+		int count = 0;
+		if (field==null) field = "provider_name";
+		List<Provider> providerList = new ArrayList<>();
+		String sql =
+				"SELECT COUNT(provider_id) AS no FROM provider " +
+						(keyword != null ? " WHERE " + field + " LIKE '%" + keyword + "%' " : "") ;
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			count = resultSet.getInt("no");
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return  count;
 	}
 
 	@Override
