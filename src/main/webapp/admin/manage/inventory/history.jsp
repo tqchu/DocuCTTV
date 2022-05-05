@@ -1,9 +1,21 @@
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <link rel="stylesheet" href="${context}/css/admin/inventory/home.css?rd=${rand}">
 <div class="search">
-    <form action="${context}/admin/inventory/search" class="search__form" method="get">
-        <input type="search" class="search__bar form-control" name="productName" placeholder="Nhập tên sản phẩm">
+    <form action="${context}/admin/inventory/history/search" class="search__form" method="get">
+        <input type="search" class="search__bar form-control" name="keyword" placeholder="Nhập tên sản phẩm">
+        <div class="form-group">
+            <label for="from">Từ</label>
+            <input type="date" name="from" id="from">
+
+        </div>
+        <div class="form-group">
+            <label for="to">Đến</label>
+            <input type="date" name="to" id="to">
+
+        </div>
         <button type="submit" class="btn btn-primary btn-search">
             <i class="las la-search"></i>
         </button>
@@ -49,7 +61,7 @@
     <span class="order-bar__option ${param.sortBy=='default'|| empty param.sortBy?'active':''}"
           data-sort="default">Mới
             nhất</span>
-<%--    <span class="order-bar__option  ${param.sortBy=='name'?'active':''}" data-sort="name">Tên</span>--%>
+    <%--    <span class="order-bar__option  ${param.sortBy=='name'?'active':''}" data-sort="name">Tên</span>--%>
 </div>
 <div class="list">
     <table class="table table-hover table-bordered ">
@@ -77,8 +89,13 @@
                     <td>DN${currentRow.importId}</td>
                     <td>${currentRow.importerName}</td>
                     <td>${currentRow.providerName}</td>
-                    <td>${currentRow.totalPrice}</td>
-                    <td>${currentRow.importDate}</td>
+                    <td>
+                        <fmt:formatNumber value="${currentRow.totalPrice}" type="number" maxFractionDigits="0"/>
+                    </td>
+                    <td>
+                            <%--                        <fmt:formatDate value="${currentRow.importDate}" type="time" />--%>
+                            ${currentRow.importDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))}
+                    </td>
                     <td class="">
                         <a href="${context}/admin/inventory/history/view?id=${currentRow.importId}">Xem chi tiết</a>
                     </td>

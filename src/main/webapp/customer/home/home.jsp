@@ -99,7 +99,8 @@ Danh mục</span>
                                                             ${product.name}
                                                     </div>
                                                     <div class="product__price">
-                                                        ${product.price}
+                                                        <fmt:formatNumber maxFractionDigits="0"
+                                                                          value="${product.price}" type="number" />
 
                                                     </div>
                                                 </a>

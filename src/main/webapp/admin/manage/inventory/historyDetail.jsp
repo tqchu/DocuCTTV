@@ -1,4 +1,6 @@
+<%@ page import="com.ctvv.model.ImportDetail" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%-- set context path--%>
 <c:set var="context" value="${pageContext.request.contextPath}" scope="request"/>
@@ -53,7 +55,10 @@
                 <td>${importDetail.quantity}</td>
                 <td>${importDetail.price}</td>
                 <td>${importDetail.tax*100}%</td>
-                <td>${importDetail.price*importDetail.quantity*(1-importDetail.tax)}</td>
+                <td>
+                    <fmt:formatNumber value="${importDetail.price*importDetail.quantity*(1-importDetail.tax)}"
+                                      type="number" maxFractionDigits="0"/>
+                </td>
             </tr>
         </c:forEach>
 

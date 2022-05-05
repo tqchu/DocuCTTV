@@ -16,6 +16,8 @@ import javax.sql.DataSource;
 import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class ManageInventoryController
 	final String HOME_PAGE = "/admin/manage/home.jsp";
 	final String INVENTORY_SERVLET = "/admin/inventory";
 	final String HISTORY_SERVLET = "/admin/inventory/history";
-	private HttpSession httpSession ;
+	private HttpSession httpSession;
 	private ImportDAO importDAO;
 	private ProductDAO productDAO;
 	private ProviderDAO providerDAO;
@@ -37,7 +39,7 @@ public class ManageInventoryController
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		httpSession = request.getSession();
 		// INVENTORY HISTORY HOME
-		if (request.getRequestURI().equals(request.getContextPath() + "/admin/inventory/history")) {
+		if (request.getRequestURI().startsWith(request.getContextPath() + "/admin/inventory/history")) {
 			listImport(request, response);
 		}
 		// VIEW HISTORY DETAIL
@@ -86,7 +88,7 @@ public class ManageInventoryController
 		Provider provider = providerDAO.get(providerId);
 		String importerName = request.getParameter("importerName");
 
-		LocalDate importDate = LocalDate.now();
+		LocalDateTime importDate = LocalDateTime.now();
 		String[] productIdParams = request.getParameterValues("productId");
 		String[] quantityParams = request.getParameterValues("quantity");
 		String[] priceParams = request.getParameterValues("price");
@@ -114,11 +116,16 @@ public class ManageInventoryController
 	private void listImport(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
+		LocalDateTime from = request.getParameter("from") != null ?
+				LocalDate.parse(request.getParameter("from")).atStartOfDay()
+				: null;
+		LocalDateTime to = request.getParameter("to") != null ?
+				LocalDate.parse(request.getParameter("to")).atTime(23, 59,59  ) : null;
 		String orderBy = getOrder(request);
 		List<Import> importList;
 		int begin = getBegin(request);
-		importList = importDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, orderBy, null);
-		int numberOfPages = (importDAO.count(keyword, null) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		importList = importDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, from, to, orderBy, null);
+		int numberOfPages = (importDAO.count(keyword, from, to) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
 		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("importList", importList);
 		goHistoryHome(request, response);
