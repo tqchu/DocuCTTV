@@ -26,6 +26,20 @@
     </div>
     <c:remove var="successMessage" scope="session"/>
 </c:if>
+<c:if test="${errorMessage!=null}">
+    <div class="toast align-items-center toast-message toast-message--error show" role="alert"
+         aria-live="assertive"
+         aria-atomic="true" data-bs-autohide="false">
+        <div class="d-flex ">
+            <div class="toast-body">
+                    ${errorMessage}
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+    <c:remove var="errorMessage" scope="session"/>
+</c:if>
 <div class="order-bar">
         <span class="order-bar__text-heading">
             Sắp xếp theo

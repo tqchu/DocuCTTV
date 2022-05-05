@@ -21,6 +21,7 @@ import java.util.Objects;
 @WebServlet(name = "ManageProviderController", value = "/admin/providers/*")
 public class ManageProviderController
 		extends HttpServlet {
+	final int NUMBER_OF_RECORDS_PER_PAGE = 10;
 	private ProviderDAO providerDAO;
     final String HOME_PAGE = "/admin/manage/home.jsp";
 	final String SEARCH_SERVLET ="/admin/providers/search";
@@ -30,44 +31,18 @@ public class ManageProviderController
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession();
-		String uri = request.getRequestURI();
-		if (uri.equals(request.getContextPath() + SEARCH_SERVLET)) {
-			search(request, response);
-		} else
 			listProviders(request, response);
-	}
-
-	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                     IOException {
-		String field = request.getParameter("field");
-		String keyword = request.getParameter("keyword");
-		switch (field) {
-			case "name":
-				field = "provider_name";
-				break;
-			case "address":
-				field = "provider_address";
-				break;
-			case "phoneNumber":
-				field = "phone_number";
-				break;
-			case "taxId":
-				field = "tax_id_number";
-				break;
-		}
-		String sortBy= getOrder(request);
-		List<Provider> providerList;
-		providerList = providerDAO.search(keyword, field, sortBy);
-		request.setAttribute("providerList", providerList);
-		goHome(request, response);
 	}
 
 	private void listProviders(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String keyword = request.getParameter("keyword");
 		String sortBy =getOrder(request);
 		List<Provider> providerList;
-		if (sortBy != null) providerList = providerDAO.getAll(sortBy);
-		else providerList = providerDAO.getAll();
+		int begin = getBegin(request);
+		providerList = providerDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, sortBy, null);
+		int numberOfPages = (providerDAO.count(keyword, null) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("providerList", providerList);
 		goHome(request, response);
 	}
@@ -244,6 +219,18 @@ public class ManageProviderController
 		}
 		return sortBy;
 	}
+
+	public int getBegin(HttpServletRequest request){
+		String pageParam = request.getParameter("page");
+		int page;
+		if(pageParam == null){
+			page = 1;
+		} else {
+			page = Integer.parseInt(pageParam);
+		}
+		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
+	}
+
 	@Override
 	public void init() throws ServletException {
 		super.init();

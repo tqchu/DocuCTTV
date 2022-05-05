@@ -269,5 +269,26 @@ public class ProductDAO
 			e.printStackTrace();
 		}
 		return count;
+  }
+
+	public Product findByName (String name)
+	{
+		String sql = "SELECT * FROM product WHERE product_name = ?";
+		try(Connection connection = dataSource.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql);)
+		{
+			ResultSet resultSet;
+			statement.setString(1,name);
+			resultSet = statement.executeQuery();
+			while (resultSet.next())
+			{
+				return map(resultSet);
+			}
+			resultSet.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
