@@ -137,24 +137,32 @@ public class ManageProductsController
 		if (!Objects.equals(request.getParameter("categoryId"), "")) {
 			category = categoryDAO.get(Integer.parseInt(request.getParameter("categoryId")));
 		}
-		Product product = new Product(name, warrantyPeriod, description, dimension, material, price, category);
-		int productId = productDAO.create(product).getProductId();
 
-		String imageFolder = "images/products";
-		for (Part part : request.getParts()) {
-			if (part.getName().equals("images") && !Objects.equals(part.getSubmittedFileName(), "")) {
-				String uniqueId = UUID.randomUUID().toString();
-				String submittedFileName = part.getSubmittedFileName();
-				String baseName = FilenameUtils.getBaseName(submittedFileName);
-				String extensionName = FilenameUtils.getExtension(submittedFileName);
-				String fileName = baseName + uniqueId + "." + extensionName;
-				part.write(this.getInitParameter("sourceImageFolder") + "\\" + fileName);
-				part.write(this.getInitParameter("targetImageFolder") + "\\" + fileName);
-				imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
+		if (productDAO.findByName(name) == null)
+		{
+			Product product = new Product(name, warrantyPeriod, description, dimension, material, price, category);
+			int productId = productDAO.create(product).getProductId();
+
+			String imageFolder = "images/products";
+			for (Part part : request.getParts()) {
+				if (part.getName().equals("images") && !Objects.equals(part.getSubmittedFileName(), "")) {
+					String uniqueId = UUID.randomUUID().toString();
+					String submittedFileName = part.getSubmittedFileName();
+					String baseName = FilenameUtils.getBaseName(submittedFileName);
+					String extensionName = FilenameUtils.getExtension(submittedFileName);
+					String fileName = baseName + uniqueId + "." + extensionName;
+					part.write(this.getInitParameter("sourceImageFolder") + "\\" + fileName);
+					part.write(this.getInitParameter("targetImageFolder") + "\\" + fileName);
+					imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
+				}
 			}
+			session.setAttribute("successMessage", "Sản phẩm đã thêm thành công");
+			response.sendRedirect(request.getContextPath() + HOME);
 		}
-		session.setAttribute("successMessage", "Sản phẩm đã thêm thành công");
-		response.sendRedirect(request.getContextPath() + HOME);
+		else {
+			session.setAttribute("errorMessage", "Tên sản phẫm đã tồn tại");
+			response.sendRedirect(request.getContextPath() + HOME);
+		}
 
 	}
 	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException,
