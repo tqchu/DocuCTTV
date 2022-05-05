@@ -24,33 +24,37 @@ public class CustomerProductController
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String categoryName = request.getParameter("category");
-		String idParam =request.getParameter("id");
-		if (categoryName!=null){
-			Category category = categoryDAO.find(categoryName);
-			List<Product> productList = productDAO.getAllByCategory(category.getCategoryId());
-			request.setAttribute("productList", productList);
-			List<Category> categoryList = categoryDAO.getAll();
-			request.setAttribute("categoryList", categoryList);
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/home.jsp");
-			dispatcher.forward(request, response);
-		}
-		else if (idParam!=null){
-			int id = Integer.parseInt(idParam);
-			Product product = productDAO.get(id);
-			request.setAttribute("product", product);
-			if (product.getCategory() != null) {
-				List<Product> similarProducts = productDAO.getAllByCategory(product.getCategory().getCategoryId());
-				similarProducts.remove(product);
-				request.setAttribute("similarProducts", similarProducts);
-			}
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/product.jsp");
-			dispatcher.forward(request, response);
-		}
+		if (request.getRequestURI().equals(request.getContextPath()+ "products/search")) search(request,response);
 		else {
-			response.sendRedirect(request.getContextPath());
+			String categoryName = request.getParameter("category");
+			String idParam = request.getParameter("id");
+			if (categoryName != null) {
+				Category category = categoryDAO.find(categoryName);
+				List<Product> productList = productDAO.getAllByCategory(category.getCategoryId());
+				request.setAttribute("productList", productList);
+				List<Category> categoryList = categoryDAO.getAll();
+				request.setAttribute("categoryList", categoryList);
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/home.jsp");
+				dispatcher.forward(request, response);
+			} else if (idParam != null) {
+				int id = Integer.parseInt(idParam);
+				Product product = productDAO.get(id);
+				request.setAttribute("product", product);
+				if (product.getCategory() != null) {
+					List<Product> similarProducts = productDAO.getAllByCategory(product.getCategory().getCategoryId());
+					similarProducts.remove(product);
+					request.setAttribute("similarProducts", similarProducts);
+				}
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/product.jsp");
+				dispatcher.forward(request, response);
+			} else {
+				response.sendRedirect(request.getContextPath());
+			}
 		}
 
+	}
+
+	private void search(HttpServletRequest request, HttpServletResponse response) {
 	}
 
 	@Override
