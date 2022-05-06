@@ -184,10 +184,12 @@ public class ProductDAO
 		}
 		return productList;
 	}
+
 	public List<Product> getAllByCategory(int categoryId, String sortBy, String order, int begin, int numberOfRec) {
 		List<Product> productList = new ArrayList<>();
-		String sql = "SELECT * FROM product WHERE category_id=? "+(sortBy!=null? "ORDER BY "+sortBy+" "+order : "")
-				+ " LIMIT "+begin+","+numberOfRec;
+		String sql = "SELECT * FROM product WHERE category_id=? " + (sortBy != null ?
+				"ORDER BY " + sortBy + " " + order : "")
+				+ " LIMIT " + begin + "," + numberOfRec;
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, categoryId);
@@ -269,19 +271,16 @@ public class ProductDAO
 			e.printStackTrace();
 		}
 		return count;
-  }
+	}
 
-	public Product findByName (String name)
-	{
+	public Product findByName(String name) {
 		String sql = "SELECT * FROM product WHERE product_name = ?";
-		try(Connection connection = dataSource.getConnection();
-			PreparedStatement statement = connection.prepareStatement(sql);)
-		{
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql);) {
 			ResultSet resultSet;
-			statement.setString(1,name);
+			statement.setString(1, name);
 			resultSet = statement.executeQuery();
-			while (resultSet.next())
-			{
+			while (resultSet.next()) {
 				return map(resultSet);
 			}
 			resultSet.close();
@@ -290,5 +289,38 @@ public class ProductDAO
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public List<Product> get(int begin, int numberOfRecords) {
+		List<Product> productList = new ArrayList<>();
+		String sql =
+				"SELECT * FROM product LIMIT " + begin + ", " + numberOfRecords;
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				productList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return productList;
+	}
+
+	public int count () {
+		int count = 0;
+		String sql =
+				"SELECT COUNT(product_id) AS no FROM product ";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			count = resultSet.getInt("no");
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 }

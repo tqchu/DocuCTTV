@@ -26,38 +26,54 @@ public class CustomerProductController
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("requestURI", request.getRequestURI());
-		if (request.getRequestURI().equals(request.getContextPath()+ "products/search")) search(request,response);
+		if (request.getRequestURI().equals(request.getContextPath()+ "/products/search")) search(request,response);
 		else {
 			String categoryName = request.getParameter("category");
 			String idParam = request.getParameter("id");
-			if (categoryName != null) {
-				Category category = categoryDAO.find(categoryName);
-				List<Product> productList = new ArrayList<>();
-				String sortBy = getSortBy(request);
-				String order = request.getParameter("order");
-				int begin = getBegin(request);
-				productList = productDAO.getAllByCategory(category.getCategoryId(),sortBy,order,begin,NUMBER_OF_RECORDS_PER_PAGE);
-				request.setAttribute("productList", productList);
-				List<Category> categoryList = categoryDAO.getAll();
-				request.setAttribute("categoryList", categoryList);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/home.jsp");
-				dispatcher.forward(request, response);
-			} else if (idParam != null) {
-				int id = Integer.parseInt(idParam);
-				Product product = productDAO.get(id);
-				request.setAttribute("product", product);
-				if (product.getCategory() != null) {
-					List<Product> similarProducts = productDAO.getAllByCategory(product.getCategory().getCategoryId(),null,null,0,NUMBER_OF_RECORDS_PER_PAGE);
-					similarProducts.remove(product);
-					request.setAttribute("similarProducts", similarProducts);
+			// categoryName
+			// sortBy
+			// order
+			// page
+			if (idParam != null) {
+				viewProductDetail(request, response);
+			}
+			else {
+				//  Xem danh sách product với các tham số category, sortBy, order, page
+				if (categoryName != null) {
+					Category category = categoryDAO.find(categoryName);
+					List<Product> productList = new ArrayList<>();
+					String sortBy = getSortBy(request);
+					String order = request.getParameter("order");
+					int begin = getBegin(request);
+					productList = productDAO.getAllByCategory(category.getCategoryId(), sortBy, order, begin,
+							NUMBER_OF_RECORDS_PER_PAGE);
+
+					request.setAttribute("productList", productList);
+					List<Category> categoryList = categoryDAO.getAll();
+					request.setAttribute("categoryList", categoryList);
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/home.jsp");
+					dispatcher.forward(request, response);
+				} else {
+					response.sendRedirect(request.getContextPath());
 				}
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/product.jsp");
-				dispatcher.forward(request, response);
-			} else {
-				response.sendRedirect(request.getContextPath());
 			}
 		}
 
+	}
+
+	private void viewProductDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                                IOException {
+		String idParam = request.getParameter("id");
+		int id = Integer.parseInt(idParam);
+		Product product = productDAO.get(id);
+		request.setAttribute("product", product);
+		if (product.getCategory() != null) {
+			List<Product> similarProducts = productDAO.getAllByCategory(product.getCategory().getCategoryId(),null,null,0,NUMBER_OF_RECORDS_PER_PAGE);
+			similarProducts.remove(product);
+			request.setAttribute("similarProducts", similarProducts);
+		}
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/product.jsp");
+		dispatcher.forward(request, response);
 	}
 
 	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException,
