@@ -13,14 +13,15 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "CustomerProductController", value = "/products")
+@WebServlet(name = "CustomerProductController", value = "/products/*")
 public class CustomerProductController
 		extends HttpServlet {
 	private ProductDAO productDAO;
 	private CategoryDAO categoryDAO;
-
+	private final int NUMBER_OF_RECORDS_PER_PAGE = 20;
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -30,7 +31,11 @@ public class CustomerProductController
 			String idParam = request.getParameter("id");
 			if (categoryName != null) {
 				Category category = categoryDAO.find(categoryName);
-				List<Product> productList = productDAO.getAllByCategory(category.getCategoryId());
+				List<Product> productList = new ArrayList<>();
+				String sortBy = getSortBy(request);
+				String order = request.getParameter("order");
+				int begin = getBegin(request);
+				productList = productDAO.getAllByCategory(category.getCategoryId(),sortBy,order,begin,NUMBER_OF_RECORDS_PER_PAGE);
 				request.setAttribute("productList", productList);
 				List<Category> categoryList = categoryDAO.getAll();
 				request.setAttribute("categoryList", categoryList);
@@ -41,7 +46,7 @@ public class CustomerProductController
 				Product product = productDAO.get(id);
 				request.setAttribute("product", product);
 				if (product.getCategory() != null) {
-					List<Product> similarProducts = productDAO.getAllByCategory(product.getCategory().getCategoryId());
+					List<Product> similarProducts = productDAO.getAllByCategory(product.getCategory().getCategoryId(),null,null,0,NUMBER_OF_RECORDS_PER_PAGE);
 					similarProducts.remove(product);
 					request.setAttribute("similarProducts", similarProducts);
 				}
@@ -54,7 +59,57 @@ public class CustomerProductController
 
 	}
 
-	private void search(HttpServletRequest request, HttpServletResponse response) {
+	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+			IOException {
+		String keyword = request.getParameter("keyword");
+		String sortBy = getSortBy(request);
+		String order = request.getParameter("order");
+		int begin = getBegin(request);
+		int minPrice ;
+		int maxPrice ;
+		if (request.getParameter("minPrice")!=null) minPrice= Integer.parseInt(request.getParameter("minPrice"));
+		else minPrice=0;
+		if  (request.getParameter("maxPrice")!=null) maxPrice= Integer.parseInt(request.getParameter("maxPrice"));
+		else maxPrice=Integer.MAX_VALUE;
+
+		List<Product> productList;
+		productList = productDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, minPrice, maxPrice, sortBy, order);
+
+		int numberOfPages = (productDAO.count(keyword, minPrice, maxPrice) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		request.setAttribute("numberOfPages", numberOfPages);
+		request.setAttribute("search", true);
+		request.setAttribute("productList", productList);
+		goHome(request, response);
+	}
+
+	public String getSortBy(HttpServletRequest request) {
+		String sortBy = request.getParameter("sortBy");
+		if (sortBy != null) {
+			switch (sortBy) {
+				case "price":
+					sortBy = "price";
+					break;
+				default:
+					sortBy = null;
+					break;
+			}
+		}
+		return sortBy;
+	}
+	public int getBegin(HttpServletRequest request) {
+		String pageParam = request.getParameter("page");
+		int page;
+		if (pageParam == null) {
+			page = 1;
+		} else {
+			page = Integer.parseInt(pageParam);
+		}
+		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
+	}
+	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+			IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/home.jsp");
+		dispatcher.forward(request, response);
 	}
 
 	@Override
