@@ -38,13 +38,15 @@ public class ManageInventoryController
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		httpSession = request.getSession();
-		// INVENTORY HISTORY HOME
-		if (request.getRequestURI().startsWith(request.getContextPath() + "/admin/inventory/history")) {
-			listImport(request, response);
-		}
+
 		// VIEW HISTORY DETAIL
-		else if (request.getRequestURI().equals(request.getContextPath() + "/admin/inventory/history/view")) {
+		if (request.getRequestURI().equals(request.getContextPath() + "/admin/inventory/history/view")) {
 			viewHistoryDetail(request, response);
+		}
+		// INVENTORY HISTORY HOME
+
+		else if (request.getRequestURI().startsWith(request.getContextPath() + "/admin/inventory/history")) {
+			listImport(request, response);
 		}
 		// INVENTORY HOME
 		else {
@@ -113,6 +115,15 @@ public class ManageInventoryController
 
 	}
 
+	private void viewHistoryDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                                IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		Import anImport = importDAO.get(id);
+		request.setAttribute("anImport", anImport);
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/manage/inventory/historyDetail.jsp");
+		dispatcher.forward(request, response);
+	}
+
 	private void listImport(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
@@ -120,7 +131,7 @@ public class ManageInventoryController
 				LocalDate.parse(request.getParameter("from")).atStartOfDay()
 				: null;
 		LocalDateTime to = request.getParameter("to") != null ?
-				LocalDate.parse(request.getParameter("to")).atTime(23, 59,59  ) : null;
+				LocalDate.parse(request.getParameter("to")).atTime(23, 59, 59) : null;
 		String orderBy = getOrder(request);
 		List<Import> importList;
 		int begin = getBegin(request);
@@ -129,15 +140,6 @@ public class ManageInventoryController
 		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("importList", importList);
 		goHistoryHome(request, response);
-	}
-
-	private void viewHistoryDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                                IOException {
-		int id = Integer.parseInt(request.getParameter("id"));
-		Import anImport = importDAO.get(id);
-		request.setAttribute("anImport", anImport);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/manage/inventory/historyDetail.jsp");
-		dispatcher.forward(request, response);
 	}
 
 	private void goInventoryHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,

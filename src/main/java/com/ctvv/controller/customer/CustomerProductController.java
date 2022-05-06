@@ -20,7 +20,7 @@ public class CustomerProductController
 		extends HttpServlet {
 	private ProductDAO productDAO;
 	private CategoryDAO categoryDAO;
-	final int NUMBER_OF_RECORDS_PER_PAGE = 20;
+
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -30,13 +30,7 @@ public class CustomerProductController
 			String idParam = request.getParameter("id");
 			if (categoryName != null) {
 				Category category = categoryDAO.find(categoryName);
-				List<Product> productList;
-				if (request.getRequestURI().equals(request.getContextPath()+"&sortBy=price&order=ASC"))
-					productList = productDAO.getAllByCategory(category.getCategoryId(),"price","ASC",0,NUMBER_OF_RECORDS_PER_PAGE);
-				else if (request.getRequestURI().equals(request.getContextPath()+"&sortBy=price&order=DESC"))
-					productList = productDAO.getAllByCategory(category.getCategoryId(),"price","DESC",0,NUMBER_OF_RECORDS_PER_PAGE);
-				else
-					productList = productDAO.getAllByCategory(category.getCategoryId(),null,null,0,NUMBER_OF_RECORDS_PER_PAGE);
+				List<Product> productList = productDAO.getAllByCategory(category.getCategoryId());
 				request.setAttribute("productList", productList);
 				List<Category> categoryList = categoryDAO.getAll();
 				request.setAttribute("categoryList", categoryList);
@@ -47,7 +41,7 @@ public class CustomerProductController
 				Product product = productDAO.get(id);
 				request.setAttribute("product", product);
 				if (product.getCategory() != null) {
-					List<Product> similarProducts = productDAO.getAllByCategory(product.getCategory().getCategoryId(),null,null,0,NUMBER_OF_RECORDS_PER_PAGE);
+					List<Product> similarProducts = productDAO.getAllByCategory(product.getCategory().getCategoryId());
 					similarProducts.remove(product);
 					request.setAttribute("similarProducts", similarProducts);
 				}
@@ -59,30 +53,7 @@ public class CustomerProductController
 		}
 
 	}
-	public String getsortBy(HttpServletRequest request) {
-		String sortBy = request.getParameter("sortBy");
-		if (sortBy != null) {
-			switch (sortBy) {
-				case "default":
-					sortBy = null;
-					break;
-				case "name":
-					sortBy = "product_name";
-					break;
-			}
-		}
-		return sortBy;
-	}
-	public int getBegin(HttpServletRequest request) {
-		String pageParam = request.getParameter("page");
-		int page;
-		if (pageParam == null) {
-			page = 1;
-		} else {
-			page = Integer.parseInt(pageParam);
-		}
-		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
-	}
+
 	private void search(HttpServletRequest request, HttpServletResponse response) {
 	}
 

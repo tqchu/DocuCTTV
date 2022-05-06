@@ -160,8 +160,8 @@ public class ManageProductsController
 			response.sendRedirect(request.getContextPath() + HOME);
 		}
 		else {
-			session.setAttribute("errorMessage", "Tên sản phẫm đã tồn tại");
-			response.sendRedirect(request.getContextPath() + HOME);
+			request.setAttribute("errorMessage", "Tên sản phẩm '"+ name+ "' đã tồn tại");
+			request.getRequestDispatcher("/admin/manage/product/addForm.jsp").forward(request, response);
 		}
 
 	}
