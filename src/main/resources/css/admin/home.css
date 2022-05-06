@@ -58,8 +58,8 @@ ul {
 
 .search__add-btn {
     padding: 10px 12px;
-    margin-left: auto;
     margin-right: 10px;
+    margin-left: 100px;
 }
 
 .save-btn {
