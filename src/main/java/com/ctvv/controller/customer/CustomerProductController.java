@@ -25,6 +25,7 @@ public class CustomerProductController
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("requestURI", request.getRequestURI());
 		if (request.getRequestURI().equals(request.getContextPath()+ "products/search")) search(request,response);
 		else {
 			String categoryName = request.getParameter("category");
