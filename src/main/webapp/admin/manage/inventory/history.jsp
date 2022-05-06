@@ -5,13 +5,13 @@
 <link rel="stylesheet" href="${context}/css/admin/inventory/home.css?rd=${rand}">
 <div class="search">
     <form action="${context}/admin/inventory/history/search" class="search__form" method="get">
-        <input type="search" class="search__bar form-control" name="keyword" placeholder="Nhập tên sản phẩm">
-        <div class="form-group">
+        <input type="search" class="search__bar form-control" name="keyword" placeholder="Tìm kiếm">
+        <div class="form-group date-form-group">
             <label for="from">Từ</label>
             <input type="date" name="from" id="from">
 
         </div>
-        <div class="form-group">
+        <div class="form-group date-form-group">
             <label for="to">Đến</label>
             <input type="date" name="to" id="to">
 

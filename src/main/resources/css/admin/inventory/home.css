@@ -23,3 +23,15 @@
     font-size: 14px;
     margin-top: 6px;
 }
+.date-form-group {
+    margin-left: 10px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
+.date-form-group label{
+    margin-right: 6px;
+}
+.search__form{
+    margin-right: 0;
+}
