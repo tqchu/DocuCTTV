@@ -129,11 +129,11 @@ public class ProductDAO
 	}
 
 	@Override
-	public void delete(int id) {
+	public void delete(int productId) {
 		String sql = "DELETE FROM product WHERE product_id = ?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setInt(1, id);
+			statement.setInt(1, productId);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -184,10 +184,10 @@ public class ProductDAO
 		}
 		return productList;
 	}
-
-	public List<Product> getAllByCategory(int categoryId) {
+	public List<Product> getAllByCategory(int categoryId, String sortBy, String order, int begin, int numberOfRec) {
 		List<Product> productList = new ArrayList<>();
-		String sql = "SELECT * FROM product WHERE category_id=?";
+		String sql = "SELECT * FROM product WHERE category_id=? "+(sortBy!=null? "ORDER BY "+sortBy+" "+order : "")
+				+ " LIMIT "+begin+","+numberOfRec;
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, categoryId);
