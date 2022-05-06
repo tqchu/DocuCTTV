@@ -24,7 +24,7 @@ import java.util.List;
 @WebServlet(name = "ManageInventoryController", value = "/admin/inventory/*")
 public class ManageInventoryController
 		extends HttpServlet {
-	final int NUMBER_OF_RECORDS_PER_PAGE = 5;
+	final int NUMBER_OF_RECORDS_PER_PAGE = 10;
 	final String HOME_PAGE = "/admin/manage/home.jsp";
 	final String INVENTORY_SERVLET = "/admin/inventory";
 	final String HISTORY_SERVLET = "/admin/inventory/history";

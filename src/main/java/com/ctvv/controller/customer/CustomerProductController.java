@@ -13,26 +13,30 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "CustomerProductController", value = "/products/*")
 public class CustomerProductController
 		extends HttpServlet {
-	final int NUMBER_OF_RECORDS_PER_PAGE = 20;
 	private ProductDAO productDAO;
 	private CategoryDAO categoryDAO;
-
+	private final int NUMBER_OF_RECORDS_PER_PAGE = 20;
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("requestURI", request.getRequestURI());
-		if (request.getRequestURI().equals(request.getContextPath() + "/products/search")) search(request, response);
+		if (request.getRequestURI().equals(request.getContextPath()+ "products/search")) search(request,response);
 		else {
 			String categoryName = request.getParameter("category");
 			String idParam = request.getParameter("id");
 			if (categoryName != null) {
 				Category category = categoryDAO.find(categoryName);
-				List<Product> productList = productDAO.getAllByCategory(category.getCategoryId());
+				List<Product> productList = new ArrayList<>();
+				String sortBy = getSortBy(request);
+				String order = request.getParameter("order");
+				int begin = getBegin(request);
+				productList = productDAO.getAllByCategory(category.getCategoryId(),sortBy,order,begin,NUMBER_OF_RECORDS_PER_PAGE);
 				request.setAttribute("productList", productList);
 				List<Category> categoryList = categoryDAO.getAll();
 				request.setAttribute("categoryList", categoryList);
@@ -43,7 +47,7 @@ public class CustomerProductController
 				Product product = productDAO.get(id);
 				request.setAttribute("product", product);
 				if (product.getCategory() != null) {
-					List<Product> similarProducts = productDAO.getAllByCategory(product.getCategory().getCategoryId());
+					List<Product> similarProducts = productDAO.getAllByCategory(product.getCategory().getCategoryId(),null,null,0,NUMBER_OF_RECORDS_PER_PAGE);
 					similarProducts.remove(product);
 					request.setAttribute("similarProducts", similarProducts);
 				}
@@ -57,7 +61,7 @@ public class CustomerProductController
 	}
 
 	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                     IOException {
+			IOException {
 		String keyword = request.getParameter("keyword");
 		String sortBy = getSortBy(request);
 		String order = request.getParameter("order");
@@ -77,30 +81,6 @@ public class CustomerProductController
 		request.setAttribute("search", true);
 		request.setAttribute("productList", productList);
 		goHome(request, response);
-
-	}
-
-	public int getBegin(HttpServletRequest request) {
-		String pageParam = request.getParameter("page");
-		int page;
-		if (pageParam == null) {
-			page = 1;
-		} else {
-			page = Integer.parseInt(pageParam);
-		}
-		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
-	}
-
-	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                     IOException {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/home.jsp");
-		dispatcher.forward(request, response);
-	}
-
-	@Override
-	protected void doPost(
-			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 	}
 
 	public String getSortBy(HttpServletRequest request) {
@@ -116,6 +96,27 @@ public class CustomerProductController
 			}
 		}
 		return sortBy;
+	}
+	public int getBegin(HttpServletRequest request) {
+		String pageParam = request.getParameter("page");
+		int page;
+		if (pageParam == null) {
+			page = 1;
+		} else {
+			page = Integer.parseInt(pageParam);
+		}
+		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
+	}
+	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+			IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/home.jsp");
+		dispatcher.forward(request, response);
+	}
+
+	@Override
+	protected void doPost(
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
 	}
 
 	@Override
