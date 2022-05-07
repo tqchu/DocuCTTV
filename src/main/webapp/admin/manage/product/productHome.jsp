@@ -62,7 +62,7 @@
         <c:if test="${not empty list}">
             <c:forEach items="${list}" var="product" varStatus="loop">
                 <tr>
-                    <td>${loop.count}</td>
+                    <td>${loop.count + (not empty param.page?param.page-1:0) * 10}</td>
                     <td class="product__name">${product.name}</td>
                     <td class="product__image">
                         <div id="product-image-slide${product.productId}" class="carousel slide"

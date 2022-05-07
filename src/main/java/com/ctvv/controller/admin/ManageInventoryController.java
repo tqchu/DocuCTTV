@@ -111,7 +111,7 @@ public class ManageInventoryController
 		importDAO.create(anImport);
 
 		httpSession.setAttribute("successMessage", "Thêm đơn thành công");
-		response.sendRedirect(request.getContextPath() + INVENTORY_SERVLET);
+		response.sendRedirect(request.getContextPath() + HISTORY_SERVLET);
 
 	}
 
