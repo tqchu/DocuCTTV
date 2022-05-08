@@ -104,14 +104,14 @@
                         </c:choose>
                     </td>
                     <td class="product__rating">-</td>
-                    <td>
+                    <td class="column__action">
                         <form action="${context}/admin/products" method="get">
                             <input type="hidden" name="action" value="view">
                             <input type="hidden" value="${product.productId}" name="id">
                             <button type="submit" class="btn-edit btn btn-primary">Xem chi tiết</button>
                         </form>
                     </td>
-                    <td>
+                    <td class="column__action">
                         <button class="btn btn-delete" title="Xoá sản phẩm"
                                 data-bs-toggle="modal"
                                 data-bs-target="#deleteProductModal${product.productId}">

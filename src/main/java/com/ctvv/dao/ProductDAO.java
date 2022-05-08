@@ -57,7 +57,7 @@ public class ProductDAO
 	@Override
 	public Product create(Product product) {
 		String sql = "INSERT INTO product(product_name, warranty_period, description,dimension,material,price," +
-				"category_id) VALUES (?,?,?,?,?,?,?)";
+				"category_id,uri) VALUES (?,?,?,?,?,?,?,?)";
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
@@ -74,6 +74,7 @@ public class ProductDAO
 				statement.setNull(7, Types.INTEGER);
 			} else
 				statement.setInt(7, product.getCategory().getCategoryId());
+			statement.setString(8, product.getUri());
 			statement.execute();
 			ResultSet resultSet = statement.getGeneratedKeys();
 			while (resultSet.next()) {
@@ -106,7 +107,7 @@ public class ProductDAO
 	@Override
 	public Product update(Product product) {
 		String sql = "UPDATE product SET product_name=?, warranty_period=?,  description=?, " +
-				"dimension = ?, material = ?, price = ?, category_id=? WHERE product_id=?";
+				"dimension = ?, material = ?, price = ?, category_id=?, uri=? WHERE product_id=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, product.getName());
@@ -119,7 +120,8 @@ public class ProductDAO
 				statement.setNull(7, Types.INTEGER);
 			} else
 				statement.setInt(7, product.getCategory().getCategoryId());
-			statement.setInt(8, product.getProductId());
+			statement.setString(8, product.getUri());
+			statement.setInt(9, product.getProductId());
 			statement.executeUpdate();
 			return product;
 		} catch (SQLException e) {
@@ -153,55 +155,14 @@ public class ProductDAO
 			int categoryId = resultSet.getInt("category_id");
 			Category category = categoryDAO.get(categoryId);
 			List<ImagePath> imagePathList = imagePathDAO.getGroup(productId);
-
+			String uri = resultSet.getString("uri");
 			return new Product(productId, productName, warrantyPeriod, material, dimension, description,
-					price, category, imagePathList);
+					price, category, imagePathList,uri);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 
-	}
-
-	public List<Product> get(int begin, int numberOfRec, String keyword, String field, String sortBy, String order) {
-		if (order == null) order = "ASC";
-		if (field == null) field = "product_name";
-		List<Product> productList = new ArrayList<>();
-		String sql =
-				"SELECT * FROM product " +
-						(keyword != null ? " WHERE " + field + " LIKE '%" + keyword + "%' " : "") +
-						(sortBy != null ? "ORDER BY " + sortBy + " " + order : "") +
-						" LIMIT " + begin + "," + numberOfRec;
-		try (Connection connection = dataSource.getConnection();
-		     PreparedStatement statement = connection.prepareStatement(sql)) {
-			ResultSet resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				productList.add(map(resultSet));
-			}
-			resultSet.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return productList;
-	}
-
-	public List<Product> getAllByCategory(int categoryId, String sortBy, String order, int begin, int numberOfRec) {
-		List<Product> productList = new ArrayList<>();
-		String sql = "SELECT * FROM product WHERE category_id=? " + (sortBy != null ?
-				"ORDER BY " + sortBy + " " + order : "")
-				+ " LIMIT " + begin + "," + numberOfRec;
-		try (Connection connection = dataSource.getConnection();
-		     PreparedStatement statement = connection.prepareStatement(sql)) {
-			statement.setInt(1, categoryId);
-			ResultSet resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				productList.add(map(resultSet));
-			}
-			resultSet.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return productList;
 	}
 
 	public int count(String keyword, String field) {
@@ -360,5 +321,21 @@ public class ProductDAO
 			e.printStackTrace();
 		}
 		return count;
+	}
+
+	public Product get(String productURI) {
+		String sql = "SELECT * FROM product WHERE uri=?";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+			preparedStatement.setString(1, productURI);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				return map(resultSet);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

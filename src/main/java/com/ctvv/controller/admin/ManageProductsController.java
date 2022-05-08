@@ -1,9 +1,11 @@
 package com.ctvv.controller.admin;
-
 import com.ctvv.dao.*;
 import com.ctvv.model.*;
+import com.ctvv.util.CaseUtils;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.google.common.base.CaseFormat;
 import org.apache.commons.io.FilenameUtils;
-
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -38,7 +40,7 @@ public class ManageProductsController
 		String uri = request.getRequestURI();
 		if (action != null) {
 			String path = "";
-			List<Category> categoryList = categoryDAO.getAll();
+			List<Category> categoryList = categoryDAO.get(0,Integer.MAX_VALUE, null,null,"category_name","ASC");
 			request.setAttribute("categoryList", categoryList);
 			switch (action) {
 				case "create":
@@ -66,7 +68,7 @@ public class ManageProductsController
 		String sortBy = getsortBy(request);
 		List<Product> productList;
 		int begin = getBegin(request);
-		productList = productDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, null, sortBy, null);
+		productList = productDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, sortBy, null);
 		int numberOfPages = (productDAO.count(keyword, null) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
 		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("list", productList);
@@ -132,6 +134,7 @@ public class ManageProductsController
 		String dimension = request.getParameter("dimension");
 		String material = request.getParameter("material");
 		int price = Integer.parseInt(request.getParameter("price"));
+		String uri = CaseUtils.convert2KebabCase(name);
 		int warrantyPeriod = Integer.parseInt(request.getParameter("warrantyPeriod"));
 		Category category = null;
 		if (!Objects.equals(request.getParameter("categoryId"), "")) {
@@ -140,7 +143,7 @@ public class ManageProductsController
 
 		if (productDAO.findByName(name) == null)
 		{
-			Product product = new Product(name, warrantyPeriod, description, dimension, material, price, category);
+			Product product = new Product(name, warrantyPeriod, description, dimension, material, price, category,uri);
 			int productId = productDAO.create(product).getProductId();
 
 			String imageFolder = "images/products";
@@ -189,6 +192,7 @@ public class ManageProductsController
 		product.setMaterial(material);
 		product.setDimension(dimension);
 		product.setPrice(price);
+		product.setUri(	CaseUtils.convert2KebabCase(name));
 		productDAO.update(product);
 
 		String imageFolder = "images/products";

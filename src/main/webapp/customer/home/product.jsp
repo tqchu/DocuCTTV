@@ -155,7 +155,7 @@
 
                             <c:forEach items="${similarProducts}" var="product">
                                 <div class="col col-2">
-                                    <a href="${context}/products?id=${product.productId}"
+                                    <a href="${context}/products/${product.uri}"
                                        class="product__similar-product__product-list__product">
                                         <div class="product__similar-product__product-list__product__product__image"
                                              style="background-image:

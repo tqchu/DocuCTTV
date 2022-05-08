@@ -103,7 +103,7 @@
         <c:if test="${not empty list}">
             <c:forEach items="${list}" var="currentRow" varStatus="loop">
                 <tr>
-                    <td>${loop.count}</td>
+                    <td>${loop.count + (not empty param.page?param.page-1:0) * 10}</td>
                     <td>${currentRow.categoryName}</td>
                     <td><a href="" class="btn-edit btn btn btn-primary"
                            data-bs-toggle="modal"

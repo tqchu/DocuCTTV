@@ -134,7 +134,7 @@ Danh mục</span>
 
                                             <div class="col col-3">
 
-                                                <a href="${context}/products/${product.name}" class="product">
+                                                <a href="${context}/products/${product.uri}" class="product">
                                                     <div class="product__image" style="background-image:
                                                             url('${context}/${product.imagePathList[0].path}');">
                                                     </div>

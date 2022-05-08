@@ -38,8 +38,7 @@ public class CustomerProductController
 				if (request.getRequestURI().equals(request.getContextPath() + "/products")) {
 					response.sendRedirect(request.getContextPath());
 
-				}
-				else{
+				} else {
 					viewProductDetail(request, response);
 				}
 			} else {
@@ -93,6 +92,28 @@ public class CustomerProductController
 		goHome(request, response);
 	}
 
+	private void viewProductDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                                IOException {
+
+		String requestURI = request.getPathInfo(); // chuỗi kq sẽ là như này "/ten-san-pham"
+		String productURI = requestURI.substring(1);
+		Product product = productDAO.get(productURI);
+		request.setAttribute("product", product);
+		if (product != null) {
+			Category category = product.getCategory();
+			Integer categoryId ;
+			if (category != null) {
+				categoryId = category.getCategoryId();
+			}
+			else categoryId = null;
+			List<Product> similarProducts = productDAO.get(0, 6, categoryId, null,null);
+			similarProducts.remove(product);
+			request.setAttribute("similarProducts", similarProducts);
+		}
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/product.jsp");
+		dispatcher.forward(request, response);
+	}
+
 	public String getSortBy(HttpServletRequest request) {
 		String sortBy = request.getParameter("sortBy");
 		if (sortBy != null) {
@@ -129,21 +150,6 @@ public class CustomerProductController
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-	}
-
-	private void viewProductDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                                IOException {
-//		String productName ;
-		Product product = null;
-		request.setAttribute("product", product);
-		if (product.getCategory() != null) {
-			List<Product> similarProducts = productDAO.getAllByCategory(product.getCategory().getCategoryId(), null,
-					null, 0, NUMBER_OF_RECORDS_PER_PAGE);
-			similarProducts.remove(product);
-			request.setAttribute("similarProducts", similarProducts);
-		}
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/home/product.jsp");
-		dispatcher.forward(request, response);
 	}
 
 	@Override

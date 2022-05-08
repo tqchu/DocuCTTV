@@ -67,7 +67,7 @@
         <c:if test="${not empty adminList}">
             <c:forEach items="${adminList}" var="currentRow" varStatus="loop">
                 <tr>
-                    <td>${loop.count}</td>
+                    <td>${loop.count + (not empty param.page?param.page-1:0) * 10}</td>
                     <td>${currentRow.fullName}</td>
                     <td>${currentRow.username}</td>
                     <td>${currentRow.email}</td>
