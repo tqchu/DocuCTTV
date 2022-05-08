@@ -15,14 +15,28 @@ public class Product {
 	private int price;
 	private Category category;
 	private List<ImagePath> imagePathList;
+	private String uri;
+
 
 	public Product() {
 	}
 
+	public Product(Product product) {
+		this.productId = product.productId;
+		this.name = product.name;
+		this.warrantyPeriod = product.warrantyPeriod;
+		this.material = product.material;
+		this.dimension = product.dimension;
+		this.description = product.description;
+		this.price = product.price;
+		this.category = product.category;
+		this.imagePathList = new ArrayList<>(product.imagePathList);
+		this.uri = product.uri;
+	}
 
 	public Product(
 			int productId, String name, int warrantyPeriod, String material, String dimension, String description,
-			int price, Category category, List<ImagePath> imagePathList) {
+			int price, Category category, List<ImagePath> imagePathList, String uri) {
 		this.productId = productId;
 		this.name = name;
 		this.warrantyPeriod = warrantyPeriod;
@@ -32,21 +46,24 @@ public class Product {
 		this.price = price;
 		this.category = category;
 		this.imagePathList = new ArrayList<>(imagePathList);
-	}
-
-	public Product(String name, int warrantyPeriod, String material, String dimension, String description, int price, Category category) {
-		this.name = name;
-		this.warrantyPeriod = warrantyPeriod;
-		this.material = material;
-		this.dimension = dimension;
-		this.description = description;
-		this.price = price;
-		this.category = category;
+		this.uri = uri;
 	}
 
 	public Product(
 			String name, int warrantyPeriod, String material, String dimension, String description,
-			int price, Category category, List<ImagePath> imagePathList) {
+			Category category, String uri) {
+		this.name = name;
+		this.warrantyPeriod = warrantyPeriod;
+		this.material = material;
+		this.dimension = dimension;
+		this.description = description;
+		this.category = category;
+		this.uri = uri;
+	}
+
+	public Product(
+			String name, int warrantyPeriod, String description, String dimension, String material, int price,
+			Category category, String uri) {
 		this.name = name;
 		this.warrantyPeriod = warrantyPeriod;
 		this.material = material;
@@ -54,17 +71,7 @@ public class Product {
 		this.description = description;
 		this.price = price;
 		this.category = category;
-		this.imagePathList = new ArrayList<>(imagePathList);
-
-	}
-
-	public Product(String name, int warrantyPeriod, String material, String dimension, String description, Category category) {
-		this.name = name;
-		this.warrantyPeriod = warrantyPeriod;
-		this.material = material;
-		this.dimension = dimension;
-		this.description = description;
-		this.category = category;
+		this.uri = uri;
 	}
 
 	public int getProductId() {
@@ -123,9 +130,22 @@ public class Product {
 		this.category = category;
 	}
 
-	public int getPrice() {return price;}
+	public int getPrice() {
+		return price;
+	}
 
-	public void setPrice(int price) {this.price = price;}
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public String getUri() {
+		return uri;
+	}
+
+	public void setUri(String uri) {
+		this.uri = uri;
+	}
+
 	public List<ImagePath> getImagePathList() {
 		return imagePathList;
 	}

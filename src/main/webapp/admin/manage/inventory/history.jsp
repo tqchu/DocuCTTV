@@ -86,18 +86,17 @@
         <c:if test="${not empty importList}">
             <c:forEach items="${importList}" var="currentRow" varStatus="loop">
                 <tr>
-                    <td>DN${currentRow.importId}</td>
+                    <td>${currentRow.importId}</td>
                     <td>${currentRow.importerName}</td>
                     <td>${currentRow.providerName}</td>
                     <td>
                         <fmt:formatNumber value="${currentRow.totalPrice}" type="number" maxFractionDigits="0"/>
                     </td>
                     <td>
-                            <%--                        <fmt:formatDate value="${currentRow.importDate}" type="time" />--%>
                             ${currentRow.importDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))}
                     </td>
-                    <td class="">
-                        <a href="${context}/admin/inventory/history/view?id=${currentRow.importId}">Xem chi tiết</a>
+                    <td class="column__action">
+                        <a href="${context}/admin/inventory/history/view?id=${currentRow.importId}" class="btn-edit btn btn-primary">Xem chi tiết</a>
                     </td>
 
                 </tr>

@@ -24,7 +24,7 @@ import java.util.List;
 @WebServlet(name = "ManageInventoryController", value = "/admin/inventory/*")
 public class ManageInventoryController
 		extends HttpServlet {
-	final int NUMBER_OF_RECORDS_PER_PAGE = 20;
+	final int NUMBER_OF_RECORDS_PER_PAGE = 10;
 	final String HOME_PAGE = "/admin/manage/home.jsp";
 	final String INVENTORY_SERVLET = "/admin/inventory";
 	final String HISTORY_SERVLET = "/admin/inventory/history";
@@ -54,8 +54,9 @@ public class ManageInventoryController
 			if (action != null) {
 				switch (action) {
 					case "create":
-						List<Product> productList = productDAO.getAll();
-						List<Provider> providerList = providerDAO.getAll();
+						List<Product> productList = productDAO.get(0, Integer.MAX_VALUE, null, "name", "ASC");
+						List<Provider> providerList = providerDAO.get(0, Integer.MAX_VALUE, null, "providerName",
+								"ASC");
 						request.setAttribute("providerList", providerList);
 						request.setAttribute("productList", productList);
 						RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/manage/inventory/addForm" +
@@ -111,7 +112,7 @@ public class ManageInventoryController
 		importDAO.create(anImport);
 
 		httpSession.setAttribute("successMessage", "Thêm đơn thành công");
-		response.sendRedirect(request.getContextPath() + INVENTORY_SERVLET);
+		response.sendRedirect(request.getContextPath() + HISTORY_SERVLET);
 
 	}
 

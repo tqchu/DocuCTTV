@@ -61,21 +61,7 @@
                         <button class="btn search__filter__apply-btn btn-primary">
                             ÁP DỤNG
                         </button>
-                        <!-- SURROGATE FORM -->
-                        <form action="${requestURI}" id="surrogateForm">
-                            <input type="hidden" name="keyword"
-                                   value="${param.keyword}" ${empty param.keyword?'disabled':''}>
-                            <input type="hidden" name="page" value="${not empty param.page? param.page: 1}">
-                            <input type="hidden" name="minPrice" value="${param.minPrice}"
-                                ${empty param.minPrice?'disabled':''}>
-                            <input type="hidden" name="maxPrice"
-                                   value="${param.maxPrice}"
-                                ${empty param.maxPrice?'disabled':''}>
 
-                            <input type="hidden" name="sortBy"
-                                   value="${param.sortBy}" ${empty param.sortBy?'disabled':''}>
-                            <input type="hidden" name="order" value="${param.order}" ${empty param.order?'disabled':''}>
-                        </form>
                     </div>
                 </c:if>
                 <c:if test="${search!=true}">
@@ -100,6 +86,7 @@ Danh mục</span>
 
                 </c:if>
             </div>
+
             <div class="col col-9-6">
                 <div class="products-wrapper">
                     <div class="products__sort-selection">
@@ -147,7 +134,7 @@ Danh mục</span>
 
                                             <div class="col col-3">
 
-                                                <a href="${context}/products?id=${product.productId}" class="product">
+                                                <a href="${context}/products/${product.uri}" class="product">
                                                     <div class="product__image" style="background-image:
                                                             url('${context}/${product.imagePathList[0].path}');">
                                                     </div>
@@ -179,9 +166,30 @@ Danh mục</span>
         </div>
     </div>
 </div>
-<c:if test="${search}">
-    <script src="${context}/js/customer/search.js?rd=${rand}"></script>
-</c:if>
+<!-- SURROGATE FORM -->
+<form action="${context}/products${search?'/search':''}" id="surrogateForm">
+    <c:if test="${search}">
+        <input type="hidden" name="keyword"
+               value="${param.keyword}" ${empty param.keyword?'disabled':''}>
+    </c:if>
+    <c:if test="${!search}">
+        <input type="hidden" name="category"
+               value="${param.category}" ${empty param.category?'disabled':''}>
+    </c:if>
+
+    <input type="hidden" name="page" value="${not empty param.page? param.page: 1}">
+    <input type="hidden" name="minPrice" value="${param.minPrice}"
+    ${empty param.minPrice?'disabled':''}>
+    <input type="hidden" name="maxPrice"
+           value="${param.maxPrice}"
+    ${empty param.maxPrice?'disabled':''}>
+
+    <input type="hidden" name="sortBy"
+           value="${param.sortBy}" ${empty param.sortBy?'disabled':''}>
+    <input type="hidden" name="order" value="${param.order}" ${empty param.order?'disabled':''}>
+</form>
+
+<script src="${context}/js/customer/search.js?rd=${rand}"></script>
 
 <jsp:include page="../../common/footer.jsp"/>
 

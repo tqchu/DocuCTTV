@@ -1,0 +1,10 @@
+.import-detail-box {
+    width: 80%;
+    margin: auto;
+}
+.import-detail-box__group{
+    margin-top: 10px;
+}
+.import-detail-box__table{
+    margin-top: 20px;
+}

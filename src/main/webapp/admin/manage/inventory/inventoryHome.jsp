@@ -76,7 +76,7 @@
         <c:if test="${not empty list}">
             <c:forEach items="${list}" var="currentRow" varStatus="loop">
                 <tr>
-                    <td>${loop.count}</td>
+                    <td>${loop.count + (not empty param.page?param.page-1:0) * 10}</td>
                     <td>${currentRow.product.productId}</td>
                     <td>${currentRow.product.productName}</td>
                     <td>Tổng số lượng</td>
