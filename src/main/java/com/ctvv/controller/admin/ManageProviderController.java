@@ -41,7 +41,7 @@ public class ManageProviderController
 		List<Provider> providerList;
 		int begin = getBegin(request);
 		providerList = providerDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, sortBy, null);
-		int numberOfPages = (providerDAO.count(keyword, null) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		int numberOfPages = (providerDAO.count(keyword) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
 		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("providerList", providerList);
 		goHome(request, response);

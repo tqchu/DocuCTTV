@@ -37,7 +37,7 @@ public class ManageCategoriesController
 		String sortBy = getOrder(request);
 		List<Category> categoryList;
 		int begin = getBegin(request);
-		categoryList = categoryDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, null, sortBy, null);
+		categoryList = categoryDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, sortBy, null);
 		int numberOfPages = (categoryDAO.count(keyword, null) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
 		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("list", categoryList);
