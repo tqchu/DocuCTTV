@@ -105,7 +105,7 @@
                 <tr>
                     <td>${loop.count + (not empty param.page?param.page-1:0) * 10}</td>
                     <td>${currentRow.categoryName}</td>
-                    <td><a href="" class="btn-edit btn btn btn-primary"
+                    <td style="width: 200px"><a href="" class="btn-edit btn btn btn-primary"
                            data-bs-toggle="modal"
                            data-bs-target="#editModal">Chỉnh sửa</a>
                         <!-- MODAL CONTENT -->

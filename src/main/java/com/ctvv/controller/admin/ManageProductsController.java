@@ -40,7 +40,7 @@ public class ManageProductsController
 		String uri = request.getRequestURI();
 		if (action != null) {
 			String path = "";
-			List<Category> categoryList = categoryDAO.get(0,Integer.MAX_VALUE, null,null,"category_name","ASC");
+			List<Category> categoryList = categoryDAO.getAll("category_name","ASC");
 			request.setAttribute("categoryList", categoryList);
 			switch (action) {
 				case "create":

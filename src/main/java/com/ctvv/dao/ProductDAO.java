@@ -53,6 +53,22 @@ public class ProductDAO
 		}
 		return productList;
 	}
+	public List<Product> getAll(String sortBy, String order) {
+
+		List<Product> productList = new ArrayList<>();
+		String sql = "SELECT * FROM product " +
+				(sortBy != null ? " ORDER BY " + sortBy + " " + order : "");
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				productList.add(map(resultSet));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return productList;
+	}
 
 	@Override
 	public Product create(Product product) {
@@ -157,7 +173,7 @@ public class ProductDAO
 			List<ImagePath> imagePathList = imagePathDAO.getGroup(productId);
 			String uri = resultSet.getString("uri");
 			return new Product(productId, productName, warrantyPeriod, material, dimension, description,
-					price, category, imagePathList,uri);
+					price, category, imagePathList, uri);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -277,10 +293,11 @@ public class ProductDAO
 		return null;
 	}
 
-	public List<Product> get(int begin, int numberOfRecords) {
+	public List<Product> get(int begin, int numberOfRecords, String sortBy, String order) {
 		List<Product> productList = new ArrayList<>();
 		String sql =
-				"SELECT * FROM product LIMIT " + begin + ", " + numberOfRecords;
+				"SELECT * FROM product LIMIT " + begin + ", " + numberOfRecords +
+						(sortBy != null ? " ORDER BY " + sortBy + " " + order : "");
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
@@ -362,5 +379,26 @@ public class ProductDAO
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public List<Product> get(int begin, int numberOfRecs, String keyword, String sortBy, String order) {
+		if (order == null) order = "ASC";
+		List<Product> productList = new ArrayList<>();
+		String sql =
+				"SELECT * FROM product " +
+						(keyword != null ? " WHERE category_id = " + keyword : "") +
+						(sortBy != null ? " ORDER BY " + sortBy + " " + order : "") +
+						" LIMIT " + begin + "," + numberOfRecs;
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				productList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return productList;
 	}
 }

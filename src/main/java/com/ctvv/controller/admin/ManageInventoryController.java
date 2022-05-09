@@ -54,9 +54,8 @@ public class ManageInventoryController
 			if (action != null) {
 				switch (action) {
 					case "create":
-						List<Product> productList = productDAO.get(0, Integer.MAX_VALUE, (String) null, "name", "ASC");
-						List<Provider> providerList = providerDAO.get(0, Integer.MAX_VALUE, null, "providerName",
-								"ASC");
+						List<Product> productList = productDAO.getAll("product_name", "ASC");
+						List<Provider> providerList = providerDAO.getAll("provider_name", "ASC");
 						request.setAttribute("providerList", providerList);
 						request.setAttribute("productList", productList);
 						RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/manage/inventory/addForm" +
