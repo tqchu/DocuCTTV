@@ -1,11 +1,14 @@
 package com.ctvv.controller.admin;
-import com.ctvv.dao.*;
-import com.ctvv.model.*;
+
+import com.ctvv.dao.CategoryDAO;
+import com.ctvv.dao.ImagePathDAO;
+import com.ctvv.dao.ProductDAO;
+import com.ctvv.model.Category;
+import com.ctvv.model.ImagePath;
+import com.ctvv.model.Product;
 import com.ctvv.util.CaseUtils;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.google.common.base.CaseFormat;
 import org.apache.commons.io.FilenameUtils;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
