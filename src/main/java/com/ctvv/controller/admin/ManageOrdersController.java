@@ -29,36 +29,39 @@ public class ManageOrdersController
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String path = request.getPathInfo();
+		Order.OrderStatus  status = Order.OrderStatus.PENDING;
 		switch (path) {
-			case PENDING:
-				viewPendingOrders(request, response);
-				break;
 			case TO_SHIP:
-				viewToShipOrders(request, response);
+				status = Order.OrderStatus.TO_SHIP;
 				break;
 			case TO_RECEIVE:
-				viewToReceiveOrders(request, response);
+				status = Order.OrderStatus.TO_RECEIVE;
 				break;
 			case COMPLETED:
-				viewCompletedOrders(request, response);
+				status = Order.OrderStatus.COMPLETED;
+				break;
+			default:
+				response.sendRedirect(request.getContextPath() + request.getServletPath() + PENDING);
 				break;
 		}
-	}
-
-
-	private void viewPendingOrders(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                                IOException {
-		List<Order> orderList =  orderDAO.getAll(Order.OrderStatus.PENDING);
-		request.setAttribute("order", orderList);
-		goHome(request , response);
-	}
-
-	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		List<Order> orderList = orderDAO.getAll(status);
+		request.setAttribute("orderList", orderList);
 		RequestDispatcher dispatcher = request.getRequestDispatcher(HOME_PAGE);
 		dispatcher.forward(request, response);
 	}
 
+	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	}
+
+	private void viewPendingOrders(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                                IOException {
+
+	}
+
+
 	private void viewToShipOrders(HttpServletRequest request, HttpServletResponse response) {
+
 	}
 	private void viewToReceiveOrders(HttpServletRequest request, HttpServletResponse response) {
 	}
