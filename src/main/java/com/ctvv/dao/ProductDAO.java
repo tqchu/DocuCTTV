@@ -183,7 +183,32 @@ public class ProductDAO
 		}
 		return count;
 	}
-
+	public List<Product> get(
+			int begin, int numberOfRec, String keyword, String sortBy,
+			String order) {
+		if (order == null) order = "ASC";
+		List<Product> productList = new ArrayList<>();
+		String sql =
+				"SELECT * FROM product " +
+						(keyword != null ?
+								" WHERE (product_name  LIKE '%" + keyword +
+										"%' OR description  LIKE '%" + keyword +
+										"%' OR material  LIKE '%" + keyword + "' ) "
+								: "") +
+						(sortBy != null ? " ORDER BY " + sortBy + " " + order : "") +
+						" LIMIT " + begin + "," + numberOfRec;
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				productList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return productList;
+	}
 	public List<Product> get(
 			int begin, int numberOfRec, String keyword, int minPrice, int maxPrice, String sortBy,
 			String order) {

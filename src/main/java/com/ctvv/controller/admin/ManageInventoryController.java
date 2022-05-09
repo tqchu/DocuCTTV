@@ -54,7 +54,7 @@ public class ManageInventoryController
 			if (action != null) {
 				switch (action) {
 					case "create":
-						List<Product> productList = productDAO.get(0, Integer.MAX_VALUE, null, "name", "ASC");
+						List<Product> productList = productDAO.get(0, Integer.MAX_VALUE, (String) null, "name", "ASC");
 						List<Provider> providerList = providerDAO.get(0, Integer.MAX_VALUE, null, "providerName",
 								"ASC");
 						request.setAttribute("providerList", providerList);
