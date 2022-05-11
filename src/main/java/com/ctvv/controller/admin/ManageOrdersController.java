@@ -29,40 +29,45 @@ public class ManageOrdersController
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String path = request.getPathInfo();
+		// orders/
+		String path = request.getPathInfo(); //
 		Order.OrderStatus status = Order.OrderStatus.PENDING;
 		String statusTab = "pending";
 		if (path == null) response.sendRedirect(request.getContextPath() + request.getServletPath() + PENDING);
 		else {
-			if (path.startsWith(TO_SHIP)) {
-				status = Order.OrderStatus.TO_SHIP;
-				statusTab = "to-ship";
-			} else if (path.startsWith(TO_RECEIVE)) {
-				status = Order.OrderStatus.TO_RECEIVE;
-				statusTab = "to-receive";
+			if (path.startsWith(PENDING) || path.startsWith(TO_SHIP) || path.startsWith(TO_RECEIVE) || path.startsWith(COMPLETED)) {
+				if (path.startsWith(TO_SHIP)) {
+					status = Order.OrderStatus.TO_SHIP;
+					statusTab = "to-ship";
+				} else if (path.startsWith(TO_RECEIVE)) {
+					status = Order.OrderStatus.TO_RECEIVE;
+					statusTab = "to-receive";
 
-			} else if (path.startsWith(COMPLETED)) {
-				status = Order.OrderStatus.COMPLETED;
-				statusTab = "completed";
+				} else if (path.startsWith(COMPLETED)) {
+					status = Order.OrderStatus.COMPLETED;
+					statusTab = "completed";
 
+				}
+				String keyword = request.getParameter("keyword");
+				int begin = getBegin(request);
+				// sortBy, order
+				// Xử lý numberOfPage
+				//			int numberOfPages = (importDAO.count(keyword, from, to) - 1) / NUMBER_OF_RECORDS_PER_PAGE
+				//			+ 1;
+				//			request.setAttribute("numberOfPages", numberOfPages);
+				List<Order> orderList = orderDAO.getAll(status);
+
+				request.setAttribute("tab", "orders");
+				request.setAttribute("statusTab", statusTab);
+				request.setAttribute("orderList", orderList);
+				RequestDispatcher dispatcher = request.getRequestDispatcher(HOME_PAGE);
+				dispatcher.forward(request, response);
+			} else {
+				viewOrderDetail(request, response);
 			}
-			String keyword = request.getParameter("keyword");
-			int begin = getBegin(request);
-			// sortBy, order
-			// Xử lý numberOfPage
-			//			int numberOfPages = (importDAO.count(keyword, from, to) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
-			//			request.setAttribute("numberOfPages", numberOfPages);
-			List<Order> orderList = orderDAO.getAll(status);
-
-			request.setAttribute("tab", "orders");
-			request.setAttribute("statusTab", statusTab);
-			request.setAttribute("orderList", orderList);
-			RequestDispatcher dispatcher = request.getRequestDispatcher(HOME_PAGE);
-			dispatcher.forward(request, response);
 		}
 
 	}
-
 
 	private int getBegin(HttpServletRequest request) {
 		String pageParam = request.getParameter("page");
@@ -75,12 +80,34 @@ public class ManageOrdersController
 		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
 	}
 
+	private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) {
+		int orderId = Integer.parseInt(request.getPathInfo().substring(1));
+		Order order = orderDAO.get(orderId);
+		request.setAttribute("order", order);
+		//
+	}
+
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getParameter("action");
+		// to-ship, to-receive, cancel
 		int id = Integer.parseInt(request.getParameter("id"));
+		Order order = orderDAO.get(id);
+		switch (action) {
+			case "to-ship":
+				order.setStatus(Order.OrderStatus.TO_SHIP);
+				break;
+			case "to-receive":
+				order.setStatus(Order.OrderStatus.TO_RECEIVE);
+				break;
+			case "cancel":
+				order.setStatus(Order.OrderStatus.CANCELED);
+				break;
 
+		}
+		orderDAO.update(order);
+		response.sendRedirect(request.getParameter("from"));
 
 	}
 

@@ -47,9 +47,10 @@
                         <div class="modal-body">
                             <form action="${context}/admin/orders" method="post"
                                   class="d-flex align-items-center flex-column">
+                                <input type="hidden" value="" name="from">
                                 <input type="hidden" value="to-receive" name="action">
                                 <input type="hidden" value="${order.orderId}" name="id">
-                                Bạn có chắc chắn xác nhận đơn hàng ${order.orderId}
+                                Xác nhận đã bàn giao đơn hàng ${order.orderId} cho đơn vị vận chuyển?
                                 <button type="submit"
                                         class="btn btn-primary save-btn">
                                     Lưu
