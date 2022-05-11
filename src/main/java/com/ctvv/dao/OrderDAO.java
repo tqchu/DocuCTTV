@@ -69,9 +69,6 @@ public class OrderDAO
 		}
 		return null;
 	}
-
-
-
 	public List<Order> getAll(String sortBy, String order) {
 		List<Order> orderList = new ArrayList<>();
 		String sql = "SELECT * FROM customer_order " +
@@ -90,8 +87,7 @@ public class OrderDAO
 
 	public List<Order> getAll(Order.OrderStatus status) {
 		List<Order> orderList = new ArrayList<>();
-		String sql = "SELECT * FROM customer_order WHERE order_status=?"  +
-				"  ORDER BY order_status";
+		String sql = "SELECT * FROM customer_order WHERE order_status=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
 			preparedStatement.setString(1, status.toString());

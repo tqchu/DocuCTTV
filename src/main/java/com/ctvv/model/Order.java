@@ -17,7 +17,8 @@ public class Order {
 	private int shippingFee;
 	private long totalPrice;
 	private List<OrderDetail> orderDetailList;
-	public  Order(Order order){
+
+	public Order(Order order) {
 		this.orderId = order.orderId;
 		this.customerId = order.customerId;
 		this.customerName = order.customerName;
@@ -30,6 +31,7 @@ public class Order {
 		this.shippingFee = order.shippingFee;
 		this.totalPrice = order.totalPrice;
 	}
+
 	public Order(
 			int orderId, int customerId, String customerName, String recipientName, String phoneNumber, String address,
 			LocalDateTime orderTime, LocalDateTime completedTime, OrderStatus status,
@@ -47,6 +49,15 @@ public class Order {
 		this.shippingFee = shippingFee;
 		setTotalPrice();
 	}
+
+	private void setTotalPrice() {
+		totalPrice = 0;
+		for (OrderDetail orderDetail : orderDetailList) {
+			totalPrice += (long) orderDetail.getPrice() * orderDetail.getQuantity();
+		}
+		totalPrice += shippingFee;
+	}
+
 	public int getOrderId() {
 		return orderId;
 	}
@@ -139,15 +150,7 @@ public class Order {
 		return totalPrice;
 	}
 
-	private void setTotalPrice() {
-		totalPrice = 0;
-		for (OrderDetail orderDetail : orderDetailList) {
-			totalPrice+= (long) orderDetail.getPrice() * orderDetail.getQuantity();
-		}
-		totalPrice += shippingFee;
-	}
-
-	public enum OrderStatus{
+	public enum OrderStatus {
 		PENDING,
 		TO_SHIP,
 		TO_RECEIVE,
