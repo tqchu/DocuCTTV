@@ -58,8 +58,8 @@ ul {
 
 .search__add-btn {
     padding: 10px 12px;
-    margin-left: auto;
     margin-right: 10px;
+    margin-left: 100px;
 }
 
 .save-btn {
@@ -84,7 +84,7 @@ ul {
 }
 
 .column__action {
-    width: 112px;
+    white-space: nowrap;
 }
 
 .list {
@@ -174,22 +174,6 @@ img.product__main-image {
     font-weight: 500;
 }
 
-/*PAGINATION*/
-.pagination{
-    margin-top: 40px;
-}
-.page-link {
-    color: var(--primary-color);
-    padding: 10px 20px;
-    font-size: 18px;
-    font-weight: 500;
-}
-.page-item.active .page-link {
-    z-index: 3;
-    color: #fff;
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-}
 .product__image{
     width: 240px;
 }

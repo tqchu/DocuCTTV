@@ -1,4 +1,4 @@
-<%@ page import="com.ctvv.model.ImportDetail" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
@@ -26,44 +26,63 @@
     <!-- APP -->
     <link rel="stylesheet" href="${context}/css/base.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/admin/inventory/historyDetail.css?rd=${rand}">
 
 </head>
 <body>
 <jsp:include page="../../common/header.jsp"/>
 <div class="content">
-    <div>DN${anImport.importId}</div>
-    <div>${anImport.importerName}</div>
-    <div>${anImport.providerName}</div>
-    <div>${anImport.totalPrice}</div>
-    <div>${anImport.importDate}</div>
-    <table class="table table-hover table-bordered ">
-        <thead>
-        <tr>
-            <th>STT</th>
-            <th>Tên sản phẩm</th>
-            <th>Số lượng</th>
-            <th>Đơn giá</th>
-            <th>Thuế</th>
-            <Th>Thành tiền</Th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach items="${anImport.importDetailList}" var="importDetail" varStatus="loop">
+    <div class="import-detail-box">
+        <div class="import-detail-box__group">
+            <span class="import-detail-box__column__label">Người nhập kho:</span>
+            <span class="import-detail-box__column__content"> ${anImport.importerName}
+            </span>
+        </div>
+        <div class="import-detail-box__group">
+            <span class="import-detail-box__column__label">Nhà cung cấp:</span>
+            <span class="import-detail-box__column__content">${anImport.providerName}
+            </span>
+        </div>
+        <table class="table table-hover table-bordered import-detail-box__table">
+            <thead>
             <tr>
-                <td>${loop.count}</td>
-                <td>${importDetail.productName}</td>
-                <td>${importDetail.quantity}</td>
-                <td>${importDetail.price}</td>
-                <td>${importDetail.tax*100}%</td>
-                <td>
-                    <fmt:formatNumber value="${importDetail.price*importDetail.quantity*(1-importDetail.tax)}"
-                                      type="number" maxFractionDigits="0"/>
-                </td>
+                <th>STT</th>
+                <th>Tên sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Thuế</th>
+                <Th>Thành tiền</Th>
             </tr>
-        </c:forEach>
+            </thead>
+            <tbody>
+            <c:forEach items="${anImport.importDetailList}" var="importDetail" varStatus="loop">
+                <tr>
+                    <td>${loop.count}</td>
+                    <td>${importDetail.productName}</td>
+                    <td>${importDetail.quantity}</td>
+                    <td>${importDetail.price}</td>
+                    <td>${importDetail.tax*100}%</td>
+                    <td>
+                        <fmt:formatNumber value="${importDetail.price*importDetail.quantity*(1-importDetail.tax)}"
+                                          type="number" maxFractionDigits="0"/>
+                    </td>
+                </tr>
+            </c:forEach>
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+        <div class="import-detail-box__group">
+            <span class="import-detail-box__column__label">Tổng tiền:</span>
+            <span class="import-detail-box__column__content">
+                <fmt:formatNumber type="number" value="${anImport.totalPrice}" maxFractionDigits="0"/>
+            </span>
+        </div>
+        <div class="import-detail-box__group"><span class="import-detail-box__column__label">Ngày nhập:</span>
+            <span
+                    class="import-detail-box__column__content">${anImport.importDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))}
+            </span>
+            </div>
+    </div>
 
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

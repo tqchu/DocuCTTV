@@ -62,7 +62,7 @@
         <c:if test="${not empty list}">
             <c:forEach items="${list}" var="product" varStatus="loop">
                 <tr>
-                    <td>${loop.count}</td>
+                    <td>${loop.count + (not empty param.page?param.page-1:0) * 10}</td>
                     <td class="product__name">${product.name}</td>
                     <td class="product__image">
                         <div id="product-image-slide${product.productId}" class="carousel slide"
@@ -104,14 +104,14 @@
                         </c:choose>
                     </td>
                     <td class="product__rating">-</td>
-                    <td>
+                    <td class="column__action">
                         <form action="${context}/admin/products" method="get">
                             <input type="hidden" name="action" value="view">
                             <input type="hidden" value="${product.productId}" name="id">
                             <button type="submit" class="btn-edit btn btn-primary">Xem chi tiết</button>
                         </form>
                     </td>
-                    <td>
+                    <td class="column__action">
                         <button class="btn btn-delete" title="Xoá sản phẩm"
                                 data-bs-toggle="modal"
                                 data-bs-target="#deleteProductModal${product.productId}">
@@ -138,8 +138,7 @@
                                     <div class="modal-body">
                                         <form action="${context}/admin/products"
                                               class="delete-form" method="post">
-                                            Vì lý do về lịch sử đơn hàng, bạn không thể xóa sản phẩm này.
-                                            Bạn có muốn ngừng kinh doanh sản phẩm <strong> ${product.name} </strong>?
+                                            Bạn có chắc chắn xóa sản phẩm này <strong> ${product.name} </strong>?
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="productId"
                                                    value="${product.productId}">
@@ -159,3 +158,11 @@
         </tbody>
     </table>
 </div>
+<!-- SURROGATE FORM -->
+<form action="${requestURI}" id="surrogateForm">
+    <input type="hidden" name="keyword" value="${param.keyword}" ${empty param.keyword?'disabled':''}>
+    <input type="hidden" name="field" value="${param.field}" ${empty param.field?'disabled':''}>
+    <input type="hidden" name="page" value="${not empty param.page? param.page: 1}">
+    <input type="hidden" name="sortBy" value="${param.sortBy}" ${empty param.sortBy?'disabled':''}>
+    <input type="hidden" name="order" value="${param.order}" ${empty param.order?'disabled':''}>
+</form>

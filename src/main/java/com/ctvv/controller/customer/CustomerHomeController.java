@@ -19,7 +19,8 @@ import java.util.List;
 @WebServlet(name = "CustomerHomeController", value = "")
 public class CustomerHomeController
 		extends HttpServlet {
-    private ProductDAO productDAO;
+	private final int NUMBER_OF_RECORDS_PER_PAGE = 20;
+	private ProductDAO productDAO;
     private CategoryDAO categoryDAO;
 	@Override
 	protected void doGet(
@@ -35,10 +36,13 @@ public class CustomerHomeController
     private void listProductAndCategory(
             HttpServletRequest request, HttpServletResponse response) throws ServletException,
                                                                              IOException {
-        List<Product> productList = productDAO.getAll();
+        List<Product> productList = productDAO.get(0, NUMBER_OF_RECORDS_PER_PAGE,null,null);
+	    int numberOfPages = (productDAO.count() -1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+	    request.setAttribute("numberOfPages", numberOfPages);
         List<Category> categoryList = categoryDAO.getAll();
         request.setAttribute("productList", productList);
         request.setAttribute("categoryList", categoryList);
+
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("/customer/home/home.jsp");
         requestDispatcher.forward(request, response);
     }

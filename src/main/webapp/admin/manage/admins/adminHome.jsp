@@ -67,7 +67,7 @@
         <c:if test="${not empty adminList}">
             <c:forEach items="${adminList}" var="currentRow" varStatus="loop">
                 <tr>
-                    <td>${loop.count}</td>
+                    <td>${loop.count + (not empty param.page?param.page-1:0) * 10}</td>
                     <td>${currentRow.fullName}</td>
                     <td>${currentRow.username}</td>
                     <td>${currentRow.email}</td>
@@ -142,4 +142,12 @@
         </tbody>
     </table>
 </div>
+<!-- SURROGATE FORM -->
+<form action="${requestURI}" id="surrogateForm">
+    <input type="hidden" name="keyword" value="${param.keyword}" ${empty param.keyword?'disabled':''}>
+    <input type="hidden" name="field" value="${param.field}" ${empty param.field?'disabled':''}>
+    <input type="hidden" name="page" value="${not empty param.page? param.page: 1}">
+    <input type="hidden" name="sortBy" value="${param.sortBy}" ${empty param.sortBy?'disabled':''}>
+    <input type="hidden" name="order" value="${param.order}" ${empty param.order?'disabled':''}>
+</form>
 

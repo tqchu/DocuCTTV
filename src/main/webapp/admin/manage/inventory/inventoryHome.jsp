@@ -76,7 +76,7 @@
         <c:if test="${not empty list}">
             <c:forEach items="${list}" var="currentRow" varStatus="loop">
                 <tr>
-                    <td>${loop.count}</td>
+                    <td>${loop.count + (not empty param.page?param.page-1:0) * 10}</td>
                     <td>${currentRow.product.productId}</td>
                     <td>${currentRow.product.productName}</td>
                     <td>Tổng số lượng</td>
@@ -90,4 +90,12 @@
         </tbody>
     </table>
 </div>
+<!-- SURROGATE FORM -->
+<form action="${requestURI}" id="surrogateForm">
+    <input type="hidden" name="keyword" value="${param.keyword}" ${empty param.keyword?'disabled':''}>
+    <input type="hidden" name="field" value="${param.field}" ${empty param.field?'disabled':''}>
+    <input type="hidden" name="page" value="${not empty param.page? param.page: 1}">
+    <input type="hidden" name="sortBy" value="${param.sortBy}" ${empty param.sortBy?'disabled':''}>
+    <input type="hidden" name="order" value="${param.order}" ${empty param.order?'disabled':''}>
+</form>
 <script src="${context}/js/admin/inventory/inventory.js?rd=${rand}"></script>

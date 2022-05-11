@@ -33,6 +33,20 @@
 <body>
 <jsp:include page="../../common/header.jsp"/>
 <div class="content">
+
+    <c:if test="${errorMessage!=null}">
+        <div class="toast align-items-center toast-message toast-message--error show" role="alert"
+             aria-live="assertive"
+             aria-atomic="true" data-bs-autohide="false">
+            <div class="d-flex ">
+                <div class="toast-body">
+                        ${errorMessage}
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+            </div>
+        </div>
+    </c:if>
     <form action="${context}/admin/products" enctype="multipart/form-data" method="post" class="products__add-form">
         <input type="hidden" name="action" value="create">
         <div class="form-group">

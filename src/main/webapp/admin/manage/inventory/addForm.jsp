@@ -45,12 +45,11 @@
         <div class="product-row">
             <div class="form-group">
                 <span class="form-group__label">Sản phẩm</span>
-                <input type="text" list="product" name="productId">
-                <datalist  id="product">
+                <select name="productId">
                     <c:forEach items="${productList}" var="product">
                         <option value="${product.productId}">${product.name}</option>
                     </c:forEach>
-                </datalist>
+                </select>
             </div>
 
             <div class="form-group">

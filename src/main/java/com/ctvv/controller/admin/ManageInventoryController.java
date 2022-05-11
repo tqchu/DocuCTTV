@@ -24,7 +24,7 @@ import java.util.List;
 @WebServlet(name = "ManageInventoryController", value = "/admin/inventory/*")
 public class ManageInventoryController
 		extends HttpServlet {
-	final int NUMBER_OF_RECORDS_PER_PAGE = 5;
+	final int NUMBER_OF_RECORDS_PER_PAGE = 10;
 	final String HOME_PAGE = "/admin/manage/home.jsp";
 	final String INVENTORY_SERVLET = "/admin/inventory";
 	final String HISTORY_SERVLET = "/admin/inventory/history";
@@ -38,13 +38,15 @@ public class ManageInventoryController
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		httpSession = request.getSession();
-		// INVENTORY HISTORY HOME
-		if (request.getRequestURI().startsWith(request.getContextPath() + "/admin/inventory/history")) {
-			listImport(request, response);
-		}
+
 		// VIEW HISTORY DETAIL
-		else if (request.getRequestURI().equals(request.getContextPath() + "/admin/inventory/history/view")) {
+		if (request.getRequestURI().equals(request.getContextPath() + "/admin/inventory/history/view")) {
 			viewHistoryDetail(request, response);
+		}
+		// INVENTORY HISTORY HOME
+
+		else if (request.getRequestURI().startsWith(request.getContextPath() + "/admin/inventory/history")) {
+			listImport(request, response);
 		}
 		// INVENTORY HOME
 		else {
@@ -52,8 +54,8 @@ public class ManageInventoryController
 			if (action != null) {
 				switch (action) {
 					case "create":
-						List<Product> productList = productDAO.getAll();
-						List<Provider> providerList = providerDAO.getAll();
+						List<Product> productList = productDAO.getAll("product_name", "ASC");
+						List<Provider> providerList = providerDAO.getAll("provider_name", "ASC");
 						request.setAttribute("providerList", providerList);
 						request.setAttribute("productList", productList);
 						RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/manage/inventory/addForm" +
@@ -109,26 +111,8 @@ public class ManageInventoryController
 		importDAO.create(anImport);
 
 		httpSession.setAttribute("successMessage", "Thêm đơn thành công");
-		response.sendRedirect(request.getContextPath() + INVENTORY_SERVLET);
+		response.sendRedirect(request.getContextPath() + HISTORY_SERVLET);
 
-	}
-
-	private void listImport(
-			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String keyword = request.getParameter("keyword");
-		LocalDateTime from = request.getParameter("from") != null ?
-				LocalDate.parse(request.getParameter("from")).atStartOfDay()
-				: null;
-		LocalDateTime to = request.getParameter("to") != null ?
-				LocalDate.parse(request.getParameter("to")).atTime(23, 59,59  ) : null;
-		String orderBy = getOrder(request);
-		List<Import> importList;
-		int begin = getBegin(request);
-		importList = importDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, from, to, orderBy, null);
-		int numberOfPages = (importDAO.count(keyword, from, to) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
-		request.setAttribute("numberOfPages", numberOfPages);
-		request.setAttribute("importList", importList);
-		goHistoryHome(request, response);
 	}
 
 	private void viewHistoryDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
@@ -138,6 +122,24 @@ public class ManageInventoryController
 		request.setAttribute("anImport", anImport);
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/manage/inventory/historyDetail.jsp");
 		dispatcher.forward(request, response);
+	}
+
+	private void listImport(
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String keyword = request.getParameter("keyword");
+		LocalDateTime from = request.getParameter("from") != null ?
+				LocalDate.parse(request.getParameter("from")).atStartOfDay()
+				: null;
+		LocalDateTime to = request.getParameter("to") != null ?
+				LocalDate.parse(request.getParameter("to")).atTime(23, 59, 59) : null;
+		String orderBy = getOrder(request);
+		List<Import> importList;
+		int begin = getBegin(request);
+		importList = importDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, from, to, orderBy, null);
+		int numberOfPages = (importDAO.count(keyword, from, to) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		request.setAttribute("numberOfPages", numberOfPages);
+		request.setAttribute("importList", importList);
+		goHistoryHome(request, response);
 	}
 
 	private void goInventoryHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,

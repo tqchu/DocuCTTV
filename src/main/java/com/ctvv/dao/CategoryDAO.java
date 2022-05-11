@@ -109,9 +109,9 @@ public class CategoryDAO
 		return category;
 	}
 
-	public List<Category> getAll(String orderBy) {
+	public List<Category> getAll(String orderBy, String order) {
 		List<Category> categoryList = new ArrayList<>();
-		String sql = "SELECT * FROM category ORDER BY " + orderBy;
+		String sql = "SELECT * FROM category ORDER BY " + orderBy +" "+ order;
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
@@ -141,13 +141,12 @@ public class CategoryDAO
 		return category;
 	}
 
-	public List<Category> get(int begin, int numberOfRec, String keyword, String field, String sortBy, String order) {
-		if (field==null) field = "category_name";
+	public List<Category> get(int begin, int numberOfRec, String keyword,String sortBy, String order) {
 		if (order==null) order="ASC";
 		List<Category> categoryList = new ArrayList<>();
 		String sql =
 				"SELECT * FROM category " +
-						(keyword != null ? " WHERE " + field + " LIKE '%" + keyword + "%' " : "") +
+						(keyword != null ? " WHERE category_name" +  " LIKE '%" + keyword + "%' " : "") +
 						(sortBy != null ? "ORDER BY " + sortBy +" " + order: "") +
 						" LIMIT " + begin + "," + numberOfRec;
 		try (Connection connection = dataSource.getConnection();

@@ -4,4 +4,13 @@
 <%--CONTENT--%>
 <div class="header">
     <a href="${context}" class="header__logo"></a>
+    <div class="search">
+        <form action="${context}/products/search" class="search-form">
+            <input type="search" class="search-input" name="keyword" value="${param.keyword}">
+            <button class="btn btn-primary btn-search"><i class="las la-search"></i></button>
+        </form>
+    </div>
+    <div class="cart">
+        <i class="las la-shopping-cart"></i>
+    </div>
 </div>
