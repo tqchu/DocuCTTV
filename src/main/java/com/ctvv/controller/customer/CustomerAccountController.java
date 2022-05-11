@@ -33,7 +33,7 @@ public class CustomerAccountController
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String tab = request.getParameter("tab");
 		if (tab != null) {
-			if (tab.equals("profile") || tab.equals("address") || tab.equals("password")) {
+			if (tab.equals("profile") || tab.equals("address") || tab.equals("password") || tab.equals("purchase")) {
 				request.setAttribute("tab", tab);
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
 				dispatcher.forward(request, response);

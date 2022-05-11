@@ -432,18 +432,20 @@
 
 .user__manage-account__purchase-bar {
     background-color: #fff;
-    padding: 14px;
     display: flex;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-
 .user__manage-account__purchase-item {
-    width: 25%;
+    width: 20%;
     text-align: center;
     color: #000;
     text-decoration: none;
+    padding: 14px 0;
 }
-
+.user__manage-account__purchase-item.active {
+    border-bottom: 2px solid #EE4D2D;
+    color: #ff0000;
+}
 .user__manage-account__purchase-list {
     margin-top: 12px;
     background-color: #fff;
