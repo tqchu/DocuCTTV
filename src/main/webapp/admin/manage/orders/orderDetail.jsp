@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<link rel="stylesheet" href="${context}/css/admin/orders/orderDetail.css">
+<link rel="stylesheet" href="${context}/css/admin/orders/orderDetail.css?rd=${rand}">
 <div class="order__meta-info">
   <span class="order__back-btn" onclick="history.back()">
       <i class="las la-angle-left order__back-btn-icon"></i>
@@ -48,32 +48,28 @@
     </div>
 </div>
 <div class="order__product-list">
-    <div class="order__product-item">
-        <div class="order__product-item__img"
-             style="background-image: url('https://cf.shopee.vn/file/2457128b2c21d70ffbb1b2e1e04cf63f_tn');"></div>
-        <div class="order__product-item__name-item">
-            <div class="order__product-item__product-name">
-                [Mã FMCGMALL giảm 8% đơn từ 250K] Xà Phòng Lưng Pelican For Back Medicated Soap (135g)
+    <c:forEach items="${order.orderDetailList}" var="orderDetail">
+        <c:set var="product" value="${orderDetail.product}"/>
+        <a href="${context}/products/${not empty product?product.uri:'ngung-kinh-doanh'}" class="order__product-item">
+            <div class="order__product-item__img"
+                 style="background-image: url('${context+='/'+=product.imagePathList[0].path}');"></div>
+            <div class="order__product-item__name-item">
+                <div class="order__product-item__product-name">
+                    <c:if test="${ not empty orderDetail.product}">
+                        ${product.name}
+                    </c:if>
+                    <c:if test="${empty orderDetail.product}">
+                        ${orderDetail.productName}
+                    </c:if>
+                </div>
+                <div class="order__product-item__quantity">x${orderDetail.quantity}</div>
             </div>
-            <div class="order__product-item__quantity">x1</div>
-        </div>
-        <div class="order__product-item__price">
-            85.000
-        </div>
-    </div>
-    <div class="order__product-item">
-        <div class="order__product-item__img"
-             style="background-image: url('https://cf.shopee.vn/file/2457128b2c21d70ffbb1b2e1e04cf63f_tn');"></div>
-        <div class="order__product-item__name-item">
-            <div class="order__product-item__product-name">
-                [Mã FMCGMALL giảm 8% đơn từ 250K] Xà Phòng Lưng Pelican For Back Medicated Soap (135g)
+            <div class="order__product-item__price">
+                    ${orderDetail.price}
             </div>
-            <div class="order__product-item__quantity">x1</div>
-        </div>
-        <div class="order__product-item__price">
-            85.000
-        </div>
-    </div>
+        </a>
+    </c:forEach>
+
 
 </div>
 <div class="order__summary">

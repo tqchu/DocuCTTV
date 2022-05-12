@@ -62,10 +62,11 @@
     border-top: 1px solid var(--border-color);
     padding: 10px 0;
     display: flex;
+    text-decoration: none;
 }
 .order__product-item__img {
     background-size: cover;
-    width: 80px;
+    width: 100px;
     height: 80px;
     border: 1px solid var(--border-color);
 }
