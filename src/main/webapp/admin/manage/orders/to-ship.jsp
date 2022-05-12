@@ -23,7 +23,7 @@
         </td>
         <td>${order.totalPrice}</td>
         <td class="column__action">
-            <a href="" class="btn-primary btn btn-edit">Xem chi tiết</a>
+            <a href="${context}/admin/orders/${order.orderId}" class="btn-primary btn btn-edit">Xem chi tiết</a>
         </td>
         <td class="column__action">
             <a href="" class="btn-edit btn btn-primary"

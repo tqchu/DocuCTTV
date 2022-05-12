@@ -4,15 +4,20 @@
 <%--CONTENT--%>
 <div class="header">
     <a href="${context}" class="header__logo"></a>
-    <c:if test="${not empty customer}">
+    <c:if test="${not empty action}">
+        <div class="header__action">
+            ${action}
+        </div>
+    </c:if>
+    <c:if test="${empty action}">
         <div class="search">
             <form action="${context}/products/search" class="search-form">
                 <input type="search" class="search-input" name="keyword" value="${param.keyword}">
                 <button class="btn btn-primary btn-search"><i class="las la-search"></i></button>
             </form>
         </div>
-        <div class="cart">
+        <a href="${context}/user/cart" class="cart">
             <i class="las la-shopping-cart"></i>
-        </div>
+        </a>
     </c:if>
 </div>

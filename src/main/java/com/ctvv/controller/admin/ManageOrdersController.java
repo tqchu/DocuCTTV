@@ -80,11 +80,13 @@ public class ManageOrdersController
 		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
 	}
 
-	private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) {
+	private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                              IOException {
 		int orderId = Integer.parseInt(request.getPathInfo().substring(1));
 		Order order = orderDAO.get(orderId);
+		request.setAttribute("tab", "orderDetail");
 		request.setAttribute("order", order);
-		//
+		goHome(request, response);
 	}
 
 	@Override
@@ -113,7 +115,8 @@ public class ManageOrdersController
 
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
-
+		RequestDispatcher dispatcher =  request.getRequestDispatcher("/admin/manage/home.jsp");
+		dispatcher.forward(request, response);
 	}
 
 	private void viewPendingOrders(HttpServletRequest request, HttpServletResponse response) throws ServletException,
