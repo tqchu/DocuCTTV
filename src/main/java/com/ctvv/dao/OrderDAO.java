@@ -42,31 +42,11 @@ public class OrderDAO
 		return null;
 	}
 
-	public String createOrderId(){
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuMMdd");
-		LocalDate localDate = LocalDate.now();
-		String strDate = dtf.format(localDate);
-		char[] random = new char[8];
-		char[] chars = "ABSDEFGHIJKLMNOPQRSTUVWXYZ1234567890".toCharArray();
-		Random r = new Random();
-		for (int i = 0;  i < 8;  i++) {
-			random[i] = chars[r.nextInt(chars.length)];
-		}
-		String strRandom = new String(random);
-		String orderId = new String(strDate + strRandom);
-		return orderId;
-	}
-
 	@Override
 	public Order create(Order order) {
-		String sql = "INSERT INTO customer_order VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-		Connection connection = null;
-		PreparedStatement statement = null;
-		try {
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(sql);
-			connection.setAutoCommit(false);
-			order.setOrderId(createOrderId());
+		String sql = "INSERT INTO customer_order VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+				connection.prepareStatement(sql)) {
 			statement.setString(1, order.getOrderId());
 			statement.setInt(2, order.getCustomerId());
 			statement.setString(3, order.getCustomerName());
@@ -74,34 +54,16 @@ public class OrderDAO
 			statement.setString(5, order.getPhoneNumber());
 			statement.setString(6, order.getAddress());
 			statement.setTimestamp(7, Timestamp.valueOf(order.getOrderTime()));
-			statement.setTimestamp(8, Timestamp.valueOf(order.getCompletedTime()));
+			statement.setTimestamp(8, null);
+			statement.setInt(9, order.getShippingFee());
+			statement.setString(10, order.getStatus().name());
 			statement.execute();
-			ResultSet resultSet = statement.getGeneratedKeys();
-			while(resultSet.next()){
-				String orderId = resultSet.getString(1);
-				order.setOrderId(orderId);
-			}
-			connection.commit();
-			resultSet.close();
-			for(OrderDetail orderDetail: order.getOrderDetailList()){
-				orderDetail.setOrderId(order.getOrderId());
-				orderDetailDAO.create(orderDetail);
-			}
+			statement.close();
+			connection.close();
+			orderDetailDAO.create(order.getOrderDetailList());
 			return order;
 		} catch (SQLException e) {
-			try {
-				if (connection != null) connection.rollback();
-			} catch (SQLException ex) {
-				ex.printStackTrace();
-			}
 			e.printStackTrace();
-		} finally {
-			try {
-				if (statement != null) statement.close();
-				if (connection != null) connection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 		return null;
 	}
@@ -112,12 +74,11 @@ public class OrderDAO
 				"order_id=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
-
 			statement.setString(1, order.getRecipientName());
 			statement.setString(2, order.getPhoneNumber());
 			statement.setString(3, order.getAddress());
 			statement.setString(4, order.getStatus().name());
-			statement.setInt(5, order.getOrderId());
+			statement.setString(5, order.getOrderId());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -140,7 +101,8 @@ public class OrderDAO
 			String phoneNumber = resultSet.getString("phone_number");
 			String address = resultSet.getString("address");
 			LocalDateTime orderTime = resultSet.getTimestamp("order_time").toLocalDateTime();
-			LocalDateTime completedTime = resultSet.getTimestamp("completed_time").toLocalDateTime();
+			LocalDateTime completedTime = resultSet.getTimestamp("completed_time") != null ? resultSet.getTimestamp(
+					"completed_time").toLocalDateTime() : null;
 			int shippingFee = resultSet.getInt("shipping_fee");
 			Order.OrderStatus status = Order.OrderStatus.valueOf(resultSet.getString("order_status").toUpperCase());
 			List<OrderDetail> orderDetailList = orderDetailDAO.getGroup(orderId);
@@ -260,7 +222,7 @@ public class OrderDAO
 					".order_id WHERE order_status=?" +
 					" AND (customer_order.order_id LIKE '%" + keyword + "%' " +
 					" OR product_name LIKE '%" + keyword + "%')"
-					;
+			;
 		} else {
 			sql = "SELECT COUNT(*) AS count FROM customer_order WHERE order_status=?";
 		}
@@ -275,5 +237,20 @@ public class OrderDAO
 			e.printStackTrace();
 		}
 		return count;
+	}
+
+	public Order get(String id) {
+		String sql = "SELECT * FROM customer_order WHERE order_id = ?";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+			preparedStatement.setString(1, id);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				return map(resultSet);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
