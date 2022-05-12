@@ -63,7 +63,7 @@
                             </div>
                             <div class="user__manage-account__menu-item ">
                                 <i class="las la-shopping-bag"></i>
-                                <a href="${context}/user/account?tab=purchase"
+                                <a href="${context}/user/purchase"
                                    class="user__manage-account__menu-item__text user__manage-account__menu-tab
                                ${tab=="purchase"?'active':''}">Đơn mua</a>
 
@@ -252,27 +252,7 @@
                             </div>
                         </c:when>
                         <c:when test="${tab=='purchase'}">
-                            <div class="user__manage-account__purchase-content">
-                                <div class="user__manage-account__purchase-bar">
-                                    <a href="" class="user__manage-account__purchase-item">
-                                        Chờ xác nhận
-                                    </a>
-                                    <a href="" class="user__manage-account__purchase-item">
-                                        Chờ vận chuyển
-                                    </a><a href="" class="user__manage-account__purchase-item">
-                                    Đang giao
-                                </a>
-                                    <a href="" class="user__manage-account__purchase-item">
-                                        Đã giao
-                                    </a>
-                                    <a href="" class="user__manage-account__purchase-item">
-                                        Đã hủy
-                                    </a>
-                                </div>
-                                <div class="user__manage-account__purchase-list">
-
-                                </div>
-                            </div>
+                            <jsp:include page="order/orderHome.jsp" />
                         </c:when>
                         </c:choose>
                     </div>
