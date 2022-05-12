@@ -79,15 +79,15 @@
 <div class="order__summary">
     <div class="order__summary-item">
         <div class="order__summary-item__name">Tồng tiền hàng</div>
-        <div class="order__summary-item__value price">258.000</div>
+        <div class="order__summary-item__value price">${order.totalPrice-order.shippingFee}</div>
     </div>
     <div class="order__summary-item">
         <div class="order__summary-item__name">Phí vận chuyển</div>
-        <div class="order__summary-item__value price">30.000</div>
+        <div class="order__summary-item__value price">${order.shippingFee}</div>
     </div>
     <div class="order__summary__total">
         <div class="order__summary-item__name">Tổng tiền</div>
-        <div class="order__summary-item__value price">288.000</div>
+        <div class="order__summary-item__value price">${order.totalPrice}</div>
     </div>
     <div class="order__summary-item order__summary__payment-method">
         <div class="order__summary-item__name">Phương thức thanh toán</div>

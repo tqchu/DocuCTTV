@@ -126,12 +126,13 @@ public class OrderDAO
 		}
 		return orderList;
 	}
-	public List<Order> getAll(Order.OrderStatus status, String keyword, String sortBy, String order) {
+	public List<Order> getAll(int begin, int num, Order.OrderStatus status, String keyword, String sortBy,
+	                          String order) {
 		List<Order> orderList = new ArrayList<>();
 		String sql = "SELECT * FROM customer_order WHERE order_status=?"+
-				(keyword!=null? " AND (order_id LIKE '% "+keyword+ "%' " +
+				(keyword!=null? " AND (order_id LIKE '%"+keyword+ "%' " +
 										"OR customer_name LIKE '%"+keyword+"%')":"") +
-				(sortBy!=null? " ORDER BY " +sortBy + " " + order :"");
+				(sortBy!=null? " ORDER BY " +sortBy + " " + order :"") + " LIMIT "+ begin +", "+num;
 		try(Connection connection = dataSource.getConnection();
 			PreparedStatement statement = connection.prepareStatement(sql)){
 			statement.setString(1,status.name());
