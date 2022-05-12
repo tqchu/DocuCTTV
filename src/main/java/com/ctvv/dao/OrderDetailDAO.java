@@ -24,12 +24,12 @@ public class OrderDetailDAO
 	public OrderDetail get(int id) {
 		return null;
 	}
-	public List<OrderDetail> getGroup(int orderId){
+	public List<OrderDetail> getGroup(String orderId){
 			List<OrderDetail> orderDetailList = new ArrayList<>();
 			String sql = "SELECT * FROM order_detail WHERE order_id=? ";
 			try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
 					connection.prepareStatement(sql);) {
-				statement.setInt(1, orderId);
+				statement.setString(1, orderId);
 				ResultSet resultSet = statement.executeQuery();
 				// loop the result set
 				while (resultSet.next()) {
@@ -64,7 +64,7 @@ public class OrderDetailDAO
 	@Override
 	public OrderDetail map(ResultSet resultSet) {
 		try {
-			int orderId = resultSet.getInt("order_id");
+			String orderId = resultSet.getString("order_id");
 			int productId = resultSet.getInt("product_id");
 			Product product = productDAO.get(productId);
 			String productName = resultSet.getString("product_name");
@@ -90,7 +90,7 @@ public class OrderDetailDAO
 			statement = connection.prepareStatement(sql);
 			// Loop qua từng orderDetail
 			for (OrderDetail orderDetail : orderDetailList) {
-				statement.setInt(1, orderDetail.getOrderId());
+				statement.setString(1, orderDetail.getOrderId());
 				statement.setInt(2, orderDetail.getProduct().getProductId());
 				statement.setString(3, orderDetail.getProductName());
 				statement.setInt(4, orderDetail.getQuantity());

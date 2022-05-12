@@ -86,7 +86,7 @@ public class ManageOrdersController
 
 	private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                              IOException {
-		int orderId = Integer.parseInt(request.getPathInfo().substring(1));
+		String orderId =(request.getPathInfo().substring(1));
 		Order order = orderDAO.get(orderId);
 		request.setAttribute("tab", "orderDetail");
 		request.setAttribute("order", order);
@@ -119,8 +119,8 @@ public class ManageOrdersController
 
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
-		request.setAttribute("tab", "purchase");
-		RequestDispatcher dispatcher =  request.getRequestDispatcher("/customer/account/manage-account.jsp");
+		request.setAttribute("tab", "orderDetail");
+		RequestDispatcher dispatcher =  request.getRequestDispatcher("/admin/manage/home.jsp");
 		dispatcher.forward(request, response);
 	}
 

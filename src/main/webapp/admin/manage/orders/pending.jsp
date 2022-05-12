@@ -62,42 +62,42 @@
                 </div>
             </div>
         </td>
-        <<td class="column__action">
-        <a href="" class="btn-edit btn btn-primary"
-           data-bs-toggle="modal"
-           data-bs-target="#cancelModal${loop.count}">Hủy đơn</a>
-        <!-- MODAL CONTENT -->
-        <div class="modal fade" id="cancelModal${loop.count}" tabindex="-1"
-             aria-labelledby="cancelModal${loop.count}Label"
-             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
+        <td class="column__action">
+            <a href="" class="btn-delete btn"
+               data-bs-toggle="modal"
+               data-bs-target="#cancelModal${loop.count}">Hủy đơn</a>
+            <!-- MODAL CONTENT -->
+            <div class="modal fade" id="cancelModal${loop.count}" tabindex="-1"
+                 aria-labelledby="cancelModal${loop.count}Label"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
 
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="cancelModal${loop.count}Label">
-                            Xác nhận
-                        </h5>
-                        <button type="button" class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="${context}/admin/orders" method="post"
-                              class="d-flex align-items-center flex-column">
-                            <input type="hidden" value="" name="from">
-                            <input type="hidden" value="cancel" name="action">
-                            <input type="hidden" value="${order.orderId}" name="id">
-                            Bạn có chắc chắn hủy đơn hàng ${order.orderId}
-                            <button type="submit"
-                                    class="btn btn-primary save-btn">
-                                Lưu
-                            </button>
-                        </form>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cancelModal${loop.count}Label">
+                                Xác nhận
+                            </h5>
+                            <button type="button" class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="${context}/admin/orders" method="post"
+                                  class="d-flex align-items-center flex-column">
+                                <input type="hidden" value="" name="from">
+                                <input type="hidden" value="cancel" name="action">
+                                <input type="hidden" value="${order.orderId}" name="id">
+                                Bạn có chắc chắn hủy đơn hàng ${order.orderId}
+                                <button type="submit"
+                                        class="btn btn-delete">
+                                    Xác nhận
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </td>
+        </td>
     </tr>
 </c:forEach>
 </tbody>

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <link rel="stylesheet" href="${context}/css/admin/orders/orderDetail.css?rd=${rand}">
 <div class="order__meta-info">
   <span class="order__back-btn" onclick="history.back()">
@@ -73,20 +74,43 @@
 
 </div>
 <div class="order__summary">
-    <div class="order__summary-item">
-        <div class="order__summary-item__name">Tồng tiền hàng</div>
-        <div class="order__summary-item__value price">${order.totalPrice-order.shippingFee}</div>
+    <div class="order__summary__time-line">
+        <div class="order__summary__time-line-item">
+            <div class="order__summary__time-line-item__name">Thời gian đặt</div>
+            <div class="order__summary__time-line-item__value">
+                <fmt:parseDate value="${order.orderTime}" type="time" var="orderTime"
+                               pattern="yyyy-MM-dd'T'HH:mm:ss"/>
+                <fmt:formatDate value="${orderTime}" type="TIME" pattern="dd/MM/yyyy HH:mm:ss"/>
+            </div>
+        </div>
+        <c:if test="${not empty order.completedTime}">
+            <div class="order__summary__time-line-item">
+                <div class="order__summary__time-line-item__name">Thời gian giao</div>
+
+                <div class="order__summary__time-line-item__value price">
+                    <fmt:parseDate value="${order.completedTime}" type="time" var="completedTime"
+                                   pattern="yyyy-MM-dd'T'HH:mm:ss"/>
+                    <fmt:formatDate value="${completedTime}" type="TIME" pattern="dd/MM/yyyy HH:mm:ss"/>
+                </div>
+            </div>
+        </c:if>
     </div>
-    <div class="order__summary-item">
-        <div class="order__summary-item__name">Phí vận chuyển</div>
-        <div class="order__summary-item__value price">${order.shippingFee}</div>
-    </div>
-    <div class="order__summary__total">
-        <div class="order__summary-item__name">Tổng tiền</div>
-        <div class="order__summary-item__value price">${order.totalPrice}</div>
-    </div>
-    <div class="order__summary-item order__summary__payment-method">
-        <div class="order__summary-item__name">Phương thức thanh toán</div>
-        <div class="order__summary-item__value">Thanh toán khi nhận hàng</div>
+    <div class="order__summary__price">
+        <div class="order__summary-item">
+            <div class="order__summary-item__name">Tồng tiền hàng</div>
+            <div class="order__summary-item__value price">${order.totalPrice-order.shippingFee}</div>
+        </div>
+        <div class="order__summary-item">
+            <div class="order__summary-item__name">Phí vận chuyển</div>
+            <div class="order__summary-item__value price">${order.shippingFee}</div>
+        </div>
+        <div class="order__summary__total">
+            <div class="order__summary-item__name">Tổng tiền</div>
+            <div class="order__summary-item__value price">${order.totalPrice}</div>
+        </div>
+        <div class="order__summary-item order__summary__payment-method">
+            <div class="order__summary-item__name">Phương thức thanh toán</div>
+            <div class="order__summary-item__value">Thanh toán khi nhận hàng</div>
+        </div>
     </div>
 </div>

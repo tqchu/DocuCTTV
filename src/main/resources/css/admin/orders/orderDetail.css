@@ -5,20 +5,25 @@
     background-color: #ffff;
     border-bottom: 1px solid var(--border-color);
 }
+
 .order__back-btn-icon {
     margin-right: 6px;
 }
+
 .order__id-status {
     margin-left: auto;
 }
+
 .order__order-id {
     padding-right: 20px;
 }
+
 .order__order-status {
     padding-left: 20px;
-    border-left: 2px solid rgba(0,0,0,0.6);
+    border-left: 2px solid rgba(0, 0, 0, 0.6);
     color: var(--near-red);
 }
+
 .order__back-btn {
     cursor: pointer;
 }
@@ -32,23 +37,29 @@
     margin-top: 4px;
     padding: 10px;
 }
+
 .order__customer-info {
     width: 50%;
 }
+
 .order__customer-info__heading {
     font-size: 16px;
     font-weight: 500;
 }
+
 .order__customer-info__content {
     margin-top: 10px;
 }
+
 .order__customer-info__heading {
     font-size: 16px;
     font-weight: 500;
 }
+
 .order__customer-info__content {
     margin-top: 10px;
 }
+
 .order__customer-info__recipient-item {
     margin-bottom: 6px;
 }
@@ -58,22 +69,27 @@
     border-bottom: 1px solid var(--border-color);
     padding: 10px;
 }
+
 .order__product-item {
     border-top: 1px solid var(--border-color);
     padding: 10px 0;
     display: flex;
     text-decoration: none;
 }
+
 .order__product-item__img {
     background-size: cover;
     width: 100px;
-    height: 80px;
+    background-position: center;
+    height: 68px;
     border: 1px solid var(--border-color);
 }
+
 .order__product-item__name-item {
     font-size: 14px;
     margin-left: 10px;
 }
+
 .order__product-item__name-item {
     font-size: 14px;
     margin-left: 10px;
@@ -81,16 +97,32 @@
     flex-direction: column;
     justify-content: space-between;
 }
+
 .order__product-item__price {
     margin-left: auto;
     display: flex;
     align-items: center;
 }
+
 .order__summary {
     padding: 10px 0;
     display: flex;
+}
+.order__summary__time-line {
+    display: flex;
     flex-direction: column;
-    align-items: end;
+}
+.order__summary__time-line-item__name {
+    width: 160px;
+}
+.order__summary__price {
+    margin-left: auto;
+}
+.order__summary__time-line-item {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    padding: 6px 0;
+    font-size: 13px;
 }
 .order__summary-item {
     display: flex;
@@ -98,26 +130,32 @@
     padding: 6px 0;
     font-size: 13px;
 }
+
 .order__summary-item__value {
     width: 120px;
     text-align: end;
 }
+
 .order__summary__total {
     display: flex;
     padding: 10px 0;
     font-size: 16px;
 }
+
 .order__summary__total .order__summary-item__value {
     color: var(--near-red);
     font-size: 18px;
 }
+
 .order__summary-item__name {
     width: 160px;
 }
+
 .order__summary-item__value {
     width: 300px;
     text-align: end;
 }
+
 .order__summary__payment-method {
     border-bottom: none;
     border-top: 1px solid var(--border-color);
