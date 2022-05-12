@@ -1,7 +1,7 @@
 package com.ctvv.model;
 
 public class OrderDetail {
-	private int orderId;
+	private String orderId;
 	private Product product;
 	private String productName;
 	private int quantity;
@@ -15,7 +15,7 @@ public class OrderDetail {
 		this.price = orderDetail.price;
 	}
 
-	public OrderDetail(int orderId, Product product, String productName, int quantity, int price) {
+	public OrderDetail(String orderId, Product product, String productName, int quantity, int price) {
 		this.orderId = orderId;
 		this.product = new Product(product);
 		this.productName = productName;
@@ -23,20 +23,19 @@ public class OrderDetail {
 		this.price = price;
 	}
 
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+  }
 	public Product getProduct() {
 		return product;
 	}
 
 	public void setProduct(Product product) {
 		this.product = product;
-	}
-
-	public int getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(int orderId) {
-		this.orderId = orderId;
 	}
 
 	public String getProductName() {

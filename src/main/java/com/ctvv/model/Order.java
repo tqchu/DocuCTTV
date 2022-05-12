@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
-	private int orderId;
+	private String orderId;
 	private int customerId;
 	private String customerName;
 	private String recipientName;
@@ -33,7 +33,7 @@ public class Order {
 	}
 
 	public Order(
-			int orderId, int customerId, String customerName, String recipientName, String phoneNumber, String address,
+			String orderId, int customerId, String customerName, String recipientName, String phoneNumber, String address,
 			LocalDateTime orderTime, LocalDateTime completedTime, OrderStatus status,
 			List<OrderDetail> orderDetailList, int shippingFee) {
 		this.orderId = orderId;
@@ -58,11 +58,11 @@ public class Order {
 		totalPrice += shippingFee;
 	}
 
-	public int getOrderId() {
+	public String getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(int orderId) {
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
 
