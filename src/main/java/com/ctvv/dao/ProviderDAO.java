@@ -36,7 +36,6 @@ public class ProviderDAO
 		}
 		return null;
 	}
-
 	@Override
 	public List<Provider> getAll() {
 		List<Provider> providerList = new ArrayList<>();
