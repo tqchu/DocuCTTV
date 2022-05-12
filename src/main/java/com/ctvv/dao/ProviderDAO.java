@@ -36,26 +36,6 @@ public class ProviderDAO
 		}
 		return null;
 	}
-
-	public int count(String keyword, String field){
-		int count = 0;
-		if (field==null) field = "provider_name";
-		List<Provider> providerList = new ArrayList<>();
-		String sql =
-				"SELECT COUNT(provider_id) AS no FROM provider " +
-						(keyword != null ? " WHERE " + field + " LIKE '%" + keyword + "%' " : "") ;
-		try (Connection connection = dataSource.getConnection();
-			 PreparedStatement statement = connection.prepareStatement(sql)) {
-			ResultSet resultSet = statement.executeQuery();
-			resultSet.next();
-			count = resultSet.getInt("no");
-			resultSet.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return  count;
-	}
-
 	@Override
 	public List<Provider> getAll() {
 		List<Provider> providerList = new ArrayList<>();
