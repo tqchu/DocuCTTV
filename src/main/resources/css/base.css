@@ -3,12 +3,19 @@
     --bg-color: rgba(0, 0, 0, 0.03);
     --border-color: rgba(0,0,0,0.2);
     --primary-color: #37BDDB;
+    --solid-red: #EE4D2D;
     --near-red: #FD5E32;
     --text-hover-color: rgba(255, 255, 255, 0.8);
     --warning-bg-color: #F8D7DA;
     --warning-text-color: #A22029;
 }
 
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+    display: none;
+}
 .btn {
     border-radius: 2px;
 }

@@ -23,6 +23,17 @@ public class OrderDAO
 
 	@Override
 	public Order get(int id) {
+		String sql = "SELECT * FROM customer_order WHERE order_id = ?";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+			preparedStatement.setInt(1, id);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				return map(resultSet);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -38,7 +49,21 @@ public class OrderDAO
 
 	@Override
 	public Order update(Order order) {
-		return null;
+		String sql = "UPDATE customer_order SET recipient_name=?, phone_number=?, address=?, order_status=? WHERE " +
+				"order_id=?";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+
+			statement.setString(1, order.getRecipientName());
+			statement.setString(2, order.getPhoneNumber());
+			statement.setString(3, order.getAddress());
+			statement.setString(4, order.getStatus().name());
+			statement.setInt(5, order.getOrderId());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return order;
 	}
 
 	@Override
@@ -69,6 +94,7 @@ public class OrderDAO
 		}
 		return null;
 	}
+
 	public List<Order> getAll(String sortBy, String order) {
 		List<Order> orderList = new ArrayList<>();
 		String sql = "SELECT * FROM customer_order " +

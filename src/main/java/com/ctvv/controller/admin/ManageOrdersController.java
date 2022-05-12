@@ -16,41 +16,103 @@ import java.util.List;
 @WebServlet(name = "ManageOrdersController", value = "/admin/orders/*")
 public class ManageOrdersController
 		extends HttpServlet {
-	private OrderDAO orderDAO;
-	private HttpSession session;
+	private static final int NUMBER_OF_RECORDS_PER_PAGE = 10;
 	private final String PENDING = "/pending";
 	private final String TO_SHIP = "/to-ship";
 	private final String TO_RECEIVE = "/to-receive";
 	private final String COMPLETED = "/completed";
 	private final String CANCELED = "/canceled";
-	private  final String HOME_PAGE = "/";
+	private final String HOME_PAGE = "/admin/manage/home.jsp";
+	private OrderDAO orderDAO;
+	private HttpSession session;
 
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String path = request.getPathInfo();
-		Order.OrderStatus  status = Order.OrderStatus.PENDING;
-		switch (path) {
-			case TO_SHIP:
-				status = Order.OrderStatus.TO_SHIP;
-				break;
-			case TO_RECEIVE:
-				status = Order.OrderStatus.TO_RECEIVE;
-				break;
-			case COMPLETED:
-				status = Order.OrderStatus.COMPLETED;
-				break;
-			default:
-				response.sendRedirect(request.getContextPath() + request.getServletPath() + PENDING);
-				break;
+		// orders/
+		String path = request.getPathInfo(); //
+		Order.OrderStatus status = Order.OrderStatus.PENDING;
+		String statusTab = "pending";
+		if (path == null) response.sendRedirect(request.getContextPath() + request.getServletPath() + PENDING);
+		else {
+			if (path.startsWith(PENDING) || path.startsWith(TO_SHIP) || path.startsWith(TO_RECEIVE) || path.startsWith(COMPLETED)) {
+				if (path.startsWith(TO_SHIP)) {
+					status = Order.OrderStatus.TO_SHIP;
+					statusTab = "to-ship";
+				} else if (path.startsWith(TO_RECEIVE)) {
+					status = Order.OrderStatus.TO_RECEIVE;
+					statusTab = "to-receive";
+
+				} else if (path.startsWith(COMPLETED)) {
+					status = Order.OrderStatus.COMPLETED;
+					statusTab = "completed";
+
+				}
+				String keyword = request.getParameter("keyword");
+				int begin = getBegin(request);
+				// sortBy, order
+				// Xử lý numberOfPage
+				//			int numberOfPages = (importDAO.count(keyword, from, to) - 1) / NUMBER_OF_RECORDS_PER_PAGE
+				//			+ 1;
+				//			request.setAttribute("numberOfPages", numberOfPages);
+				List<Order> orderList = orderDAO.getAll(status);
+
+				request.setAttribute("tab", "orders");
+				request.setAttribute("statusTab", statusTab);
+				request.setAttribute("orderList", orderList);
+				RequestDispatcher dispatcher = request.getRequestDispatcher(HOME_PAGE);
+				dispatcher.forward(request, response);
+			} else {
+				viewOrderDetail(request, response);
+			}
 		}
-		List<Order> orderList = orderDAO.getAll(status);
-		request.setAttribute("orderList", orderList);
-		RequestDispatcher dispatcher = request.getRequestDispatcher(HOME_PAGE);
-		dispatcher.forward(request, response);
+
 	}
 
-	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private int getBegin(HttpServletRequest request) {
+		String pageParam = request.getParameter("page");
+		int page;
+		if (pageParam == null) {
+			page = 1;
+		} else {
+			page = Integer.parseInt(pageParam);
+		}
+		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
+	}
+
+	private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) {
+		int orderId = Integer.parseInt(request.getPathInfo().substring(1));
+		Order order = orderDAO.get(orderId);
+		request.setAttribute("order", order);
+		//
+	}
+
+	@Override
+	protected void doPost(
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String action = request.getParameter("action");
+		// to-ship, to-receive, cancel
+		int id = Integer.parseInt(request.getParameter("id"));
+		Order order = orderDAO.get(id);
+		switch (action) {
+			case "to-ship":
+				order.setStatus(Order.OrderStatus.TO_SHIP);
+				break;
+			case "to-receive":
+				order.setStatus(Order.OrderStatus.TO_RECEIVE);
+				break;
+			case "cancel":
+				order.setStatus(Order.OrderStatus.CANCELED);
+				break;
+
+		}
+		orderDAO.update(order);
+		response.sendRedirect(request.getParameter("from"));
+
+	}
+
+	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                     IOException {
 
 	}
 
@@ -59,19 +121,14 @@ public class ManageOrdersController
 
 	}
 
-
 	private void viewToShipOrders(HttpServletRequest request, HttpServletResponse response) {
 
 	}
+
 	private void viewToReceiveOrders(HttpServletRequest request, HttpServletResponse response) {
 	}
+
 	private void viewCompletedOrders(HttpServletRequest request, HttpServletResponse response) {
-	}
-
-	@Override
-	protected void doPost(
-			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
 	}
 
 	@Override
@@ -81,8 +138,7 @@ public class ManageOrdersController
 			Context context = new InitialContext();
 			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
 			orderDAO = new OrderDAO(dataSource);
-		}
-		catch (NamingException e){
+		} catch (NamingException e) {
 			e.printStackTrace();
 		}
 	}
