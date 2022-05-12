@@ -50,13 +50,16 @@ public class ManageOrdersController
 				}
 				String keyword = request.getParameter("keyword");
 				int begin = getBegin(request);
-				// sortBy, order
-				// Xử lý numberOfPage
-				//			int numberOfPages = (importDAO.count(keyword, from, to) - 1) / NUMBER_OF_RECORDS_PER_PAGE
-				//			+ 1;
-				//			request.setAttribute("numberOfPages", numberOfPages);
-				List<Order> orderList = orderDAO.getAll(status);
-
+				String sortBy = request.getParameter("sortBy");
+				if (status.name().equals("COMPLETED"))
+					sortBy = "completed_time";
+				else
+					sortBy = "order_time";
+				String order = request.getParameter("order");
+				//Xử lý numberOfPages
+				int numberOfPages = (orderDAO.count(status,keyword) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+				request.setAttribute("numberOfPages", numberOfPages);
+				List<Order> orderList = orderDAO.getAll(status,keyword,sortBy,order);
 				request.setAttribute("tab", "orders");
 				request.setAttribute("statusTab", statusTab);
 				request.setAttribute("orderList", orderList);

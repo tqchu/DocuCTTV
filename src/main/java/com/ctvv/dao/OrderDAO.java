@@ -126,4 +126,41 @@ public class OrderDAO
 		}
 		return orderList;
 	}
+	public List<Order> getAll(Order.OrderStatus status, String keyword, String sortBy, String order) {
+		List<Order> orderList = new ArrayList<>();
+		String sql = "SELECT * FROM customer_order WHERE order_status=?"+
+				(keyword!=null? " AND (order_id LIKE '% "+keyword+ "%' " +
+										"OR customer_name LIKE '%"+keyword+"%')":"") +
+				(sortBy!=null? " ORDER BY " +sortBy + " " + order :"");
+		try(Connection connection = dataSource.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setString(1,status.name());
+			ResultSet resultSet = statement.executeQuery();
+			while(resultSet.next()){
+				orderList.add(map(resultSet));
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return orderList;
+	}
+
+	public int count(Order.OrderStatus status, String keyword) {
+		int count = 0;
+		String sql = "SELECT COUNT(*) AS count FROM customer_order WHERE order_status=?"+
+					(keyword!=null? " AND (order_id LIKE '% "+keyword+ "%' " +
+										"OR customer_name LIKE '%"+keyword+"%')":"");
+		try(Connection connection = dataSource.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setString(1,status.name());
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			count = resultSet.getInt("count");
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return count;
+	}
 }
