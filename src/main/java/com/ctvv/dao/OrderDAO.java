@@ -23,6 +23,17 @@ public class OrderDAO
 
 	@Override
 	public Order get(int id) {
+		String sql = "SELECT * FROM customer_order WHERE order_id = ?";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+			preparedStatement.setInt(1, id);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				return map(resultSet);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -97,7 +108,21 @@ public class OrderDAO
 
 	@Override
 	public Order update(Order order) {
-		return null;
+		String sql = "UPDATE customer_order SET recipient_name=?, phone_number=?, address=?, order_status=? WHERE " +
+				"order_id=?";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+
+			statement.setString(1, order.getRecipientName());
+			statement.setString(2, order.getPhoneNumber());
+			statement.setString(3, order.getAddress());
+			statement.setString(4, order.getStatus().name());
+			statement.setInt(5, order.getOrderId());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return order;
 	}
 
 	@Override
@@ -128,6 +153,7 @@ public class OrderDAO
 		}
 		return null;
 	}
+
 	public List<Order> getAll(String sortBy, String order) {
 		List<Order> orderList = new ArrayList<>();
 		String sql = "SELECT * FROM customer_order " +
@@ -158,5 +184,96 @@ public class OrderDAO
 			e.printStackTrace();
 		}
 		return orderList;
+	}
+
+	public List<Order> getAll(
+			int begin, int num, Order.OrderStatus status, String keyword, String sortBy,
+			String order) {
+		List<Order> orderList = new ArrayList<>();
+		String sql = "SELECT * FROM customer_order WHERE order_status=?" +
+				(keyword != null ? " AND (order_id LIKE '%" + keyword + "%' " +
+						"OR customer_name LIKE '%" + keyword + "%')" : "") +
+				(sortBy != null ? " ORDER BY " + sortBy + " " + order : "") + " LIMIT " + begin + ", " + num;
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, status.name());
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				orderList.add(map(resultSet));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return orderList;
+	}
+
+	public List<Order> getAllForCustomers(
+			int begin, int num, Order.OrderStatus status, String keyword, String sortBy,
+			String order) {
+		List<Order> orderList = new ArrayList<>();
+		String sql;
+		if (keyword != null) {
+			sql = "SELECT customer_order.* FROM customer_order JOIN order_detail od on customer_order.order_id = od" +
+					".order_id WHERE order_status=?" +
+					" AND (customer_order.order_id LIKE '%" + keyword + "%' " +
+					" OR product_name LIKE '%" + keyword + "%')" +
+					(sortBy != null ? " ORDER BY " + sortBy + " " + order : "") + " LIMIT " + begin + ", " + num;
+		} else {
+			sql = "SELECT * FROM customer_order WHERE order_status=?" +
+					(sortBy != null ? " ORDER BY " + sortBy + " " + order : "") + " LIMIT " + begin + ", " + num;
+		}
+
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, status.name());
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				orderList.add(map(resultSet));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return orderList;
+	}
+
+	public int count(Order.OrderStatus status, String keyword) {
+		int count = 0;
+		String sql = "SELECT COUNT(*) AS count FROM customer_order WHERE order_status=?" +
+				(keyword != null ? " AND (order_id LIKE '% " + keyword + "%' " +
+						"OR customer_name LIKE '%" + keyword + "%')" : "");
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, status.name());
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			count = resultSet.getInt("count");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	public int countForCustomer(Order.OrderStatus status, String keyword) {
+		String sql;
+		if (keyword != null) {
+			sql = "SELECT COUNT(*) AS count FROM customer_order JOIN order_detail od on customer_order.order_id = od" +
+					".order_id WHERE order_status=?" +
+					" AND (customer_order.order_id LIKE '%" + keyword + "%' " +
+					" OR product_name LIKE '%" + keyword + "%')"
+					;
+		} else {
+			sql = "SELECT COUNT(*) AS count FROM customer_order WHERE order_status=?";
+		}
+		int count = 0;
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, status.name());
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			count = resultSet.getInt("count");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
 	}
 }

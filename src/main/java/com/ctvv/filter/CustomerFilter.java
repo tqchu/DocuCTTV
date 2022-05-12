@@ -11,7 +11,8 @@ import java.io.IOException;
 public class CustomerFilter
 		implements Filter {
 	public static final String[] loginRequiredURLs = {
-			"/user/account"
+			"/user/account",
+			"/user/cart"
 	};
 
 	public void init(FilterConfig config) throws ServletException {

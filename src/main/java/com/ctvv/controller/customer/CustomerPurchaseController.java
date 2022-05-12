@@ -1,4 +1,4 @@
-package com.ctvv.controller.admin;
+package com.ctvv.controller.customer;
 
 import com.ctvv.dao.OrderDAO;
 import com.ctvv.model.Order;
@@ -13,8 +13,8 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "ManageOrdersController", value = "/admin/orders/*")
-public class ManageOrdersController
+@WebServlet(name = "CustomerPurchaseController", value = "/user/purchase/*")
+public class CustomerPurchaseController
 		extends HttpServlet {
 	private static final int NUMBER_OF_RECORDS_PER_PAGE = 10;
 	private final String PENDING = "/pending";
@@ -22,10 +22,9 @@ public class ManageOrdersController
 	private final String TO_RECEIVE = "/to-receive";
 	private final String COMPLETED = "/completed";
 	private final String CANCELED = "/canceled";
-	private final String HOME_PAGE = "/admin/manage/home.jsp";
+	private final String HOME_PAGE = "/customer/account/manage-account.jsp";
 	private OrderDAO orderDAO;
 	private HttpSession session;
-
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -58,19 +57,32 @@ public class ManageOrdersController
 				String order = request.getParameter("order");
 				if (order==null) order="DESC";
 				//Xử lý numberOfPages
-				int numberOfPages = (orderDAO.count(status,keyword) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+				int numberOfPages = (orderDAO.countForCustomer(status,keyword) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
 				request.setAttribute("numberOfPages", numberOfPages);
-				List<Order> orderList = orderDAO.getAll(begin, NUMBER_OF_RECORDS_PER_PAGE, status,keyword,sortBy,order);
-				request.setAttribute("tab", "orders");
+				List<Order> orderList = orderDAO.getAllForCustomers(begin, NUMBER_OF_RECORDS_PER_PAGE, status,keyword,sortBy,
+						order);
 				request.setAttribute("statusTab", statusTab);
 				request.setAttribute("orderList", orderList);
-				RequestDispatcher dispatcher = request.getRequestDispatcher(HOME_PAGE);
-				dispatcher.forward(request, response);
+				goHome(request, response);
 			} else {
 				viewOrderDetail(request, response);
 			}
 		}
+	}
 
+	private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                              IOException {
+		int orderId = Integer.parseInt(request.getPathInfo().substring(1));
+		Order order = orderDAO.get(orderId);
+		request.setAttribute("tab", "orderDetail");
+		request.setAttribute("order", order);
+		goHome(request, response);
+	}
+
+	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("tab", "purchase");
+		RequestDispatcher dispatcher =  request.getRequestDispatcher(HOME_PAGE);
+		dispatcher.forward(request, response);
 	}
 
 	private int getBegin(HttpServletRequest request) {
@@ -84,63 +96,15 @@ public class ManageOrdersController
 		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
 	}
 
-	private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                              IOException {
-		int orderId = Integer.parseInt(request.getPathInfo().substring(1));
-		Order order = orderDAO.get(orderId);
-		request.setAttribute("tab", "orderDetail");
-		request.setAttribute("order", order);
-		goHome(request, response);
-	}
-
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String action = request.getParameter("action");
-		// to-ship, to-receive, cancel
-		int id = Integer.parseInt(request.getParameter("id"));
-		Order order = orderDAO.get(id);
-		switch (action) {
-			case "to-ship":
-				order.setStatus(Order.OrderStatus.TO_SHIP);
-				break;
-			case "to-receive":
-				order.setStatus(Order.OrderStatus.TO_RECEIVE);
-				break;
-			case "cancel":
-				order.setStatus(Order.OrderStatus.CANCELED);
-				break;
 
-		}
-		orderDAO.update(order);
-		response.sendRedirect(request.getParameter("from"));
-
-	}
-
-	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                     IOException {
-		request.setAttribute("tab", "purchase");
-		RequestDispatcher dispatcher =  request.getRequestDispatcher("/customer/account/manage-account.jsp");
-		dispatcher.forward(request, response);
-	}
-
-	private void viewPendingOrders(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                                IOException {
-
-	}
-
-	private void viewToShipOrders(HttpServletRequest request, HttpServletResponse response) {
-
-	}
-
-	private void viewToReceiveOrders(HttpServletRequest request, HttpServletResponse response) {
-	}
-
-	private void viewCompletedOrders(HttpServletRequest request, HttpServletResponse response) {
 	}
 
 	@Override
 	public void init() throws ServletException {
+		super.init();
 		super.init();
 		try {
 			Context context = new InitialContext();
