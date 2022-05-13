@@ -424,46 +424,96 @@
 }
 
 /*USER PURCHASE*/
-.user__manage-account__purchase-content {
-    padding: 0 24px 20px;
-    margin-top: 10px;
-
-}
-
-.user__manage-account__purchase-bar {
+.purchase-bar {
     background-color: #fff;
     display: flex;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
-.user__manage-account__purchase-item {
-    width: 20%;
+
+.purchase-tab-item.active {
+    border-bottom: 2px solid #EE4D2D;
+    color: #ff0000;
+}
+
+.purchase-tab-item {
     text-align: center;
     color: #000;
     text-decoration: none;
     padding: 14px 0;
 }
-.user__manage-account__purchase-item.active {
-    border-bottom: 2px solid #EE4D2D;
-    color: #ff0000;
+
+.purchase-bar__four-column .purchase-tab-item {
+    flex-basis: 25%;
 }
-.user__manage-account__purchase-list {
-    margin-top: 12px;
+
+.purchase-bar__five-column .purchase-tab-item {
+    flex-basis: 20%;
+}
+
+.purchase-search-bar {
+    margin-top: 6px;
+    background-color: #EAEAEA;
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.purchase-search-bar__search-icon {
+    transform: rotateY(180deg);
+    margin-left: 10px;
+    font-size: 22px;
+    position: absolute;
+    top: 1px;
+}
+
+.purchase-search-bar__input {
+    border: none;
+    background-color: #EAEAEA;
+    font-size: 13px;
+    margin-left: 40px;
+    padding-right: 20px;
+    flex-grow: 1;
+}
+
+.purchase-order-bar {
+    margin-bottom: 6px;
+    padding: 8px 20px;
+}
+
+#search-form {
+    width: 100%;
+    display: flex;
+}
+
+.purchase-search-bar__search-icon-wrapper {
+    position: relative;
+}
+
+/*ORDER BAR*/
+
+.order-bar {
+    background-color: #EDEDED;
+    padding: 16px 20px;
+    font-size: 14px;
+    opacity: 0.95;
+}
+
+.order-bar__option.active {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.order-bar__option {
     background-color: #fff;
-}
-
-.user__manage-account__update__message {
-    margin-bottom: 20px;
-    font-size: 16px;
-    margin-left: 164px;
-    margin-top: 20px;
-}
-
-.user__manage-account__update__message--success {
-    color: green;
-}
-
-.user__manage-account__update__message--fail {
-    color: red;
+    padding: 4px 12px;
+    margin-left: 10px;
+    display: inline-block;
+    min-width: 88px;
+    text-align: center;
+    border-radius: 2px;
+    cursor: pointer;
+    line-height: 21px;
 }
 
 /*SUPER ADMIN - MANAGE ADMINS*/

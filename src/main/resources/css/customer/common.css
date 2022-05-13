@@ -1,7 +1,7 @@
 .user-header {
     display: flex;
     width: 100%;
-    padding-top: 10px;
+    padding: 10px 0 8px;
     position: fixed;
     top: 0;
     background-color: #fff;
@@ -59,21 +59,26 @@
     top: 32px;
     padding-top: 10px;
 }
-.content{
+
+.content {
     margin-top: 95px;
 }
+
 .search {
     flex-grow: 1;
     margin-top: 6px;
 }
+
 .search-form {
     display: flex;
 }
+
 .search-input {
     flex-grow: 1;
     font-size: 13px;
     padding: 0 12px;
 }
+
 .cart {
     width: 120px;
     font-size: 32px;
