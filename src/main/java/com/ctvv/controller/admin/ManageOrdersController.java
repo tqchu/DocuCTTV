@@ -98,7 +98,7 @@ public class ManageOrdersController
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getParameter("action");
 		// to-ship, to-receive, cancel
-		int id = Integer.parseInt(request.getParameter("id"));
+		String id = (request.getParameter("id"));
 		Order order = orderDAO.get(id);
 		switch (action) {
 			case "to-ship":

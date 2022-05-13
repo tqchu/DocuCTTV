@@ -2,17 +2,17 @@
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 
 <link rel="stylesheet" href="${context}/css/admin/orders/home.css?rd=${rand}">
-<div class="purchase-bar">
-    <a href="${context}/admin/orders/pending" class="purchase-item ${statusTab=='pending'?'active':''}">
+<div class="purchase-bar purchase-bar__four-column">
+    <a href="${context}/admin/orders/pending" class="purchase-tab-item ${statusTab=='pending'?'active':''}">
         Chờ xác nhận
     </a>
-    <a href="${context}/admin/orders/to-ship" class="purchase-item ${statusTab=='to-ship'?'active':''}">
+    <a href="${context}/admin/orders/to-ship" class="purchase-tab-item ${statusTab=='to-ship'?'active':''}">
         Chờ vận chuyển
     </a>
-    <a href="${context}/admin/orders/to-receive" class="purchase-item ${statusTab=='to-receive'?'active':''}">
+    <a href="${context}/admin/orders/to-receive" class="purchase-tab-item ${statusTab=='to-receive'?'active':''}">
         Đang giao
     </a>
-    <a href="${context}/admin/orders/completed" class="purchase-item ${statusTab=='completed'?'active':''}">
+    <a href="${context}/admin/orders/completed" class="purchase-tab-item ${statusTab=='completed'?'active':''}">
         Đã giao
     </a>
 </div>
