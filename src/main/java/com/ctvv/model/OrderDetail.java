@@ -1,34 +1,35 @@
 package com.ctvv.model;
 
 public class OrderDetail {
-	private int orderId;
+	private String orderId;
 	private Product product;
 	private String productName;
 	private int quantity;
 	private int price;
 
-	public OrderDetail(int orderId, Product product, String productName, int quantity, int price) {
-		this.orderId = orderId;
-		this.product = new Product(product);
-		this.productName = productName;
-		this.quantity = quantity;
-		this.price = price;
-	}
-	public OrderDetail(OrderDetail orderDetail){
+	public OrderDetail(OrderDetail orderDetail) {
 		this.orderId = orderDetail.orderId;
 		this.product = new Product(orderDetail.product);
 		this.productName = orderDetail.productName;
 		this.quantity = orderDetail.quantity;
 		this.price = orderDetail.price;
 	}
-	public int getOrderId() {
+
+	public OrderDetail(String orderId, Product product, String productName, int quantity, int price) {
+		this.orderId = orderId;
+		this.product = new Product(product);
+		this.productName = productName;
+		this.quantity = quantity;
+		this.price = price;
+	}
+
+	public String getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(int orderId) {
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
-	}
-
+  }
 	public Product getProduct() {
 		return product;
 	}

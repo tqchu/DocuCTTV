@@ -117,9 +117,13 @@
                     <c:if test="${tab=='orders'}">
                         <jsp:include page="orders/ordersHome.jsp"/>
                     </c:if>
-
+                    <c:if test="${tab=='orderDetail'}">
+                        <jsp:include page="orders/orderDetail.jsp"/>
+                    </c:if>
                     <!-- PAGINATION -->
-                    <jsp:include page="../../common/pagination.jsp"/>
+                    <c:if test="${tab!='orderDetail'}">
+                        <jsp:include page="../../common/pagination.jsp"/>
+                    </c:if>
                 </div>
 
             </div>
