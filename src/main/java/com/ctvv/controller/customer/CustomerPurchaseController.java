@@ -1,6 +1,7 @@
 package com.ctvv.controller.customer;
 
 import com.ctvv.dao.OrderDAO;
+import com.ctvv.model.Customer;
 import com.ctvv.model.Order;
 
 import javax.naming.Context;
@@ -52,6 +53,8 @@ public class CustomerPurchaseController
 					status = Order.OrderStatus.CANCELED;
 					statusTab = "canceled";
 				}
+				session = request.getSession();
+				Customer customer = (Customer) session.getAttribute("customer");
 				String keyword = request.getParameter("keyword");
 				int begin = getBegin(request);
 				String sortBy;
@@ -62,11 +65,12 @@ public class CustomerPurchaseController
 				String order = request.getParameter("order");
 				if (order == null) order = "DESC";
 				//Xử lý numberOfPages
-				int numberOfPages = (orderDAO.countForCustomer(status, keyword) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+				int numberOfPages = (orderDAO.countForCustomer(status, keyword, customer.getUserId()) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
 				request.setAttribute("numberOfPages", numberOfPages);
 				List<Order> orderList = orderDAO.getAllForCustomers(begin, NUMBER_OF_RECORDS_PER_PAGE, status, keyword
 						, sortBy,
-						order);
+						order,
+						customer.getUserId());
 				request.setAttribute("statusTab", statusTab);
 				request.setAttribute("orderList", orderList);
 				goHome(request, response);
