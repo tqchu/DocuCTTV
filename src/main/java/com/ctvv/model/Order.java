@@ -53,7 +53,7 @@ public class Order {
 	private void setTotalPrice() {
 		totalPrice = 0;
 		for (OrderDetail orderDetail : orderDetailList) {
-			totalPrice += (long) orderDetail.getPrice() * orderDetail.getQuantity();
+			totalPrice += (long) orderDetail.getPrice()* orderDetail.getQuantity();
 		}
 		totalPrice += shippingFee;
 	}

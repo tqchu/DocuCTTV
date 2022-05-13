@@ -2,6 +2,7 @@ package com.ctvv.dao;
 
 import com.ctvv.model.OrderDetail;
 import com.ctvv.model.OrderDetail;
+import com.ctvv.model.Product;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class OrderDetailDAO
 		extends GenericDAO<OrderDetail> {
-
+	private ProductDAO productDAO;
 	public OrderDetailDAO(DataSource dataSource) {
 		super(dataSource);
 	}
@@ -64,10 +65,11 @@ public class OrderDetailDAO
 		try {
 			int orderId = resultSet.getInt("order_id");
 			int productId = resultSet.getInt("product_id");
+			Product product = productDAO.get(productId);
 			String productName = resultSet.getString("product_name");
 			int quantity = resultSet.getInt("quantity");
 			int price = resultSet.getInt("price");
-			return new OrderDetail(orderId, productId, productName, quantity, price);
+			return new OrderDetail(orderId, product,productName, quantity,price);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -88,7 +90,7 @@ public class OrderDetailDAO
 			// Loop qua từng orderDetail
 			for (OrderDetail orderDetail : orderDetailList) {
 				statement.setInt(1, orderDetail.getOrderId());
-				statement.setInt(2, orderDetail.getProductId());
+				statement.setInt(2, orderDetail.getProduct().getProductId());
 				statement.setString(3, orderDetail.getProductName());
 				statement.setInt(4, orderDetail.getQuantity());
 				statement.setInt(5, orderDetail.getPrice());
