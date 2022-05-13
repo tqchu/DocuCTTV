@@ -22,7 +22,7 @@
         <span class="purchase-search-bar__search-icon-wrapper">
         <i class="las la-search purchase-search-bar__search-icon"></i>
         </span>
-        <input type="search" name="keyword" class="purchase-search-bar__input"
+        <input type="search" name="keyword" class="purchase-search-bar__input" value="${param.keyword}"
                placeholder="Nhập mã đơn hàng hoặc tên khách hàng">
     </form>
 </div>

@@ -71,6 +71,7 @@ public class CustomerPurchaseController
 						, sortBy,
 						order,
 						customer.getUserId());
+				request.setAttribute("tab", "purchase");
 				request.setAttribute("statusTab", statusTab);
 				request.setAttribute("orderList", orderList);
 				goHome(request, response);
@@ -93,14 +94,13 @@ public class CustomerPurchaseController
 
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
-		request.setAttribute("tab", "purchase");
 		RequestDispatcher dispatcher = request.getRequestDispatcher(HOME_PAGE);
 		dispatcher.forward(request, response);
 	}
 
 	private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                              IOException {
-		int orderId = Integer.parseInt(request.getPathInfo().substring(1));
+		String orderId = (request.getPathInfo().substring(1));
 		Order order = orderDAO.get(orderId);
 		request.setAttribute("tab", "orderDetail");
 		request.setAttribute("order", order);

@@ -28,7 +28,7 @@
         <span class="purchase-search-bar__search-icon-wrapper">
         <i class="las la-search purchase-search-bar__search-icon"></i>
         </span>
-                    <input type="search" name="keyword" class="purchase-search-bar__input"
+                    <input type="search" name="keyword" class="purchase-search-bar__input" value="${param.keyword}"
                            placeholder="Nhập mã đơn hàng hoặc tên khách hàng">
                 </form>
             </div>
@@ -50,7 +50,7 @@
 
                 <c:forEach items="${orderList}" var="order">
                     <div class="purchase-item">
-                        <a href="" class="purchase-item__meta-info">
+                        <a href="${context}/user/purchase/${order.orderId}" class="purchase-item__meta-info">
                             <div class="purchase-item__meta-info__order-id">
                                     ${order.orderId}
                             </div>
@@ -74,7 +74,8 @@
                         </a>
                         <div class="purchase-item__product-list">
                             <c:forEach items="${order.orderDetailList}" var="orderDetail">
-                                <a href="" class="order__product-item">
+                                <a href="${context}/products/${not empty orderDetail.product?orderDetail.product.uri:'ngung-kinh-doanh'}"
+                                   class="order__product-item">
                                     <div class="order__product-item__img" style="background-image:
                                             url('${context}/${orderDetail.product.imagePathList[0].path}');"></div>
                                     <div class="order__product-item__name-item">
@@ -200,7 +201,7 @@
             <script src="${context}/js/customer/order.js?rd=${rand}"></script>
         </c:when>
         <c:otherwise>
-            KHÔNG CÓ ĐƠN HÀNG NÀO
+            <div class="no-records-found">KHÔNG CÓ ĐƠN HÀNG NÀO</div>
         </c:otherwise>
 
     </c:choose>

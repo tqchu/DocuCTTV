@@ -76,3 +76,10 @@
 .purchase-item__action__btn {
     padding: 8px 40px;
 }
+
+.no-records-found {
+    text-align: center;
+    font-size: 20px;
+    color: var(--near-red);
+    margin-top: 40px;
+}

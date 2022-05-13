@@ -1,6 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%-- set context path--%>
+
+<c:set var="action" value="Tài khoản" scope="request"/>
 <c:set var="context" value="${pageContext.request.contextPath}" scope="request"/>
 <c:set var="rand" scope="request"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %>
 </c:set>
@@ -255,6 +257,9 @@
                         </c:when>
                         <c:when test="${tab=='purchase'}">
                             <jsp:include page="order/orderHome.jsp"/>
+                        </c:when>
+                        <c:when test="${tab=='orderDetail'}">
+                            <jsp:include page="order/orderDetail.jsp"/>
                         </c:when>
                         </c:choose>
                     </div>
