@@ -29,7 +29,7 @@
         <i class="las la-search purchase-search-bar__search-icon"></i>
         </span>
                     <input type="search" name="keyword" class="purchase-search-bar__input" value="${param.keyword}"
-                           placeholder="Nhập mã đơn hàng hoặc tên khách hàng">
+                           placeholder="Nhập mã đơn hàng, hoặc  tên sản phẩm">
                 </form>
             </div>
             <div class="order-bar purchase-order-bar">
@@ -47,7 +47,6 @@
         nhất</span>
             </div>
             <div class="purchase-list">
-
                 <c:forEach items="${orderList}" var="order">
                     <div class="purchase-item">
                         <a href="${context}/user/purchase/${order.orderId}" class="purchase-item__meta-info">
