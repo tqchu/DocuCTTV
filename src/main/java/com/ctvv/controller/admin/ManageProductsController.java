@@ -35,6 +35,7 @@ public class ManageProductsController
 	private ProductDAO productDAO;
 	private CategoryDAO categoryDAO;
 	private ImagePathDAO imagePathDAO;
+
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -43,7 +44,7 @@ public class ManageProductsController
 		String uri = request.getRequestURI();
 		if (action != null) {
 			String path = "";
-			List<Category> categoryList = categoryDAO.getAll("category_name","ASC");
+			List<Category> categoryList = categoryDAO.getAll("category_name", "ASC");
 			request.setAttribute("categoryList", categoryList);
 			switch (action) {
 				case "create":
@@ -137,40 +138,34 @@ public class ManageProductsController
 		String dimension = request.getParameter("dimension");
 		String material = request.getParameter("material");
 		int price = Integer.parseInt(request.getParameter("price"));
-		String uri = CaseUtils.convert2KebabCase(name);
+		String uri = CaseUtils.convert2KebabCase(name) + "-" + UUID.randomUUID();
 		int warrantyPeriod = Integer.parseInt(request.getParameter("warrantyPeriod"));
 		Category category = null;
 		if (!Objects.equals(request.getParameter("categoryId"), "")) {
 			category = categoryDAO.get(Integer.parseInt(request.getParameter("categoryId")));
 		}
+		Product product = new Product(name, warrantyPeriod, description, dimension, material, price, category,
+				uri);
+		int productId = productDAO.create(product).getProductId();
 
-		if (productDAO.findByName(name) == null)
-		{
-			Product product = new Product(name, warrantyPeriod, description, dimension, material, price, category,uri);
-			int productId = productDAO.create(product).getProductId();
-
-			String imageFolder = "images/products";
-			for (Part part : request.getParts()) {
-				if (part.getName().equals("images") && !Objects.equals(part.getSubmittedFileName(), "")) {
-					String uniqueId = UUID.randomUUID().toString();
-					String submittedFileName = part.getSubmittedFileName();
-					String baseName = FilenameUtils.getBaseName(submittedFileName);
-					String extensionName = FilenameUtils.getExtension(submittedFileName);
-					String fileName = baseName + uniqueId + "." + extensionName;
-					part.write(this.getInitParameter("sourceImageFolder") + "\\" + fileName);
-					part.write(this.getInitParameter("targetImageFolder") + "\\" + fileName);
-					imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
-				}
+		String imageFolder = "images/products";
+		for (Part part : request.getParts()) {
+			if (part.getName().equals("images") && !Objects.equals(part.getSubmittedFileName(), "")) {
+				String uniqueId = UUID.randomUUID().toString();
+				String submittedFileName = part.getSubmittedFileName();
+				String baseName = FilenameUtils.getBaseName(submittedFileName);
+				String extensionName = FilenameUtils.getExtension(submittedFileName);
+				String fileName = baseName + uniqueId + "." + extensionName;
+				part.write(this.getInitParameter("sourceImageFolder") + "\\" + fileName);
+				part.write(this.getInitParameter("targetImageFolder") + "\\" + fileName);
+				imagePathDAO.create(new ImagePath(productId, imageFolder + "/" + fileName));
 			}
-			session.setAttribute("successMessage", "Sản phẩm đã thêm thành công");
-			response.sendRedirect(request.getContextPath() + HOME);
 		}
-		else {
-			request.setAttribute("errorMessage", "Tên sản phẩm '"+ name+ "' đã tồn tại");
-			request.getRequestDispatcher("/admin/manage/product/addForm.jsp").forward(request, response);
-		}
+		session.setAttribute("successMessage", "Sản phẩm đã thêm thành công");
+		response.sendRedirect(request.getContextPath() + HOME);
 
 	}
+
 	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
 		int productId = Integer.parseInt(request.getParameter("productId"));
@@ -195,7 +190,7 @@ public class ManageProductsController
 		product.setMaterial(material);
 		product.setDimension(dimension);
 		product.setPrice(price);
-		product.setUri(	CaseUtils.convert2KebabCase(name));
+		product.setUri(CaseUtils.convert2KebabCase(name) + "-" + UUID.randomUUID());
 		productDAO.update(product);
 
 		String imageFolder = "images/products";
@@ -225,8 +220,8 @@ public class ManageProductsController
 		productDAO.delete(productId);
 		session = request.getSession();
 		session.setAttribute("successMessage", "Xóa sản phẩm thành công");
-		try{
-			response.sendRedirect(request.getContextPath() + HOME );
+		try {
+			response.sendRedirect(request.getContextPath() + HOME);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
