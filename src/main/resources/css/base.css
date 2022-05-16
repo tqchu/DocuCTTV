@@ -16,25 +16,12 @@ input[type="search"]::-webkit-search-results-button,
 input[type="search"]::-webkit-search-results-decoration {
     display: none;
 }
-.btn {
-    border-radius: 2px;
-}
-
-.btn.btn-edit {
-   width: 100%;
-}
-
-.btn.btn-delete {
-    background-color: var(--warning-text-color);
-    color: #fff;
-}
-
 table th {
     font-weight: 500;
 }
 
 a:hover {
-    color: #000;
+    color: var(--primary-color);
 }
 
 .form__heading-text {
@@ -48,18 +35,33 @@ a:hover {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
+.btn {
+    border-radius: 2px;
+}
+
+.btn.btn-edit {
+    width: 100%;
+}
+
+.btn.btn-delete {
+    background-color: var(--warning-text-color);
+    color: #fff;
+}
+
 .btn.btn-primary {
     background-color: var(--btn-color) !important;
     border: none;
 }
 
+.btn-sm{
+    padding: 2px 12px;
+}
 .btn-md {
-    width: 100px;
+    padding: 4px 12px;
 }
 
 .btn-lg {
-    width: 160px;
-    font-size: 16px !important;
+    padding: 6px 24px;
 }
 
 .btn-search {

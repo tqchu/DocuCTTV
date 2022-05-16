@@ -7,6 +7,7 @@ import com.ctvv.model.Category;
 import com.ctvv.model.ImagePath;
 import com.ctvv.model.Product;
 import com.ctvv.util.CaseUtils;
+import com.ctvv.util.UniqueStringUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.naming.Context;
@@ -138,7 +139,7 @@ public class ManageProductsController
 		String dimension = request.getParameter("dimension");
 		String material = request.getParameter("material");
 		int price = Integer.parseInt(request.getParameter("price"));
-		String uri = CaseUtils.convert2KebabCase(name) + "-" + UUID.randomUUID();
+		String uri = CaseUtils.convert2KebabCase(name) + "-" + UniqueStringUtils.randomUUID(16);
 		int warrantyPeriod = Integer.parseInt(request.getParameter("warrantyPeriod"));
 		Category category = null;
 		if (!Objects.equals(request.getParameter("categoryId"), "")) {
@@ -190,7 +191,7 @@ public class ManageProductsController
 		product.setMaterial(material);
 		product.setDimension(dimension);
 		product.setPrice(price);
-		product.setUri(CaseUtils.convert2KebabCase(name) + "-" + UUID.randomUUID());
+		product.setUri(CaseUtils.convert2KebabCase(name) + "-" + UniqueStringUtils.randomUUID(16));
 		productDAO.update(product);
 
 		String imageFolder = "images/products";
