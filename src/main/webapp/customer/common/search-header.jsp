@@ -19,6 +19,9 @@
         <div class="cart">
             <a href="${context}/user/cart" class="cart-icon">
                 <i class="las la-shopping-cart"></i>
+                <div class="cart-icon__badge">
+                    14
+                </div>
             </a>
             <div class="cart-preview">
                 <div class="cart-preview__heading">

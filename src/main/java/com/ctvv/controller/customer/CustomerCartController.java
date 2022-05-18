@@ -14,8 +14,9 @@ public class CustomerCartController
 		goHome(request, response);
 	}
 
-	private void goHome(HttpServletRequest request, HttpServletResponse response) {
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/");
+	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/cart/cart.jsp");
+		dispatcher.forward(request, response);
 	}
 
 	@Override

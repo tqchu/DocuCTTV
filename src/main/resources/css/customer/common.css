@@ -179,3 +179,19 @@
     margin-left: auto;
     font-size: 14px;
 }
+.cart-icon__badge {
+    position: absolute;
+    font-size: 12px;
+    line-height: 14px;
+    background-color: #fff;
+    box-shadow: 0 0 2px var(--border-color);
+    padding: 0 4px;
+    min-width: 20px;
+    border-radius: 44px;
+    top: 6px;
+    left: 20px;
+}
+.cart-icon {
+    color: var(--primary-color);
+    position: relative;
+}

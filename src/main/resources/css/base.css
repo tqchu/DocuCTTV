@@ -51,6 +51,7 @@ a:hover {
 .btn.btn-primary {
     background-color: var(--btn-color) !important;
     border: none;
+    color: #fff;
 }
 
 .btn-sm{
@@ -58,12 +59,9 @@ a:hover {
 }
 .btn-md {
     padding: 4px 12px;
-}
-
-.btn-lg {
-    padding: 6px 24px;
-}
-
+}.btn-lg {
+     padding: 12px 52px;
+ }
 .btn-search {
     padding: 10px 14px;
     margin-left: 4px;
