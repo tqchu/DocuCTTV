@@ -12,6 +12,8 @@ public class CustomerCartController
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		goHome(request, response);
+		// Lưu item -> id, quantity
+		//
 	}
 
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -22,6 +24,28 @@ public class CustomerCartController
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String action = request.getParameter("action");
+		if (action!=null) {
+			switch (action) {
+				case "add":
+					addToCart(request, response);
+					break;
+				case "update":
+					updateCartItem(request, response);
+					break;
+				case "delete":
+					deleteCartItem(request, response);
+					break;
+			}
+		}
+	}
 
+	private void deleteCartItem(HttpServletRequest request, HttpServletResponse response) {
+	}
+
+	private void updateCartItem(HttpServletRequest request, HttpServletResponse response) {
+	}
+
+	private void addToCart(HttpServletRequest request, HttpServletResponse response) {
 	}
 }

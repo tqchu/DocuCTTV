@@ -115,13 +115,19 @@
                                 </span>
                                 <span class="product__info__text-content">${product.warrantyPeriod} tháng</span>
                             </div>
+                            <div class="product-quantity">
+                                <form action="${context}/user/cart" id="add-to-cart-form" method="post">
+                                    <input type="hidden" name="action" value="add">
+                                    <input type="hidden" name="id" value="${product.productId}">
+                                    <input type="number" value="1" min="1" step="1" name="quantity"/>
+                                </form>
+                            </div>
                             <div class="product__action">
-                                <div class="product__action__add-to-cart"><i
+                                <button type="submit" class="product__action__add-to-cart" form="add-to-cart-form"><i
                                         class="las la-shopping-cart product__action__add-to-cart__icon"></i>Thêm
                                     vào giỏ hàng
-                                </div>
+                                </button>
                                 <div class="product__action__buy">Mua ngay</div>
-
                             </div>
 
 
@@ -159,7 +165,7 @@
                                        class="product__similar-product__product-list__product">
                                         <div class="product__similar-product__product-list__product__product__image"
                                              style="background-image:
-                                                url('${context}/${product.imagePathList[0].path}');">
+                                                     url('${context}/${product.imagePathList[0].path}');">
                                         </div>
                                         <div class="product__similar-product__product-list__product__name">
                                                 ${product.name}

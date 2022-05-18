@@ -28,7 +28,9 @@
 <jsp:include page="../common/header.jsp"/>
 <jsp:include page="../common/search-header.jsp"/>
 <div class="content">
-    <div class="address"></div>
+    <div class="address">
+
+    </div>
     <div class="product-list">
         <div class="product-list__header">
             <div class="product-list__product-column">
