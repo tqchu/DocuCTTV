@@ -12,7 +12,6 @@ public class CustomerFilter
 		implements Filter {
 	public static final String[] loginRequiredURLs = {
 			"/user/account",
-			"/user/cart",
 			"/user/purchase"
 	};
 

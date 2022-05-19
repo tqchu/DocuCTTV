@@ -38,6 +38,10 @@
 <jsp:include page="../common/search-header.jsp"/>
 <div class="content">
     <div class="container-fluid">
+        <c:if test="${not empty cartSuccessMessage}">
+            <div class="success-message">${cartSuccessMessage}</div>
+            <c:remove var="cartSuccessMessage" scope="session"/>
+        </c:if>
         <div class="product__header">
             <div class="container-fluid">
                 <div class="row">
@@ -116,7 +120,8 @@
                                 <span class="product__info__text-content">${product.warrantyPeriod} tháng</span>
                             </div>
                             <div class="product-quantity">
-                                <form action="${context}/user/cart" id="add-to-cart-form" method="post">
+                                <form action="${context}/user/cart" id="add-to-cart-form" method="POST">
+                                    <input type="hidden" name="from">
                                     <input type="hidden" name="action" value="add">
                                     <input type="hidden" name="id" value="${product.productId}">
                                     <input type="number" value="1" min="1" step="1" name="quantity"/>

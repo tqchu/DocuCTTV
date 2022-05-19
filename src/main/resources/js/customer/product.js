@@ -12,5 +12,8 @@ $(function () {
     };
     $("input[type='number']").inputSpinner(config);
 
+    // set from input
+    const fromInput = $('input[name=from]')
+    fromInput.val(window.location.href)
 
 });

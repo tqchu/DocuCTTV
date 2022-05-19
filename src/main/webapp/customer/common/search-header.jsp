@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <%--CONTENT--%>
@@ -20,7 +21,7 @@
             <a href="${context}/user/cart" class="cart-icon">
                 <i class="las la-shopping-cart"></i>
                 <div class="cart-icon__badge">
-                    14
+                    ${cart.size()}
                 </div>
             </a>
             <div class="cart-preview">
@@ -28,70 +29,29 @@
                     Sản phẩm mới thêm
                 </div>
                 <div class="cart-preview__cart-list">
-                    <a href="" class="cart-preview__cart-item">
-                        <div class="cart-preview__cart-item__img"
-                             style="background-image: url('https://cf.shopee.vn/file/04f74da736c4fbf6d8c52cb3c620075a_tn')">
-                        </div>
-                        <div class="cart-preview__cart-item__name">Áo thun nam POLO, áo có cổ trơn vải cá sấu cotton cao
-                            cấp ngắn tay cực sang trọng
-                        </div>
-                        <div class="cart-preview__cart-item__price">
-                            69.000
-                        </div>
+                    <c:forEach items="${cart}" var="cartItem" varStatus="loop">
+                       <c:if test="${loop.count<=5}">
+                           <a href="" class="cart-preview__cart-item">
+                               <div class="cart-preview__cart-item__img"
+                                    style="background-image: url('${context}/${cartItem.product.imagePathList[0].path}')">
+                               </div>
+                               <div class="cart-preview__cart-item__name">
+                                       ${cartItem.product.name}
+                               </div>
+                               <div class="cart-preview__cart-item__price">
+                                       <fmt:formatNumber value="${cartItem.product.price}"
+                                                         maxFractionDigits="0" type="number"/>
+                               </div>
 
-                    </a>
-                    <a href="" class="cart-preview__cart-item">
-                        <div class="cart-preview__cart-item__img"
-                             style="background-image: url('https://cf.shopee.vn/file/04f74da736c4fbf6d8c52cb3c620075a_tn')">
-                        </div>
-                        <div class="cart-preview__cart-item__name">Áo thun nam POLO, áo có cổ trơn vải cá sấu cotton cao
-                            cấp ngắn tay cực sang trọng
-                        </div>
-                        <div class="cart-preview__cart-item__price">
-                            69.000
-                        </div>
+                           </a>
+                       </c:if>
+                    </c:forEach>
 
-                    </a>
-                    <a href="" class="cart-preview__cart-item">
-                        <div class="cart-preview__cart-item__img"
-                             style="background-image: url('https://cf.shopee.vn/file/04f74da736c4fbf6d8c52cb3c620075a_tn')">
-                        </div>
-                        <div class="cart-preview__cart-item__name">Áo thun nam POLO, áo có cổ trơn vải cá sấu cotton cao
-                            cấp ngắn tay cực sang trọng
-                        </div>
-                        <div class="cart-preview__cart-item__price">
-                            69.000
-                        </div>
-
-                    </a>
-                    <a href="" class="cart-preview__cart-item">
-                        <div class="cart-preview__cart-item__img"
-                             style="background-image: url('https://cf.shopee.vn/file/04f74da736c4fbf6d8c52cb3c620075a_tn')">
-                        </div>
-                        <div class="cart-preview__cart-item__name">Áo thun nam POLO, áo có cổ trơn vải cá sấu cotton cao
-                            cấp ngắn tay cực sang trọng
-                        </div>
-                        <div class="cart-preview__cart-item__price">
-                            69.000
-                        </div>
-
-                    </a>
-                    <a href="" class="cart-preview__cart-item">
-                        <div class="cart-preview__cart-item__img"
-                             style="background-image: url('https://cf.shopee.vn/file/04f74da736c4fbf6d8c52cb3c620075a_tn')">
-                        </div>
-                        <div class="cart-preview__cart-item__name">Áo thun nam POLO, áo có cổ trơn vải cá sấu cotton cao
-                            cấp ngắn tay cực sang trọng
-                        </div>
-                        <div class="cart-preview__cart-item__price">
-                            69.000
-                        </div>
-
-                    </a>
                 </div>
                 <div class="cart-preview__footer">
-                    <span class="cart-preview__items-sum">14 thêm vào giỏ hàng</span>
-                    <a href="" class="cart-preview__view-action btn btn-primary btn-lg">Xem giỏ hàng</a>
+                    <span class="cart-preview__items-sum">${cart.size()} thêm vào giỏ hàng</span>
+                    <a href="${context}/user/cart" class="cart-preview__view-action btn btn-primary btn-lg">Xem giỏ
+                        hàng</a>
                 </div>
             </div>
         </div>

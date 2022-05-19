@@ -6,6 +6,9 @@
 .cart-list {
     margin-bottom: 92px;
 }
+.cart-header__product-name {
+    margin-top: 6px;
+}
 .cart__check-btn {
     padding: 10px 20px;
     width: 40px;

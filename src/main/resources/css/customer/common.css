@@ -148,6 +148,7 @@
     height: 32px;
     background-size: cover;
     margin-right: 10px;
+    border: 1px solid var(--border-color);
 }
 
 .cart-preview__cart-item  .cart-preview__cart-item__name {
@@ -159,7 +160,7 @@
 }
 
 .cart-preview__cart-item  .cart-preview__cart-item__price {
-    margin-left: 20px;
+    margin-left: auto;
     color: var(--near-red);
 }
 
