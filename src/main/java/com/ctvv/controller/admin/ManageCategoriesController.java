@@ -124,9 +124,12 @@ public class ManageCategoriesController
 			Category category = new Category(categoryId, categoryName);
 			categoryDAO.update(category);
 			session.setAttribute("successMessage", "Sửa doanh mục thành công");
-
-		} else {
+		} else if(categoryDAO.find(categoryName).getCategoryId() != categoryId) {
 			session.setAttribute("errorMessage", "Tên doanh mục đã tồn tại");
+		}
+		else {
+			Category category = new Category(categoryId, categoryName);
+			categoryDAO.update(category);
 		}
 		try {
 			response.sendRedirect(request.getContextPath() + "/admin/categories");
