@@ -186,8 +186,11 @@ public class ProductDAO
 		if (field == null) field = "product_name";
 		List<Product> productList = new ArrayList<>();
 		String sql =
-				"SELECT COUNT(product_id) AS no FROM product " +
-						(keyword != null ? " WHERE " + field + " LIKE '%" + keyword + "%' " : "");
+				"SELECT COUNT(product_id) AS no FROM "+ (keyword!=null? "product p JOIN category c on p.category_id = c.category_id":
+						"product")+
+						(keyword != null ? " WHERE " + field + " LIKE '%" + keyword +
+								"%' OR category_name LIKE '%"+keyword+"%'"
+								: "");
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
@@ -205,10 +208,12 @@ public class ProductDAO
 		if (order == null) order = "ASC";
 		List<Product> productList = new ArrayList<>();
 		String sql =
-				"SELECT * FROM product " +
+				"SELECT product.* FROM "+(keyword!=null? "product JOIN category c ON product.category_id = c.category_id":
+						"product")+
 						(keyword != null ?
 								" WHERE (product_name  LIKE '%" + keyword +
 										"%' OR description  LIKE '%" + keyword +
+										"%' OR category_name LIKE '%" + keyword+
 										"%' OR material  LIKE '%" + keyword + "' ) "
 								: "") +
 						(sortBy != null ? " ORDER BY " + sortBy + " " + order : "") +
