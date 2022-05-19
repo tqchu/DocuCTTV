@@ -85,7 +85,7 @@ public class ManageOrdersController
 	}
 
 	private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                              IOException {
+																								  IOException {
 		String orderId =(request.getPathInfo().substring(1));
 		Order order = orderDAO.get(orderId);
 		request.setAttribute("tab", "orderDetail");
@@ -118,14 +118,14 @@ public class ManageOrdersController
 	}
 
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                     IOException {
+			IOException {
 		request.setAttribute("tab", "orderDetail");
 		RequestDispatcher dispatcher =  request.getRequestDispatcher("/admin/manage/home.jsp");
 		dispatcher.forward(request, response);
 	}
 
 	private void viewPendingOrders(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                                IOException {
+			IOException {
 
 	}
 
