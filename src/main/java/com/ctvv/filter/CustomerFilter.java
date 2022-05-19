@@ -1,18 +1,23 @@
 package com.ctvv.filter;
 
+import com.ctvv.dao.ProductDAO;
+import com.ctvv.model.CartItem;
+
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 @WebFilter(filterName = "CustomerFilter", urlPatterns = "/*")
 public class CustomerFilter
 		implements Filter {
 	public static final String[] loginRequiredURLs = {
 			"/user/account",
-			"/user/purchase"
+			"/user/purchase",
+			"/checkout"
 	};
 
 	public void init(FilterConfig config) throws ServletException {

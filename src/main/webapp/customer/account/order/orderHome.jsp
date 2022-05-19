@@ -2,6 +2,12 @@
 <%--BOOTRAP JS--%>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="${context}/css/customer/order.css?rd=${rand}">
+<c:if test="${not empty successMessage}">
+    <div class="success-message fs-6">
+        ${successMessage}
+    </div>
+    <c:remove var="successMessage" scope="session"/>
+</c:if>
 <div class="user__manage-account__purchase-content">
     <div class="purchase-bar purchase-bar__five-column">
         <a href="${context}/user/purchase/pending" class="purchase-tab-item ${statusTab=='pending'?'active':''}">

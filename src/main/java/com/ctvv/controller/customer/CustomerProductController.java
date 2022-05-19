@@ -2,6 +2,7 @@ package com.ctvv.controller.customer;
 
 import com.ctvv.dao.CategoryDAO;
 import com.ctvv.dao.ProductDAO;
+import com.ctvv.model.CartItem;
 import com.ctvv.model.Category;
 import com.ctvv.model.Product;
 
@@ -14,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.List;
@@ -24,10 +26,20 @@ public class CustomerProductController
 	private final int NUMBER_OF_RECORDS_PER_PAGE = 20;
 	private ProductDAO productDAO;
 	private CategoryDAO categoryDAO;
+	private HttpSession session;
+
 
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession();
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+		if (cart!=null){
+			for (CartItem cartItem :cart) {
+				cartItem.setProduct(productDAO.get(cartItem.getProduct().getProductId()));
+			}
+
+		}
 		// Search
 		if (request.getRequestURI().equals(request.getContextPath() + "/products/search")) search(request, response);
 		else {

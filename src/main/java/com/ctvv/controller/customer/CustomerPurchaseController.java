@@ -3,6 +3,9 @@ package com.ctvv.controller.customer;
 import com.ctvv.dao.OrderDAO;
 import com.ctvv.model.Customer;
 import com.ctvv.model.Order;
+import com.ctvv.model.OrderDetail;
+import com.ctvv.model.Product;
+import com.ctvv.util.UniqueStringUtils;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -12,6 +15,8 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "CustomerPurchaseController", value = "/user/purchase/*")
@@ -48,8 +53,7 @@ public class CustomerPurchaseController
 					status = Order.OrderStatus.COMPLETED;
 					statusTab = "completed";
 
-				}
-				else if (path.startsWith(CANCELED)){
+				} else if (path.startsWith(CANCELED)) {
 					status = Order.OrderStatus.CANCELED;
 					statusTab = "canceled";
 				}
@@ -65,7 +69,8 @@ public class CustomerPurchaseController
 				String order = request.getParameter("order");
 				if (order == null) order = "DESC";
 				//Xử lý numberOfPages
-				int numberOfPages = (orderDAO.countForCustomer(status, keyword, customer.getUserId()) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+				int numberOfPages =
+						(orderDAO.countForCustomer(status, keyword, customer.getUserId()) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
 				request.setAttribute("numberOfPages", numberOfPages);
 				List<Order> orderList = orderDAO.getAllForCustomers(begin, NUMBER_OF_RECORDS_PER_PAGE, status, keyword
 						, sortBy,
@@ -114,17 +119,54 @@ public class CustomerPurchaseController
 		// to-ship, to-receive, cancel
 		String id = (request.getParameter("id"));
 		Order order = orderDAO.get(id);
-		switch (action) {
-			case "completed":
-				order.setStatus(Order.OrderStatus.COMPLETED);
-				break;
-			case "cancel":
-				order.setStatus(Order.OrderStatus.CANCELED);
-				break;
+		if (action.equals("create")) {
+			create(request, response);
+		} else {
+			switch (action) {
+
+				case "completed":
+					order.setStatus(Order.OrderStatus.COMPLETED);
+					break;
+				case "cancel":
+					order.setStatus(Order.OrderStatus.CANCELED);
+					break;
+
+			}
+			orderDAO.update(order);
+			response.sendRedirect(request.getParameter("from"));
+		}
+	}
+
+	private void create(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String recipientName = request.getParameter("recipientName");
+		String
+				phoneNumber = request.getParameter("phoneNumber");
+		String address = request.getParameter("address");
+		int shippingFee = Integer.parseInt(request.getParameter("shippingFee"));
+
+		String[] productIdParams = request.getParameterValues("productId");
+		String[] productNames = request.getParameterValues("productName");
+		String[] priceParams = request.getParameterValues("price");
+		String[] quantityParams = request.getParameterValues("quantity");
+
+		String orderId = UniqueStringUtils.randomOrderId();
+		List<OrderDetail> orderDetailList = new ArrayList<>();
+		for (int i = 0; i < productIdParams.length; i++) {
+			Product product =new Product();
+			product.setProductId(Integer.parseInt(productIdParams[i]));
+			orderDetailList.add(new OrderDetail(orderId, product, productNames[i],Integer.parseInt(quantityParams[i])
+					, Integer.parseInt(priceParams[i])));
 
 		}
-		orderDAO.update(order);
-		response.sendRedirect(request.getParameter("from"));
+
+		int customerId = Integer.parseInt(request.getParameter("customerId"));
+		String customerName = request.getParameter("customerName");
+		LocalDateTime orderTime = LocalDateTime.now();
+		Order order = new Order(orderId, customerId,customerName, recipientName,phoneNumber, address, orderTime, null
+				, null, orderDetailList, shippingFee);
+		orderDAO.create(order);
+		session.setAttribute("successMessage", "Đơn hàng "+ orderId+" đã được đặt thành công, đang chờ xác nhận!");
+		response.sendRedirect(request.getContextPath() + request.getServletPath()+ PENDING);
 	}
 
 	@Override

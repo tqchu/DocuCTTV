@@ -1,6 +1,6 @@
 $(function () {
     const quantitySpinner = $('input[name=quantity]')
-
+    const checkoutForm = $('#checkout-form')
     const checkBoxes = $('input[name=item]')
     const numOfItems = $('#numOfItems')
     const totalAmount = $('#totalAmount')
@@ -24,9 +24,14 @@ $(function () {
             if (checkBtnInput.prop('checked')) {
                 totalAmount.text(accounting.formatMoney(countTotalAmount(checkBoxes), '', 0, '.', '.'))
             }
+            const updateForm = $(this).parent().parent().find('form[name=update-form]')
+            updateForm.find("input[name=newQuantity]").val($(this).val())
+            updateForm.submit()
         }
     )
     checkBoxes.change(function () {
+
+
         if (isAllBoxChecked(checkBoxes)) {
             allItem.prop('checked', true)
         } else {
@@ -35,6 +40,23 @@ $(function () {
         }
         numOfItems.text(countCheckboxes(checkBoxes))
         totalAmount.text(accounting.formatMoney(countTotalAmount(checkBoxes), '', 0, '.', '.'))
+    })
+
+    const checkoutBtn = $('#checkout-btn')
+    checkoutBtn.click(function (e) {
+
+        for (const checkbox of checkBoxes) {
+            if (!$(checkbox).prop('checked')) {
+                const cartItem = $(checkbox).parent().parent()
+                const idInput = cartItem.prev()
+                const quantityInput = cartItem.find('input[name=quantity]')
+                console.log(checkBoxes.index($(checkbox)))
+                console.log(idInput)
+                console.log(quantityInput)
+                idInput.attr('disabled', true)
+                quantityInput.attr('disabled', true)
+            }
+        }
     })
 
     function countCheckboxes(checkBoxes) {

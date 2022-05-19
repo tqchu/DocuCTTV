@@ -18,13 +18,20 @@ import java.util.List;
 @WebServlet(name = "CustomerCartController", value = "/user/cart")
 public class CustomerCartController
 		extends HttpServlet {
-	HttpSession session;
+	private  HttpSession session;
 	private ProductDAO productDAO;
 
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session= request.getSession();
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+		if (cart!=null){
+			for (CartItem cartItem :cart) {
+				cartItem.setProduct(productDAO.get(cartItem.getProduct().getProductId()));
+			}
+
+		}
 		goHome(request, response);
 		// Lưu item -> id, quantity
 		//
@@ -87,10 +94,35 @@ public class CustomerCartController
 
 	}
 
-	private void updateCartItem(HttpServletRequest request, HttpServletResponse response) {
+	private void updateCartItem(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                             IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		int newQuantity = Integer.parseInt(request.getParameter("newQuantity"));
+
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+		for (CartItem cartItem :cart) {
+			if (cartItem.getProduct().getProductId()== id){
+				cartItem.setQuantity(newQuantity);
+				break;
+			}
+		}
+
+		response.sendRedirect(request.getContextPath()+ request.getServletPath());
+
 	}
 
-	private void deleteCartItem(HttpServletRequest request, HttpServletResponse response) {
+	private void deleteCartItem(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                             IOException {
+
+		String[] idParams = request.getParameterValues("id");
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+		for (String idParam : idParams) {
+			int productId = Integer.parseInt(idParam);
+			cart.remove(findItemInCart(cart, productId));
+		}
+
+		response.sendRedirect(request.getContextPath()+ request.getServletPath());
+
 	}
 
 	private int findItemInCart(List<CartItem> cartItemList, int productId) {
