@@ -20,8 +20,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
           rel="stylesheet">
     <!-- APP -->
-    <link rel="stylesheet" href="${context}/css/base.css?rd=">
-    <link rel="stylesheet" href="${context}/css/style.css?rd=">
+    <link rel="stylesheet" href="${context}/css/base.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/customer/common.css?rd=${rand}">
+    <link rel="stylesheet" href="${context}/css/customer/checkout.css?rd=${rand}">
+
 </head>
 <body>
 <c:set var="action" value="Thanh toán" scope="request"/>
@@ -29,7 +32,18 @@
 <jsp:include page="../common/search-header.jsp"/>
 <div class="content">
     <div class="address">
-
+        <div class="address__heading-text">
+            Địa chỉ nhận hàng
+        </div>
+        <div class="address__content">
+            <div class="address__recipient-infor">
+                Trương Quang Chứ (+84) 799024990
+            </div>
+            <div class="address__shipping-address">218/17/1 Nguyễn Lương Bằng, Phường Hòa Khánh Bắc, Quận Liên Chiểu,
+                Đà Nẵng
+            </div>
+            <div class="address__change">Thay đổi</div>
+        </div>
     </div>
     <div class="product-list">
         <div class="product-list__header">
@@ -63,8 +77,101 @@
                 </div>
 
             </div>
+            <div class="product-list__item">
+                <div class="product-list__product-column">
+                    <div class="product-column__product-img"
+                         style="background-image: url('https://cf.shopee.vn/file/fd55a12d80f6668a31796c39a6c13269_tn')">
+
+                    </div>
+                    <div class="product-column__product-name">Áo thun nam POLO, áo có cổ trơn vải cá sấu cotton cao cấp
+                        ngắn tay cực sang trọng
+                    </div>
+                </div>
+                <div class="product-list__price-column">
+                    69.000
+                </div>
+                <div class="product-list__quantity-column">
+                    69.000
+                </div>
+
+            </div>
+            <div class="product-list__item">
+                <div class="product-list__product-column">
+                    <div class="product-column__product-img"
+                         style="background-image: url('https://cf.shopee.vn/file/fd55a12d80f6668a31796c39a6c13269_tn')">
+
+                    </div>
+                    <div class="product-column__product-name">Áo thun nam POLO, áo có cổ trơn vải cá sấu cotton cao cấp
+                        ngắn tay cực sang trọng
+                    </div>
+                </div>
+                <div class="product-list__price-column">
+                    69.000
+                </div>
+                <div class="product-list__quantity-column">
+                    69.000
+                </div>
+
+            </div>
+            <div class="product-list__item">
+                <div class="product-list__product-column">
+                    <div class="product-column__product-img"
+                         style="background-image: url('https://cf.shopee.vn/file/fd55a12d80f6668a31796c39a6c13269_tn')">
+
+                    </div>
+                    <div class="product-column__product-name">Áo thun nam POLO, áo có cổ trơn vải cá sấu cotton cao cấp
+                        ngắn tay cực sang trọng
+                    </div>
+                </div>
+                <div class="product-list__price-column">
+                    69.000
+                </div>
+                <div class="product-list__quantity-column">
+                    69.000
+                </div>
+
+            </div>
+            <div class="product-list__item">
+                <div class="product-list__product-column">
+                    <div class="product-column__product-img"
+                         style="background-image: url('https://cf.shopee.vn/file/fd55a12d80f6668a31796c39a6c13269_tn')">
+
+                    </div>
+                    <div class="product-column__product-name">Áo thun nam POLO, áo có cổ trơn vải cá sấu cotton cao cấp
+                        ngắn tay cực sang trọng
+                    </div>
+                </div>
+                <div class="product-list__price-column">
+                    69.000
+                </div>
+                <div class="product-list__quantity-column">
+                    69.000
+                </div>
+
+            </div>
 
         </div>
+    </div>
+    <div class="summary">
+        <div class="summary-item">
+            <div class="summary-item__name">Tổng tiền hàng</div>
+            <div class="summary-item__value price">170.000</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-item__name">Phí vận chuyển</div>
+            <div class="summary-item__value price">37.700</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-item__name">Tổng tiền</div>
+            <div class="summary-item__value price summary-item__total-price">207.700</div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-item__name">Phương thức thanh toán</div>
+            <div class="summary-item__value">Thanh toán khi nhận hàng</div>
+        </div>
+    </div>
+    <div class="confirm-bar">
+        <button class="btn btn-primary btn-lg">Đặt hàng</button>
     </div>
 </div>
 
