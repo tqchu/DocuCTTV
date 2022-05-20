@@ -18,16 +18,16 @@ import java.util.List;
 @WebServlet(name = "CustomerCartController", value = "/user/cart")
 public class CustomerCartController
 		extends HttpServlet {
-	private  HttpSession session;
+	private HttpSession session;
 	private ProductDAO productDAO;
 
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session= request.getSession();
+		session = request.getSession();
 		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-		if (cart!=null){
-			for (CartItem cartItem :cart) {
+		if (cart != null) {
+			for (CartItem cartItem : cart) {
 				cartItem.setProduct(productDAO.get(cartItem.getProduct().getProductId()));
 			}
 
@@ -76,20 +76,31 @@ public class CustomerCartController
 			if (pos >= 0) {
 				CartItem item = cartItemList.get(pos);
 				item.setQuantity(item.getQuantity() + quantity);
+				// chuyển lên đầu
+				cartItemList.remove(item);
+				cartItemList.add(0, item);
+
 			} else {
-				cartItemList.add(cartItem);
+				cartItemList.add(0, cartItem);
 			}
 		}
 		// TH2: Cart rỗng
 		else {
 			cartItemList = new ArrayList<>();
-			cartItemList.add(cartItem);
+			cartItemList.add(0, cartItem);
 			session.setAttribute("cart", cartItemList);
 		}
-
-		String from = request.getParameter("from");
-		session.setAttribute("cartSuccessMessage", "Thêm vào giỏ hàng thành công");
-		response.sendRedirect(from);
+		// Buy-now
+		boolean isBuyNowOption = request.getParameter("buy-now") != null;
+		if (isBuyNowOption) {
+			session.setAttribute("isBuyNow", true);
+			response.sendRedirect(request.getContextPath()+ request.getServletPath());
+		}
+		else {
+			String from = request.getParameter("from");
+			session.setAttribute("cartSuccessMessage", "Thêm vào giỏ hàng thành công");
+			response.sendRedirect(from);
+		}
 
 	}
 
@@ -99,14 +110,14 @@ public class CustomerCartController
 		int newQuantity = Integer.parseInt(request.getParameter("newQuantity"));
 
 		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-		for (CartItem cartItem :cart) {
-			if (cartItem.getProduct().getProductId()== id){
+		for (CartItem cartItem : cart) {
+			if (cartItem.getProduct().getProductId() == id) {
 				cartItem.setQuantity(newQuantity);
 				break;
 			}
 		}
 
-		response.sendRedirect(request.getContextPath()+ request.getServletPath());
+		response.sendRedirect(request.getContextPath() + request.getServletPath());
 
 	}
 
@@ -120,7 +131,7 @@ public class CustomerCartController
 			cart.remove(findItemInCart(cart, productId));
 		}
 
-		response.sendRedirect(request.getContextPath()+ request.getServletPath());
+		response.sendRedirect(request.getContextPath() + request.getServletPath());
 
 	}
 

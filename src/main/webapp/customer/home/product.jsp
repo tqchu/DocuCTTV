@@ -125,6 +125,8 @@
                                     <input type="hidden" name="action" value="add">
                                     <input type="hidden" name="id" value="${product.productId}">
                                     <input type="number" value="1" min="1" step="1" name="quantity"/>
+                                    <input type="checkbox" hidden id="buy-now-check-box" name="buy-now"
+                                           />
                                 </form>
                             </div>
                             <div class="product__action">
@@ -132,7 +134,13 @@
                                         class="las la-shopping-cart product__action__add-to-cart__icon"></i>Thêm
                                     vào giỏ hàng
                                 </button>
-                                <div class="product__action__buy">Mua ngay</div>
+
+
+                                <button type="submit" class="product__action__buy" form="add-to-cart-form"
+                                        id="buy-now-btn">
+                                    Mua ngay
+                                </button>
+
                             </div>
 
 

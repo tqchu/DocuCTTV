@@ -59,7 +59,7 @@
             </form>
             <form action="${context}/user/cart" method="POST" id="delete-multiple-item-form">
                 <input type="hidden" name="action" value="delete" form="delete-multiple-item-form">
-                <c:forEach items="${cart}" var="cartItem">
+                <c:forEach items="${cart}" var="cartItem" varStatus="loop">
                     <input type="hidden" name="id" value="${cartItem.product.productId}"
                            form="delete-multiple-item-form">
                     <input type="hidden" name="id" value="${cartItem.product.productId}"
@@ -67,6 +67,7 @@
                     <div class="cart-item">
                         <div class="cart__check-btn">
                             <input type="checkbox" name="item" form="delete-multiple-item-form"
+                                ${loop.count==1&&(not empty isBuyNow)?'checked':''}
                             >
                         </div>
                         <div class="cart-header__product-column">
