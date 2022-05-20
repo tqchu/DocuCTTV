@@ -77,9 +77,9 @@
             <c:forEach items="${list}" var="currentRow" varStatus="loop">
                 <tr>
                     <td>${loop.count + (not empty param.page?param.page-1:0) * 10}</td>
-                    <td>${currentRow.product.productId}</td>
-                    <td>${currentRow.product.productName}</td>
-                    <td>Tổng số lượng</td>
+                    <td>${currentRow.productId}</td>
+                    <td>${currentRow.productName}</td>
+                    <td>${currentRow.quantity}</td>
                     <td class="">
                         <a href="">Xem chi tiết</a>
                     </td>
