@@ -3,6 +3,7 @@ package com.ctvv.controller.customer;
 import com.ctvv.dao.CategoryDAO;
 import com.ctvv.dao.CustomerDAO;
 import com.ctvv.dao.ProductDAO;
+import com.ctvv.model.CartItem;
 import com.ctvv.model.Category;
 import com.ctvv.model.Product;
 
@@ -22,10 +23,19 @@ public class CustomerHomeController
 	private final int NUMBER_OF_RECORDS_PER_PAGE = 20;
 	private ProductDAO productDAO;
     private CategoryDAO categoryDAO;
+	private  HttpSession session;
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        listProductAndCategory(request, response);
+		session = request.getSession();
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+		if (cart!=null){
+			for (CartItem cartItem :cart) {
+				cartItem.setProduct(productDAO.get(cartItem.getProduct().getProductId()));
+			}
+
+		}
+		listProductAndCategory(request, response);
 	}
 
 	@Override

@@ -107,16 +107,16 @@
                     <td>${currentRow.categoryName}</td>
                     <td style="width: 200px"><a href="" class="btn-edit btn btn btn-primary"
                            data-bs-toggle="modal"
-                           data-bs-target="#editModal">Chỉnh sửa</a>
+                           data-bs-target="#editModal${currentRow.categoryId}">Chỉnh sửa</a>
                         <!-- MODAL CONTENT -->
-                        <div class="modal fade" id="editModal" tabindex="-1"
-                             aria-labelledby="editModalLabel"
+                        <div class="modal fade" id="editModal${currentRow.categoryId}" tabindex="-1"
+                             aria-labelledby="editModal${currentRow.categoryId}Label"
                              aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
 
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="editModalLabel">
+                                        <h5 class="modal-title" id="editModal${currentRow.categoryId}Label">
                                             Sửa doanh mục
                                         </h5>
                                         <button type="button" class="btn-close"

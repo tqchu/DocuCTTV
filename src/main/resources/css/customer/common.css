@@ -142,7 +142,13 @@
     transform: rotate(225deg);
     right: 36px;
 }
-
+.cart-preview__empty {
+    height: 120px;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .cart-preview__cart-item__img {
     min-width: 52px;
     height: 32px;

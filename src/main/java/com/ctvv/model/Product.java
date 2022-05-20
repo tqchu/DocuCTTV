@@ -30,7 +30,8 @@ public class Product {
 		this.description = product.description;
 		this.price = product.price;
 		this.category = product.category;
-		this.imagePathList = new ArrayList<>(product.imagePathList);
+		if (product.imagePathList != null)
+			this.imagePathList = new ArrayList<>(product.imagePathList);
 		this.uri = product.uri;
 	}
 

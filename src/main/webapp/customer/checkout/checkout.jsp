@@ -37,10 +37,19 @@
         </div>
         <div class="address__content">
             <div class="address__recipient-infor">
-                Trương Quang Chứ (+84) 799024990
+                ${customer.address.recipientName} (${customer.address.phoneNumber})
+                <input type="hidden" name="recipientName" value="${customer.address.recipientName}"
+                       form="checkout-form">
+                    <input type="hidden" name="customerId" value="${customer.userId}" form="checkout-form">
+                    <input type="hidden" name="customerName" value="${customer.fullName}" form="checkout-form">
+                <input type="hidden" name="phoneNumber" value="${customer.address.phoneNumber}"
+                       form="checkout-form">
+
             </div>
-            <div class="address__shipping-address">218/17/1 Nguyễn Lương Bằng, Phường Hòa Khánh Bắc, Quận Liên Chiểu,
-                Đà Nẵng
+            <div class="address__shipping-address">
+                ${customer.address.address}
+                    <input type="hidden" name="address" value="${customer.address.address}"
+                           form="checkout-form">
             </div>
             <div class="address__change">Thay đổi</div>
         </div>
@@ -59,111 +68,53 @@
 
         </div>
         <div class="product-list__content">
-            <div class="product-list__item">
-                <div class="product-list__product-column">
-                    <div class="product-column__product-img"
-                         style="background-image: url('https://cf.shopee.vn/file/fd55a12d80f6668a31796c39a6c13269_tn')">
+            <c:forEach items="${checkoutList}" var="item">
+<%--                CHECKOUT FORM INPUT--%>
+                <input type="hidden" name="productId" value="${item.product.productId}"
+                       form="checkout-form">
+                <input type="hidden" name="productName" value="${item.product.name}"
+                       form="checkout-form">
+                <input type="hidden" name="price" value="${item.product.price}"
+                       form="checkout-form">
+                <input type="hidden" name="quantity" value="${item.quantity}"
+                       form="checkout-form">
 
-                    </div>
-                    <div class="product-column__product-name">Áo thun nam POLO, áo có cổ trơn vải cá sấu cotton cao cấp
-                        ngắn tay cực sang trọng
-                    </div>
-                </div>
-                <div class="product-list__price-column">
-                    69.000
-                </div>
-                <div class="product-list__quantity-column">
-                    69.000
-                </div>
+                <div class="product-list__item">
+                    <div class="product-list__product-column">
+                        <div class="product-column__product-img"
+                             style="background-image: url('${context}/${item.product.imagePathList[0].path}')">
 
-            </div>
-            <div class="product-list__item">
-                <div class="product-list__product-column">
-                    <div class="product-column__product-img"
-                         style="background-image: url('https://cf.shopee.vn/file/fd55a12d80f6668a31796c39a6c13269_tn')">
-
+                        </div>
+                        <div class="product-column__product-name">
+                                ${item.product.name}
+                        </div>
                     </div>
-                    <div class="product-column__product-name">Áo thun nam POLO, áo có cổ trơn vải cá sấu cotton cao cấp
-                        ngắn tay cực sang trọng
+                    <div class="product-list__price-column">
+                            ${item.product.price}
                     </div>
-                </div>
-                <div class="product-list__price-column">
-                    69.000
-                </div>
-                <div class="product-list__quantity-column">
-                    69.000
-                </div>
-
-            </div>
-            <div class="product-list__item">
-                <div class="product-list__product-column">
-                    <div class="product-column__product-img"
-                         style="background-image: url('https://cf.shopee.vn/file/fd55a12d80f6668a31796c39a6c13269_tn')">
-
+                    <div class="product-list__quantity-column">
+                            ${item.quantity}
                     </div>
-                    <div class="product-column__product-name">Áo thun nam POLO, áo có cổ trơn vải cá sấu cotton cao cấp
-                        ngắn tay cực sang trọng
-                    </div>
-                </div>
-                <div class="product-list__price-column">
-                    69.000
-                </div>
-                <div class="product-list__quantity-column">
-                    69.000
-                </div>
 
-            </div>
-            <div class="product-list__item">
-                <div class="product-list__product-column">
-                    <div class="product-column__product-img"
-                         style="background-image: url('https://cf.shopee.vn/file/fd55a12d80f6668a31796c39a6c13269_tn')">
+                </div>
+            </c:forEach>
 
-                    </div>
-                    <div class="product-column__product-name">Áo thun nam POLO, áo có cổ trơn vải cá sấu cotton cao cấp
-                        ngắn tay cực sang trọng
-                    </div>
-                </div>
-                <div class="product-list__price-column">
-                    69.000
-                </div>
-                <div class="product-list__quantity-column">
-                    69.000
-                </div>
-
-            </div>
-            <div class="product-list__item">
-                <div class="product-list__product-column">
-                    <div class="product-column__product-img"
-                         style="background-image: url('https://cf.shopee.vn/file/fd55a12d80f6668a31796c39a6c13269_tn')">
-
-                    </div>
-                    <div class="product-column__product-name">Áo thun nam POLO, áo có cổ trơn vải cá sấu cotton cao cấp
-                        ngắn tay cực sang trọng
-                    </div>
-                </div>
-                <div class="product-list__price-column">
-                    69.000
-                </div>
-                <div class="product-list__quantity-column">
-                    69.000
-                </div>
-
-            </div>
 
         </div>
     </div>
     <div class="summary">
         <div class="summary-item">
             <div class="summary-item__name">Tổng tiền hàng</div>
-            <div class="summary-item__value price">170.000</div>
+            <div class="summary-item__value price">${totalPrice}</div>
         </div>
         <div class="summary-item">
             <div class="summary-item__name">Phí vận chuyển</div>
-            <div class="summary-item__value price">37.700</div>
+            <div class="summary-item__value price">${shippingFee}</div>
+            <input type="hidden" name="shippingFee" value="${shippingFee}" form="checkout-form">
         </div>
         <div class="summary-item">
             <div class="summary-item__name">Tổng tiền</div>
-            <div class="summary-item__value price summary-item__total-price">207.700</div>
+            <div class="summary-item__value price summary-item__total-price">${totalPrice+shippingFee}</div>
         </div>
         <div class="summary-item">
             <div class="summary-item__name">Phương thức thanh toán</div>
@@ -171,10 +122,12 @@
         </div>
     </div>
     <div class="confirm-bar">
-        <button class="btn btn-primary btn-lg">Đặt hàng</button>
+        <button type="submit" class="btn btn-primary btn-lg" form="checkout-form">Đặt hàng</button>
     </div>
 </div>
-
+<form action="${context}/user/purchase/" id="checkout-form" method="POST">
+    <input type="hidden" name="action" value="create">
+</form>
 <%--<jsp:include page="../../common/footer.jsp"/>--%>
 
 

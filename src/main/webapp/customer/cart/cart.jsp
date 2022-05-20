@@ -50,44 +50,83 @@
         </div>
     </div>
     <div class="cart-list">
-        <c:forEach items="${cart}" var="cartItem">
-            <div class="cart-item">
-                <div class="cart__check-btn">
-                    <input type="checkbox" name="item"
-                    >
-                </div>
-                <div class="cart-header__product-column">
-                    <a href="" class="cart-header__product-link">
-                        <div class="cart-header__product-image"
-                             style="background-image: url('${context}/${cartItem.product.imagePathList[0].path}')"></div>
-                        <div class="cart-header__product-name">${cartItem.product.name}
-                        </div>
-                    </a>
+        <c:if test="${empty cart}">
+            <div class="cart-list__empty">Giỏ hàng rỗng</div>
+        </c:if>
+        <c:if test="${not empty cart}">
+            <form action="${context}/checkout" method="POST" id="checkout-form">
 
-                </div>
-                <div class="cart-header__price-column">
-                    <fmt:formatNumber value="${cartItem.product.price}"
-                                          maxFractionDigits="0" type="number"/>
-                </div>
-                <div class="cart-header__quantity-column">
-                    <input type="number" value="${cartItem.quantity}" min="1" step="1" name="quantity"/>
-                </div>
-                <div class="cart-header__action-column">
-                    Xóa
-                </div>
-            </div>
-        </c:forEach>
+            </form>
+            <form action="${context}/user/cart" method="POST" id="delete-multiple-item-form">
+                <input type="hidden" name="action" value="delete" form="delete-multiple-item-form">
+                <c:forEach items="${cart}" var="cartItem">
+                    <input type="hidden" name="id" value="${cartItem.product.productId}"
+                           form="delete-multiple-item-form">
+                    <input type="hidden" name="id" value="${cartItem.product.productId}"
+                           form="checkout-form" >
+                    <div class="cart-item">
+                        <div class="cart__check-btn">
+                            <input type="checkbox" name="item" form="delete-multiple-item-form"
+                            >
+                        </div>
+                        <div class="cart-header__product-column">
+                            <a href="" class="cart-header__product-link">
+                                <div class="cart-header__product-image"
+                                     style="background-image: url('${context}/${cartItem.product.imagePathList[0].path}')"></div>
+                                <div class="cart-header__product-name">${cartItem.product.name}
+                                </div>
+                            </a>
+
+                        </div>
+                        <div class="cart-header__price-column">
+                            <fmt:formatNumber value="${cartItem.product.price}"
+                                              maxFractionDigits="0" type="number"/>
+                        </div>
+                        <div class="cart-header__quantity-column">
+                            <input type="number" value="${cartItem.quantity}" min="1" step="1" name="quantity"
+                                   form="checkout-form" >
+                        </div>
+                        <div class="cart-header__action-column">
+                            <form action="${context}/user/cart" method="POST"
+                                  id="delete-item-form-${cartItem.product.productId}">
+                                <input type="hidden" name="action" value="delete"
+                                       form="delete-item-form-${cartItem.product.productId}">
+                                <input type="hidden" name="id" value="${cartItem.product.productId}"
+                                       form="delete-item-form-${cartItem.product.productId}">
+                                <button type="submit" class="btn btn-sm btn-delete"
+                                        form="delete-item-form-${cartItem.product.productId}">Xóa
+                                </button>
+                            </form>
+
+                        </div>
+                        <form action="${context}/user/cart" method="POST"
+                              id="update-item-form-${cartItem.product.productId}" name="update-form">
+                            <input type="hidden" name="action" value="update"
+                                   form="update-item-form-${cartItem.product.productId}">
+                            <input type="hidden" name="id" value="${cartItem.product.productId}"
+                                   form="update-item-form-${cartItem.product.productId}">
+                            <input type="hidden" name="newQuantity"
+                                   form="update-item-form-${cartItem.product.productId}">
+                        </form>
+                    </div>
+
+                </c:forEach>
+            </form>
+        </c:if>
     </div>
 </div>
 <div class="cart__payment">
-    <div class="cart__payment__delete">Xóa</div>
+    <button type="submit" form="delete-multiple-item-form" class="cart__payment__delete"
+    >Xóa
+    </button>
     <div class="cart__payment__summary">
         <span class="cart__payment__summary-text">Tổng thanh toán (<span id="numOfItems">0</span> sản phẩm): </span>
         <span class="cart__payment__summary-price price" id="totalAmount">0</span>
     </div>
-    <a href="" class="cart__payment__checkout-btn btn btn-primary btn-lg">
+    <button class="cart__payment__checkout-btn btn btn-primary btn-lg" type="submit" form="checkout-form"
+            id="checkout-btn">
         Mua hàng
-    </a>
+    </button>
 </div>
 
 <%--<jsp:include page="../../common/footer.jsp"/>--%>

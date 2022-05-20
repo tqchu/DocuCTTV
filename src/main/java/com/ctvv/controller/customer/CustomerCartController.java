@@ -18,13 +18,20 @@ import java.util.List;
 @WebServlet(name = "CustomerCartController", value = "/user/cart")
 public class CustomerCartController
 		extends HttpServlet {
-	HttpSession session;
+	private  HttpSession session;
 	private ProductDAO productDAO;
 
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session= request.getSession();
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+		if (cart!=null){
+			for (CartItem cartItem :cart) {
+				cartItem.setProduct(productDAO.get(cartItem.getProduct().getProductId()));
+			}
+
+		}
 		goHome(request, response);
 		// Lưu item -> id, quantity
 		//
@@ -72,7 +79,7 @@ public class CustomerCartController
 			} else {
 				cartItemList.add(cartItem);
 			}
-			session.setAttribute("cart", cartItemList);
+			session.setAttribute("cartList", cartItemList);
 		}
 		// TH2: Cart rỗng
 		else {
@@ -87,34 +94,34 @@ public class CustomerCartController
 
 	}
 
-	private void updateCartItem(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		session = request.getSession();
-		int productId = Integer.parseInt(request.getParameter("id"));
-		List<CartItem> cartItemList= (List<CartItem>) session.getAttribute("cart");
-		int newquantity = Integer.parseInt(request.getParameter("quantity"));
-		if (newquantity>quantityInStock(productId)){
-			request.setAttribute("outOfStockMessage","");
-		}
-		for (CartItem item : cartItemList){
-			if (item.getProduct().getProductId() == productId){
-				item.setQuantity(newquantity);
+	private void updateCartItem(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                             IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
+		int newQuantity = Integer.parseInt(request.getParameter("newQuantity"));
+
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+		for (CartItem cartItem :cart) {
+			if (cartItem.getProduct().getProductId()== id){
+				cartItem.setQuantity(newQuantity);
 				break;
 			}
 		}
-		session.setAttribute("cart",cartItemList);
-		String from = request.getParameter("from");
-		response.sendRedirect(from);
+
+		response.sendRedirect(request.getContextPath()+ request.getServletPath());
+
 	}
 
-	private void deleteCartItem(HttpServletRequest request, HttpServletResponse response) throws IOException{
-			session = request.getSession();
-			String [] productIds = request.getParameterValues("id");
-			List<CartItem> cartItemList = (List<CartItem>)session.getAttribute("cart");
-			for (int i = 0;i<productIds.length;i++){
-				int productId = Integer.parseInt(productIds[i]);
-				cartItemList.remove(findItemInCart(cartItemList,productId));
-			}
-			session.setAttribute("cart",cartItemList);
+	private void deleteCartItem(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                             IOException {
+
+		String[] idParams = request.getParameterValues("id");
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+		for (String idParam : idParams) {
+			int productId = Integer.parseInt(idParam);
+			cart.remove(findItemInCart(cart, productId));
+		}
+
+		response.sendRedirect(request.getContextPath()+ request.getServletPath());
 
 	}
 
@@ -126,10 +133,7 @@ public class CustomerCartController
 		}
 		return -1;
 	}
-	private int quantityInStock(int productId){
-		//return importDAO.getQuantity(productId) - orderDAO.getQuantity(productId);
-		return 0;
-	}
+
 	@Override
 	public void init() throws ServletException {
 		super.init();

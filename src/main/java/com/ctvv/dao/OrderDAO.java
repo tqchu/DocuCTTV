@@ -56,7 +56,7 @@ public class OrderDAO
 			statement.setTimestamp(7, Timestamp.valueOf(order.getOrderTime()));
 			statement.setTimestamp(8, null);
 			statement.setInt(9, order.getShippingFee());
-			statement.setString(10, order.getStatus().name());
+			statement.setString(10, Order.OrderStatus.PENDING.name());
 			statement.execute();
 			statement.close();
 			connection.close();
