@@ -1,10 +1,7 @@
 package com.ctvv.controller.customer;
 
 import com.ctvv.dao.OrderDAO;
-import com.ctvv.model.Customer;
-import com.ctvv.model.Order;
-import com.ctvv.model.OrderDetail;
-import com.ctvv.model.Product;
+import com.ctvv.model.*;
 import com.ctvv.util.UniqueStringUtils;
 
 import javax.naming.Context;
@@ -35,6 +32,7 @@ public class CustomerPurchaseController
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession();
 		// orders/
 		String path = request.getPathInfo(); //
 		Order.OrderStatus status = Order.OrderStatus.PENDING;
@@ -115,6 +113,7 @@ public class CustomerPurchaseController
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession();
 		String action = request.getParameter("action");
 		// to-ship, to-receive, cancel
 		String id = (request.getParameter("id"));
@@ -151,22 +150,31 @@ public class CustomerPurchaseController
 
 		String orderId = UniqueStringUtils.randomOrderId();
 		List<OrderDetail> orderDetailList = new ArrayList<>();
+
+		// Remove/ subtract quantity from cart
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+
 		for (int i = 0; i < productIdParams.length; i++) {
-			Product product =new Product();
-			product.setProductId(Integer.parseInt(productIdParams[i]));
-			orderDetailList.add(new OrderDetail(orderId, product, productNames[i],Integer.parseInt(quantityParams[i])
+			Product product = new Product();
+			int productId = Integer.parseInt(productIdParams[i]);
+			int quantity = Integer.parseInt(quantityParams[i]);
+			product.setProductId(productId);
+
+			orderDetailList.add(new OrderDetail(orderId, product, productNames[i], quantity
 					, Integer.parseInt(priceParams[i])));
+
+			cart.removeIf(cartItem -> cartItem.getProduct().getProductId() == productId);
 
 		}
 
 		int customerId = Integer.parseInt(request.getParameter("customerId"));
 		String customerName = request.getParameter("customerName");
 		LocalDateTime orderTime = LocalDateTime.now();
-		Order order = new Order(orderId, customerId,customerName, recipientName,phoneNumber, address, orderTime, null
+		Order order = new Order(orderId, customerId, customerName, recipientName, phoneNumber, address, orderTime, null
 				, null, orderDetailList, shippingFee);
 		orderDAO.create(order);
-		session.setAttribute("successMessage", "Đơn hàng "+ orderId+" đã được đặt thành công, đang chờ xác nhận!");
-		response.sendRedirect(request.getContextPath() + request.getServletPath()+ PENDING);
+		session.setAttribute("successMessage", "Đơn hàng " + orderId + " đã được đặt thành công, đang chờ xác nhận!");
+		response.sendRedirect(request.getContextPath() + request.getServletPath() + PENDING);
 	}
 
 	@Override
