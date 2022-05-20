@@ -113,16 +113,18 @@ public class ManageInventoryController
 	private void listStockItems(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
 		String sortBy = request.getParameter("sortBy");
-		if (sortBy!=null){
-			if(sortBy=="default"){
-				sortBy = null;
-			}
-			else if(sortBy == "name"){
-				sortBy ="product_name";
+		if (sortBy != null) {
+			switch (sortBy) {
+				case "default":
+					sortBy = null;
+					break;
+				case "name":
+					sortBy = "product_name";
+					break;
 			}
 		}
 		int begin = getBegin(request);
-		int numberOfPage = productDAO.count(keyword, "product_name")/NUMBER_OF_RECORDS_PER_PAGE +1;
+		int numberOfPage = (productDAO.count(keyword, "product_name") - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
 		List<StockItem> stockItemList = stockItemDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, sortBy, "ASC");
 		request.setAttribute("list", stockItemList);
 		request.setAttribute("numberOfPages", numberOfPage);
