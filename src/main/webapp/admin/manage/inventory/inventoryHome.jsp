@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="${context}/css/admin/inventory/home.css?rd=${rand}">
 <div class="search">
     <form action="${context}/admin/inventory/search" class="search__form" method="get">
-        <input type="search" class="search__bar form-control" name="productName" placeholder="Nhập tên sản phẩm">
+        <input type="search" class="search__bar form-control" name="keyword" placeholder="Nhập tên sản phẩm">
         <button type="submit" class="btn btn-primary btn-search">
             <i class="las la-search"></i>
         </button>
