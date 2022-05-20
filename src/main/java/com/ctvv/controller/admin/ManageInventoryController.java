@@ -1,9 +1,6 @@
 package com.ctvv.controller.admin;
 
-import com.ctvv.dao.ImportDAO;
-import com.ctvv.dao.ImportDetailDAO;
-import com.ctvv.dao.ProductDAO;
-import com.ctvv.dao.ProviderDAO;
+import com.ctvv.dao.*;
 import com.ctvv.model.*;
 
 import javax.naming.Context;
@@ -33,6 +30,7 @@ public class ManageInventoryController
 	private ProductDAO productDAO;
 	private ProviderDAO providerDAO;
 	private ImportDetailDAO importDetailDAO;
+	private StockItemDAO stockItemDAO;
 
 	@Override
 	protected void doGet(
@@ -63,11 +61,9 @@ public class ManageInventoryController
 						dispatcher.forward(request, response);
 						break;
 				}
-
 			}
-			// Liệt kê danh sách tồn kho
 			else {
-				goInventoryHome(request, response);
+				listStockItems(request,response);
 			}
 		}
 	}
@@ -114,7 +110,26 @@ public class ManageInventoryController
 		response.sendRedirect(request.getContextPath() + HISTORY_SERVLET);
 
 	}
-
+	private void listStockItems(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String keyword = request.getParameter("keyword");
+		String sortBy = request.getParameter("sortBy");
+		if (sortBy != null) {
+			switch (sortBy) {
+				case "default":
+					sortBy = null;
+					break;
+				case "name":
+					sortBy = "product_name";
+					break;
+			}
+		}
+		int begin = getBegin(request);
+		int numberOfPage = (productDAO.count(keyword, "product_name") - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		List<StockItem> stockItemList = stockItemDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, sortBy, "ASC");
+		request.setAttribute("list", stockItemList);
+		request.setAttribute("numberOfPages", numberOfPage);
+		goInventoryHome(request, response);
+	}
 	private void viewHistoryDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                                IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
@@ -192,6 +207,7 @@ public class ManageInventoryController
 			productDAO = new ProductDAO(dataSource);
 			providerDAO = new ProviderDAO(dataSource);
 			importDetailDAO = new ImportDetailDAO(dataSource);
+			stockItemDAO = new StockItemDAO(dataSource);
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
