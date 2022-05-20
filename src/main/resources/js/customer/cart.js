@@ -5,6 +5,8 @@ $(function () {
     const numOfItems = $('#numOfItems')
     const totalAmount = $('#totalAmount')
     const allItem = $('input[name=all-item]')
+
+
     allItem.change(function () {
         if (allItem.prop('checked')) {
             for (const checkbox of checkBoxes) {
@@ -41,7 +43,11 @@ $(function () {
         numOfItems.text(countCheckboxes(checkBoxes))
         totalAmount.text(accounting.formatMoney(countTotalAmount(checkBoxes), '', 0, '.', '.'))
     })
-
+    // Buy now
+    const firstCheckBoxItem =     checkBoxes.eq(0)
+    if (firstCheckBoxItem.prop('checked')){
+        firstCheckBoxItem.change();
+    }
     const checkoutBtn = $('#checkout-btn')
     checkoutBtn.click(function (e) {
 
