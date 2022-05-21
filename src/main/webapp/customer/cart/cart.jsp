@@ -81,6 +81,9 @@
                             <input type="checkbox" name="item" form="delete-multiple-item-form"
                                 ${loop.count==1&&(not empty isBuyNow)?'checked':''}
                             >
+                            <c:if test="${not empty isBuyNow}">
+                                <c:remove var="isBuyNow" scope="session" />
+                            </c:if>
                         </div>
                         <div class="cart-header__product-column">
                             <a href="" class="cart-header__product-link">
