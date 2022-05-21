@@ -1,6 +1,7 @@
 package com.ctvv.controller.customer;
 
 import com.ctvv.dao.OrderDAO;
+import com.ctvv.dao.StockItemDAO;
 import com.ctvv.model.*;
 import com.ctvv.util.UniqueStringUtils;
 
@@ -27,6 +28,7 @@ public class CustomerPurchaseController
 	private final String CANCELED = "/canceled";
 	private final String HOME_PAGE = "/customer/account/manage-account.jsp";
 	private OrderDAO orderDAO;
+	private StockItemDAO stockItemDAO;
 	private HttpSession session;
 
 	@Override
@@ -147,13 +149,14 @@ public class CustomerPurchaseController
 		String orderId = UniqueStringUtils.randomOrderId();
 		List<OrderDetail> orderDetailList = new ArrayList<>();
 
-		// Remove/ subtract quantity from cart
-		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+		// Remove sold item from cart
 
+		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 		for (int i = 0; i < productIdParams.length; i++) {
 			Product product = new Product();
 			int productId = Integer.parseInt(productIdParams[i]);
 			int quantity = Integer.parseInt(quantityParams[i]);
+
 			product.setProductId(productId);
 
 			orderDetailList.add(new OrderDetail(orderId, product, productNames[i], quantity
@@ -166,10 +169,12 @@ public class CustomerPurchaseController
 		int customerId = Integer.parseInt(request.getParameter("customerId"));
 		String customerName = request.getParameter("customerName");
 		LocalDateTime orderTime = LocalDateTime.now();
-		Order order = new Order(orderId, customerId, customerName, recipientName, phoneNumber, address, orderTime, null
+		Order order = new Order(orderId, customerId, customerName, recipientName, phoneNumber, address, orderTime,
+				null
 				, null, orderDetailList, shippingFee);
 		orderDAO.create(order);
-		session.setAttribute("successMessage", "Đơn hàng " + orderId + " đã được đặt thành công, đang chờ xác nhận!");
+		session.setAttribute("successMessage", "Đơn hàng " + orderId + " đã được đặt thành công, đang chờ xác " +
+				"nhận!");
 		response.sendRedirect(request.getContextPath() + request.getServletPath() + PENDING);
 	}
 
@@ -181,6 +186,7 @@ public class CustomerPurchaseController
 			Context context = new InitialContext();
 			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
 			orderDAO = new OrderDAO(dataSource);
+			stockItemDAO = new StockItemDAO(dataSource);
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}

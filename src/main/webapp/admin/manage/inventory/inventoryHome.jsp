@@ -48,10 +48,9 @@
         </span>
     <input type="hidden" name="query-string"
            value="${not empty param.keyword?'keyword='+=param.keyword:''}">
-    <span class="order-bar__option ${param.sortBy=='default'|| empty param.sortBy?'active':''}"
-          data-sort="default">Mới
-            nhất</span>
-    <span class="order-bar__option  ${param.sortBy=='name'?'active':''}" data-sort="name">Tên</span>
+    <span class="order-bar__option  ${param.sortBy=='name'|| empty param.sortBy?'active':''}" data-sort="name">Tên</span>
+    <span class="order-bar__option ${param.sortBy=='quantity'?'active':''}"
+          data-sort="quantity">Số lượng</span>
 </div>
 <div class="list">
     <table class="table table-hover table-bordered ">

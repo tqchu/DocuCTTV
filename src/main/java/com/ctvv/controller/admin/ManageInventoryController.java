@@ -61,9 +61,8 @@ public class ManageInventoryController
 						dispatcher.forward(request, response);
 						break;
 				}
-			}
-			else {
-				listStockItems(request,response);
+			} else {
+				listStockItems(request, response);
 			}
 		}
 	}
@@ -110,26 +109,7 @@ public class ManageInventoryController
 		response.sendRedirect(request.getContextPath() + HISTORY_SERVLET);
 
 	}
-	private void listStockItems(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String keyword = request.getParameter("keyword");
-		String sortBy = request.getParameter("sortBy");
-		if (sortBy != null) {
-			switch (sortBy) {
-				case "default":
-					sortBy = null;
-					break;
-				case "name":
-					sortBy = "product_name";
-					break;
-			}
-		}
-		int begin = getBegin(request);
-		int numberOfPage = (productDAO.count(keyword, "product_name") - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
-		List<StockItem> stockItemList = stockItemDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, sortBy, "ASC");
-		request.setAttribute("list", stockItemList);
-		request.setAttribute("numberOfPages", numberOfPage);
-		goInventoryHome(request, response);
-	}
+
 	private void viewHistoryDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                                IOException {
 		int id = Integer.parseInt(request.getParameter("id"));
@@ -157,11 +137,19 @@ public class ManageInventoryController
 		goHistoryHome(request, response);
 	}
 
-	private void goInventoryHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                              IOException {
-		request.setAttribute("tab", "inventory");
-		RequestDispatcher dispatcher = request.getRequestDispatcher(HOME_PAGE);
-		dispatcher.forward(request, response);
+	private void listStockItems(
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String keyword = request.getParameter("keyword");
+		String sortBy = request.getParameter("sortBy");
+		if (sortBy==null || sortBy.equals("name")){
+			sortBy = "product_name";
+		}
+		int begin = getBegin(request);
+		int numberOfPage = (productDAO.count(keyword, "product_name") - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		List<StockItem> stockItemList = stockItemDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, sortBy, "ASC");
+		request.setAttribute("list", stockItemList);
+		request.setAttribute("numberOfPages", numberOfPage);
+		goInventoryHome(request, response);
 	}
 
 	public String getOrder(HttpServletRequest request) {
@@ -193,6 +181,13 @@ public class ManageInventoryController
 	private void goHistoryHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                            IOException {
 		request.setAttribute("tab", "inventoryHistory");
+		RequestDispatcher dispatcher = request.getRequestDispatcher(HOME_PAGE);
+		dispatcher.forward(request, response);
+	}
+
+	private void goInventoryHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                              IOException {
+		request.setAttribute("tab", "inventory");
 		RequestDispatcher dispatcher = request.getRequestDispatcher(HOME_PAGE);
 		dispatcher.forward(request, response);
 	}
