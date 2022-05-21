@@ -60,8 +60,7 @@
                                      href="${context}/admin/inventory">Kho
                                 </div>
                                 <div class="inventory_tabs__item ${tab=='inventoryHistory'?'active':''}"
-                                     href="${context}/admin/inventory/history">Lịch
-                                    sử
+                                     href="${context}/admin/inventory/history">Nhập hàng
                                 </div>
                             </div>
 

@@ -28,7 +28,7 @@
         <td class="column__action">
             <a href="" class="btn-edit btn btn-primary"
                data-bs-toggle="modal"
-               data-bs-target="#confirmModal${loop.count}">Xác nhận</a>
+               data-bs-target="#confirmModal${loop.count}">Đã vận chuyển</a>
             <!-- MODAL CONTENT -->
             <div class="modal fade" id="confirmModal${loop.count}" tabindex="-1"
                  aria-labelledby="confirmModal${loop.count}Label"
@@ -53,7 +53,7 @@
                                 Xác nhận đã bàn giao đơn hàng ${order.orderId} cho đơn vị vận chuyển?
                                 <button type="submit"
                                         class="btn btn-primary save-btn">
-                                    Lưu
+                                    Đã vận chuyển
                                 </button>
                             </form>
                         </div>

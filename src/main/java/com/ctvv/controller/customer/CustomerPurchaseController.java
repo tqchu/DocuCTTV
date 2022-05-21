@@ -122,10 +122,6 @@ public class CustomerPurchaseController
 			create(request, response);
 		} else {
 			switch (action) {
-
-				case "completed":
-					order.setStatus(Order.OrderStatus.COMPLETED);
-					break;
 				case "cancel":
 					order.setStatus(Order.OrderStatus.CANCELED);
 					break;

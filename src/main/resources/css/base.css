@@ -69,7 +69,9 @@ a:hover {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
-
+.modal-dialog{
+    max-width: 600px;
+}
 .form-control:focus {
     box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
 }
