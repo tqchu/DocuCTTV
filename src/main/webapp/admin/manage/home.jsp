@@ -47,32 +47,31 @@
                     </div>--%>
                     <div class="navbar__tab-list">
                         <a href="${context}/admin/products" class="navbar__tab ${tab=='products'?'active':''}">
-                            <span class="navbar__tab__icon"><i class="las la-wallet"></i></span>
+                            <span class="navbar__tab__icon"><i class="las la-chair"></i></span>
 
                             <span class="navbar__tab__text-description">Sản phẩm</span>
                         </a>
                         <a href="${context}/admin/inventory" class="navbar__tab
                         inventory__tab ${tab=='inventory'|| tab=='inventoryHistory'?'active':''}">
-                            <span class="navbar__tab__icon"><i class="las la-wallet"></i></span>
+                            <span class="navbar__tab__icon"><i class="las la-warehouse"></i></span>
                             <span class="navbar__tab__text-description">Kho hàng</span>
                             <div class="inventory__tabs">
                                 <div class="inventory_tabs__item ${tab=='inventory'?'active':''}"
                                      href="${context}/admin/inventory">Kho
                                 </div>
                                 <div class="inventory_tabs__item ${tab=='inventoryHistory'?'active':''}"
-                                     href="${context}/admin/inventory/history">Lịch
-                                    sử
+                                     href="${context}/admin/inventory/history">Nhập hàng
                                 </div>
                             </div>
 
                         </a>
                         <a href="${context}/admin/categories" class="navbar__tab ${tab=='categories'?'active':''}">
-                            <span class="navbar__tab__icon"><i class="las la-wallet"></i></span>
+                            <span class="navbar__tab__icon"><i class="las la-list-ul"></i></span>
 
                             <span class="navbar__tab__text-description">Danh mục</span>
                         </a>
                         <a href="${context}/admin/providers" class="navbar__tab ${tab=='providers'?'active':''}">
-                            <span class="navbar__tab__icon"><i class="las la-wallet"></i></span>
+                            <span class="navbar__tab__icon"><i class="las la-industry"></i></span>
                             <span class="navbar__tab__text-description">Nhà cung cấp</span>
                         </a>
                         <a href="${context}/admin/orders" class="navbar__tab ${tab=='orders'?'active':''}">
@@ -82,7 +81,7 @@
                             <span class="navbar__tab__text-description">Đơn hàng</span>
                         </a>
                         <a href="${context}/admin/statistics" class="navbar__tab ${tab=='statistics'?'active':''}">
-                            <span class="navbar__tab__icon"><i class="las la-wallet"></i></span>
+                            <span class="navbar__tab__icon"><i class="las la-balance-scale"></i></span>
                             <span class="navbar__tab__text-description">Thống kê</span>
                         </a>
                         <c:if test="${admin.role=='super'}">

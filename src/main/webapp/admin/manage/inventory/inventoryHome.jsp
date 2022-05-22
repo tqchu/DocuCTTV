@@ -48,10 +48,9 @@
         </span>
     <input type="hidden" name="query-string"
            value="${not empty param.keyword?'keyword='+=param.keyword:''}">
-    <span class="order-bar__option ${param.sortBy=='default'|| empty param.sortBy?'active':''}"
-          data-sort="default">Mới
-            nhất</span>
-    <span class="order-bar__option  ${param.sortBy=='name'?'active':''}" data-sort="name">Tên</span>
+    <span class="order-bar__option  ${param.sortBy=='name'|| empty param.sortBy?'active':''}" data-sort="name">Tên</span>
+    <span class="order-bar__option ${param.sortBy=='quantity'?'active':''}"
+          data-sort="quantity">Số lượng</span>
 </div>
 <div class="list">
     <table class="table table-hover table-bordered ">
@@ -61,7 +60,6 @@
             <th>Mã sản phẩm</th>
             <th>Tên sản phẩm</th>
             <th>Tổng số lượng</th>
-            <th class="column__action">Xem chi tiết</th>
         </tr>
         </thead>
         <tbody>
@@ -78,11 +76,8 @@
                 <tr>
                     <td>${loop.count + (not empty param.page?param.page-1:0) * 10}</td>
                     <td>${currentRow.productId}</td>
-                    <td>${currentRow.productName}</td>
+                    <td><a href="${context}/admin/products?action=view&id=${currentRow.productId}">${currentRow.productName}</a></td>
                     <td>${currentRow.quantity}</td>
-                    <td class="">
-                        <a href="">Xem chi tiết</a>
-                    </td>
 
                 </tr>
             </c:forEach>

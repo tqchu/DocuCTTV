@@ -70,7 +70,9 @@ public class OrderDAO
 
 	@Override
 	public Order update(Order order) {
-		String sql = "UPDATE customer_order SET recipient_name=?, phone_number=?, address=?, order_status=? WHERE " +
+		String sql = "UPDATE customer_order SET recipient_name=?, phone_number=?, address=?, order_status=?, " +
+				"completed_time=? " +
+				"WHERE " +
 				"order_id=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -78,7 +80,13 @@ public class OrderDAO
 			statement.setString(2, order.getPhoneNumber());
 			statement.setString(3, order.getAddress());
 			statement.setString(4, order.getStatus().name());
-			statement.setString(5, order.getOrderId());
+			if (order.getCompletedTime() != null) {
+				statement.setTimestamp(5, Timestamp.valueOf(order.getCompletedTime()));
+			}
+			else{
+				statement.setNull(5, Types.TIMESTAMP);
+			}
+			statement.setString(6, order.getOrderId());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
