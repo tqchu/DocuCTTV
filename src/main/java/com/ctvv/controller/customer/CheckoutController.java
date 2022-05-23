@@ -3,7 +3,6 @@ package com.ctvv.controller.customer;
 import com.ctvv.dao.ProductDAO;
 import com.ctvv.model.CartItem;
 import com.ctvv.model.Product;
-import org.checkerframework.checker.units.qual.C;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
