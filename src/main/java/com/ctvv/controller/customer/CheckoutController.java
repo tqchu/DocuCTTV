@@ -5,6 +5,8 @@ import com.ctvv.dao.StockItemDAO;
 import com.ctvv.model.CartItem;
 import com.ctvv.model.Product;
 import com.ctvv.model.StockItem;
+import com.ctvv.util.MultiMapUtils;
+import com.google.common.collect.Multimap;
 import org.checkerframework.checker.units.qual.C;
 
 import javax.naming.Context;
@@ -37,8 +39,19 @@ public class CheckoutController
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession();
-		String[] idParams = request.getParameterValues("id");
-		String[] quantityParams = request.getParameterValues("quantity");
+		String[] idParams;
+		String[] quantityParams;
+		String postData = (String) session.getAttribute("postData");
+		if (postData != null) {
+			Multimap<String, String> params = MultiMapUtils.convertToQueryStringToMultimap(postData);
+			idParams = params.get("id").toArray(new String[0]);
+			quantityParams = params.get("quantity").toArray(new String[0]);
+			session.removeAttribute("postData");
+		} else {
+
+			idParams = request.getParameterValues("id");
+			quantityParams = request.getParameterValues("quantity");
+		}
 		long totalPrice = 0;
 		boolean isOutOfStock = false;
 		List<CartItem> checkoutList = new ArrayList<>();
@@ -58,10 +71,9 @@ public class CheckoutController
 			totalPrice += (long) product.getPrice() * quantity;
 
 		}
-		if (isOutOfStock){
-			response.sendRedirect(request.getContextPath()+"/user/cart");
-		}
-		else{
+		if (isOutOfStock) {
+			response.sendRedirect(request.getContextPath() + "/user/cart");
+		} else {
 			request.setAttribute("totalPrice", totalPrice);
 			request.setAttribute("shippingFee", 200000);
 

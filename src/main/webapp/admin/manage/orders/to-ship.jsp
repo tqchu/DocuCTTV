@@ -1,3 +1,4 @@
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <thead>
@@ -17,9 +18,7 @@
         <td>${order.orderId}</td>
         <td>${order.customerName}</td>
         <td>
-            <fmt:parseDate value="${order.orderTime}" type="time" var="orderTime"
-                           pattern="yyyy-MM-dd'T'HH:mm:ss"/>
-            <fmt:formatDate value="${orderTime}" type="TIME" pattern="dd/MM/yyyy HH:mm:ss"/>
+                ${order.orderTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))}
         </td>
         <td>${order.totalPrice}</td>
         <td class="column__action">
