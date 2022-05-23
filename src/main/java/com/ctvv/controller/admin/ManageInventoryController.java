@@ -1,9 +1,6 @@
 package com.ctvv.controller.admin;
 
-import com.ctvv.dao.ImportDAO;
-import com.ctvv.dao.ImportDetailDAO;
-import com.ctvv.dao.ProductDAO;
-import com.ctvv.dao.ProviderDAO;
+import com.ctvv.dao.*;
 import com.ctvv.model.*;
 
 import javax.naming.Context;
@@ -33,6 +30,7 @@ public class ManageInventoryController
 	private ProductDAO productDAO;
 	private ProviderDAO providerDAO;
 	private ImportDetailDAO importDetailDAO;
+	private StockItemDAO stockItemDAO;
 
 	@Override
 	protected void doGet(
@@ -63,11 +61,8 @@ public class ManageInventoryController
 						dispatcher.forward(request, response);
 						break;
 				}
-
-			}
-			// Liệt kê danh sách tồn kho
-			else {
-				goInventoryHome(request, response);
+			} else {
+				listStockItems(request, response);
 			}
 		}
 	}
@@ -142,11 +137,19 @@ public class ManageInventoryController
 		goHistoryHome(request, response);
 	}
 
-	private void goInventoryHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                              IOException {
-		request.setAttribute("tab", "inventory");
-		RequestDispatcher dispatcher = request.getRequestDispatcher(HOME_PAGE);
-		dispatcher.forward(request, response);
+	private void listStockItems(
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String keyword = request.getParameter("keyword");
+		String sortBy = request.getParameter("sortBy");
+		if (sortBy==null || sortBy.equals("name")){
+			sortBy = "product_name";
+		}
+		int begin = getBegin(request);
+		int numberOfPage = (productDAO.count(keyword, "product_name") - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		List<StockItem> stockItemList = stockItemDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, sortBy, "ASC");
+		request.setAttribute("list", stockItemList);
+		request.setAttribute("numberOfPages", numberOfPage);
+		goInventoryHome(request, response);
 	}
 
 	public String getOrder(HttpServletRequest request) {
@@ -182,6 +185,13 @@ public class ManageInventoryController
 		dispatcher.forward(request, response);
 	}
 
+	private void goInventoryHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                              IOException {
+		request.setAttribute("tab", "inventory");
+		RequestDispatcher dispatcher = request.getRequestDispatcher(HOME_PAGE);
+		dispatcher.forward(request, response);
+	}
+
 	@Override
 	public void init() throws ServletException {
 		super.init();
@@ -192,6 +202,7 @@ public class ManageInventoryController
 			productDAO = new ProductDAO(dataSource);
 			providerDAO = new ProviderDAO(dataSource);
 			importDetailDAO = new ImportDetailDAO(dataSource);
+			stockItemDAO = new StockItemDAO(dataSource);
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}

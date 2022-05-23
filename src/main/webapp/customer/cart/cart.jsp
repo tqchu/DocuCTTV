@@ -1,3 +1,4 @@
+<%@ page import="com.ctvv.model.CartItem" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
@@ -63,12 +64,26 @@
                     <input type="hidden" name="id" value="${cartItem.product.productId}"
                            form="delete-multiple-item-form">
                     <input type="hidden" name="id" value="${cartItem.product.productId}"
-                           form="checkout-form" >
+                           form="checkout-form">
+                    <c:set var="errorMessage" scope="page">
+                        <%= session.getAttribute("outOfStock" +
+                                ((CartItem)(pageContext.getAttribute("cartItem"))).getProduct().getProductId()) %>
+                    </c:set>
+                    <c:if test="${errorMessage!='null'}">
+                        <div class="out-of-stock-message">
+                                ${errorMessage}
+                                <% session.removeAttribute("outOfStock" +
+                                        ((CartItem)(pageContext.getAttribute("cartItem"))).getProduct().getProductId());%>
+                        </div>
+                    </c:if>
                     <div class="cart-item">
                         <div class="cart__check-btn">
                             <input type="checkbox" name="item" form="delete-multiple-item-form"
                                 ${loop.count==1&&(not empty isBuyNow)?'checked':''}
                             >
+                            <c:if test="${not empty isBuyNow}">
+                                <c:remove var="isBuyNow" scope="session" />
+                            </c:if>
                         </div>
                         <div class="cart-header__product-column">
                             <a href="" class="cart-header__product-link">
@@ -85,7 +100,7 @@
                         </div>
                         <div class="cart-header__quantity-column">
                             <input type="number" value="${cartItem.quantity}" min="1" step="1" name="quantity"
-                                   form="checkout-form" >
+                                   form="checkout-form">
                         </div>
                         <div class="cart-header__action-column">
                             <form action="${context}/user/cart" method="POST"

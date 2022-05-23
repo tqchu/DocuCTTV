@@ -83,7 +83,6 @@ public class CustomerCartController
 			} else {
 				cartItemList.add(0, cartItem);
 			}
-			session.setAttribute("cartList", cartItemList);
 		}
 		// TH2: Cart rỗng
 		else {

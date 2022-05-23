@@ -1,7 +1,14 @@
-.cart-header,.cart-item {
+.cart-header {
     display: flex;
     padding: 10px 20px;
     align-items: center;
+    border-bottom: 1px solid var(--border-color);
+}
+ .cart-item {
+    display: flex;
+    padding: 20px 20px;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
 }
 .cart-list__empty {
     height: 400px;
@@ -15,6 +22,10 @@
 }
 .cart-header__product-name {
     margin-top: 6px;
+}
+.out-of-stock-message {
+    padding: 10px 40px;
+    color: red;
 }
 .cart__check-btn {
     padding: 10px 20px;

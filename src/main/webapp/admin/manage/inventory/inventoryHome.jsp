@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="${context}/css/admin/inventory/home.css?rd=${rand}">
 <div class="search">
     <form action="${context}/admin/inventory/search" class="search__form" method="get">
-        <input type="search" class="search__bar form-control" name="productName" placeholder="Nhập tên sản phẩm">
+        <input type="search" class="search__bar form-control" name="keyword" placeholder="Nhập tên sản phẩm">
         <button type="submit" class="btn btn-primary btn-search">
             <i class="las la-search"></i>
         </button>
@@ -48,10 +48,9 @@
         </span>
     <input type="hidden" name="query-string"
            value="${not empty param.keyword?'keyword='+=param.keyword:''}">
-    <span class="order-bar__option ${param.sortBy=='default'|| empty param.sortBy?'active':''}"
-          data-sort="default">Mới
-            nhất</span>
-    <span class="order-bar__option  ${param.sortBy=='name'?'active':''}" data-sort="name">Tên</span>
+    <span class="order-bar__option  ${param.sortBy=='name'|| empty param.sortBy?'active':''}" data-sort="name">Tên</span>
+    <span class="order-bar__option ${param.sortBy=='quantity'?'active':''}"
+          data-sort="quantity">Số lượng</span>
 </div>
 <div class="list">
     <table class="table table-hover table-bordered ">
@@ -61,7 +60,6 @@
             <th>Mã sản phẩm</th>
             <th>Tên sản phẩm</th>
             <th>Tổng số lượng</th>
-            <th class="column__action">Xem chi tiết</th>
         </tr>
         </thead>
         <tbody>
@@ -77,12 +75,9 @@
             <c:forEach items="${list}" var="currentRow" varStatus="loop">
                 <tr>
                     <td>${loop.count + (not empty param.page?param.page-1:0) * 10}</td>
-                    <td>${currentRow.product.productId}</td>
-                    <td>${currentRow.product.productName}</td>
-                    <td>Tổng số lượng</td>
-                    <td class="">
-                        <a href="">Xem chi tiết</a>
-                    </td>
+                    <td>${currentRow.productId}</td>
+                    <td><a href="${context}/admin/products?action=view&id=${currentRow.productId}">${currentRow.productName}</a></td>
+                    <td>${currentRow.quantity}</td>
 
                 </tr>
             </c:forEach>

@@ -11,6 +11,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @WebServlet(name = "ManageOrdersController", value = "/admin/orders/*")
@@ -107,9 +108,14 @@ public class ManageOrdersController
 			case "to-receive":
 				order.setStatus(Order.OrderStatus.TO_RECEIVE);
 				break;
+			case "completed":
+				order.setStatus(Order.OrderStatus.COMPLETED);
+				order.setCompletedTime(LocalDateTime.now());
+				break;
 			case "cancel":
 				order.setStatus(Order.OrderStatus.CANCELED);
 				break;
+
 
 		}
 		orderDAO.update(order);
