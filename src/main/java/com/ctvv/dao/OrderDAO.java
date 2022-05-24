@@ -8,9 +8,6 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class OrderDAO
 		extends GenericDAO<Order> {
@@ -71,7 +68,7 @@ public class OrderDAO
 	@Override
 	public Order update(Order order) {
 		String sql = "UPDATE customer_order SET recipient_name=?, phone_number=?, address=?, order_status=?, " +
-				"completed_time=? " +
+				"completed_time=?, confirm_time=?, ship_time=? " +
 				"WHERE " +
 				"order_id=?";
 		try (Connection connection = dataSource.getConnection();
@@ -86,7 +83,19 @@ public class OrderDAO
 			else{
 				statement.setNull(5, Types.TIMESTAMP);
 			}
-			statement.setString(6, order.getOrderId());
+			if (order.getConfirmTime() != null){
+				statement.setTimestamp(6,Timestamp.valueOf(order.getConfirmTime()));
+			}
+			else {
+				statement.setNull(6,Types.TIMESTAMP);
+			}
+			if (order.getShipTime() != null){
+				statement.setTimestamp(7,Timestamp.valueOf(order.getShipTime()));
+			}
+			else {
+				statement.setNull(7,Types.TIMESTAMP);
+			}
+			statement.setString(8, order.getOrderId());
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -114,9 +123,13 @@ public class OrderDAO
 			int shippingFee = resultSet.getInt("shipping_fee");
 			Order.OrderStatus status = Order.OrderStatus.valueOf(resultSet.getString("order_status").toUpperCase());
 			List<OrderDetail> orderDetailList = orderDetailDAO.getGroup(orderId);
+			LocalDateTime confirmTime = resultSet.getTimestamp("confirm_time") != null ? resultSet.getTimestamp(
+					"confirm_time").toLocalDateTime() : null;
+			LocalDateTime shipTime = resultSet.getTimestamp("ship_time") != null ? resultSet.getTimestamp(
+					"ship_time").toLocalDateTime() : null;
 			return new Order(orderId, customerId, customerName, recipientName, phoneNumber, address, orderTime,
 					completedTime,
-					status, orderDetailList, shippingFee);
+					status, orderDetailList, shippingFee, confirmTime, shipTime);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -254,6 +267,20 @@ public class OrderDAO
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
 			preparedStatement.setString(1, id);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				return map(resultSet);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public Order get(LocalDateTime shipTime) {
+		String sql = "SELECT * FROM customer_order WHERE ship_time = ?";
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+			preparedStatement.setString(1, String.valueOf(shipTime));
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				return map(resultSet);
