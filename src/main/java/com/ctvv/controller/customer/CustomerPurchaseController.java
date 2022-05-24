@@ -171,7 +171,7 @@ public class CustomerPurchaseController
 		LocalDateTime orderTime = LocalDateTime.now();
 		Order order = new Order(orderId, customerId, customerName, recipientName, phoneNumber, address, orderTime,
 				null
-				, null, orderDetailList, shippingFee);
+				, null, orderDetailList, shippingFee, null, null);
 		orderDAO.create(order);
 		session.setAttribute("successMessage", "Đơn hàng " + orderId + " đã được đặt thành công, đang chờ xác " +
 				"nhận!");
