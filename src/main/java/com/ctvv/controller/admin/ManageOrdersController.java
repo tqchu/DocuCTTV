@@ -104,9 +104,11 @@ public class ManageOrdersController
 		switch (action) {
 			case "to-ship":
 				order.setStatus(Order.OrderStatus.TO_SHIP);
+				order.setConfirmTime(LocalDateTime.now());
 				break;
 			case "to-receive":
 				order.setStatus(Order.OrderStatus.TO_RECEIVE);
+				order.setShipTime(LocalDateTime.now());
 				break;
 			case "completed":
 				order.setStatus(Order.OrderStatus.COMPLETED);
