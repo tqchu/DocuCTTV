@@ -18,8 +18,7 @@
         <td>${order.orderId}</td>
         <td>${order.customerName}</td>
         <td>
-<%--                ${order.completedTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))}--%>
-
+               ${order.completedTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))}
         </td>
         <td>${order.totalPrice}</td>
         <td class="column__action">
