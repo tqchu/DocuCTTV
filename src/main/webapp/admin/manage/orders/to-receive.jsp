@@ -5,7 +5,7 @@
 <tr>
     <th>Mã đơn hàng</th>
     <th>Tên khách hàng</th>
-    <th>Thời gian giao hàng</th>
+    <th>Thời gian giao hàng cho vận chuyển</th>
     <th>Tổng giá</th>
     <th></th>
     <th></th>

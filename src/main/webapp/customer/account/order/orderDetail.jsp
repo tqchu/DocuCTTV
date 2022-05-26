@@ -54,7 +54,7 @@
         </c:if>
         <c:if test="${not empty order.shipTime}">
             <div class="order__time-line-item">
-                <div class="order__time-line-item__name">Thời gian giao hàng</div>
+                <div class="order__time-line-item__name">Thời gian giao hàng cho vận chuyển</div>
 
                 <div class="order__time-line-item__value price">
                     <fmt:parseDate value="${order.shipTime}" type="time" var="shipTime"
