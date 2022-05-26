@@ -12,13 +12,13 @@ public class Order {
 	private String phoneNumber;
 	private String address;
 	private LocalDateTime orderTime;
+	private LocalDateTime confirmTime;
+	private LocalDateTime shipTime;
 	private LocalDateTime completedTime;
 	private OrderStatus status;
 	private int shippingFee;
 	private long totalPrice;
 	private List<OrderDetail> orderDetailList;
-	private LocalDateTime confirmTime;
-	private LocalDateTime shipTime;
 
 	public Order(Order order) {
 		this.orderId = order.orderId;

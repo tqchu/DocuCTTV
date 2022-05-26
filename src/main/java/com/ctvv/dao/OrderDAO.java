@@ -2,6 +2,7 @@ package com.ctvv.dao;
 
 import com.ctvv.model.Order;
 import com.ctvv.model.OrderDetail;
+import com.mysql.cj.xdevapi.Type;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -41,7 +42,7 @@ public class OrderDAO
 
 	@Override
 	public Order create(Order order) {
-		String sql = "INSERT INTO customer_order VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+		String sql = "INSERT INTO customer_order VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql)) {
 			statement.setString(1, order.getOrderId());
@@ -51,10 +52,12 @@ public class OrderDAO
 			statement.setString(5, order.getPhoneNumber());
 			statement.setString(6, order.getAddress());
 			statement.setTimestamp(7, Timestamp.valueOf(order.getOrderTime()));
-			statement.setTimestamp(8, null);
-			statement.setInt(9, order.getShippingFee());
-			statement.setString(10, Order.OrderStatus.PENDING.name());
-			statement.execute();
+			statement.setNull(8, Types.TIMESTAMP);
+			statement.setNull(9, Types.TIMESTAMP);
+			statement.setNull(10, Types.TIMESTAMP);
+			statement.setString(11, Order.OrderStatus.PENDING.name());
+			statement.setInt(12, order.getShippingFee());
+			statement.executeUpdate();
 			statement.close();
 			connection.close();
 			orderDetailDAO.create(order.getOrderDetailList());
