@@ -1,14 +1,21 @@
-
 .order__time-line {
     width: 50%;
-}
-.order__time-line-item {
-    display: flex;
-}
-.order__time-line-item__name {
-    font-weight: 500;
-    font-size: 16px;
-}
+}.order__time-line-item {
+     display: flex;
+     margin-top: 10px;
+ }.order__time-line-item__name {
+      font-weight: 500;
+      font-size: 16px;
+      width: 280px;
+  }
 .order__time-line-item__value {
     margin-left: 10px;
+}
+.order__recipient-info {
+    margin-left: 80px;
+}
+.order__customer-info__heading {
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 10px;
 }

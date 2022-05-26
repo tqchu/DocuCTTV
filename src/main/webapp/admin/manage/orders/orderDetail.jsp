@@ -83,9 +83,31 @@
                 <fmt:formatDate value="${orderTime}" type="TIME" pattern="dd/MM/yyyy HH:mm:ss"/>
             </div>
         </div>
+        <c:if test="${not empty order.confirmTime}">
+            <div class="order__summary__time-line-item">
+                <div class="order__summary__time-line-item__name">Thời gian xác nhận</div>
+
+                <div class="order__summary__time-line-item__value price">
+                    <fmt:parseDate value="${order.confirmTime}" type="time" var="confirmTime"
+                                   pattern="yyyy-MM-dd'T'HH:mm:ss"/>
+                    <fmt:formatDate value="${confirmTime}" type="TIME" pattern="dd/MM/yyyy HH:mm:ss"/>
+                </div>
+            </div>
+        </c:if>
+        <c:if test="${not empty order.shipTime}">
+            <div class="order__summary__time-line-item">
+                <div class="order__summary__time-line-item__name">Thời gian giao hàng cho vận chuyển</div>
+
+                <div class="order__summary__time-line-item__value price">
+                    <fmt:parseDate value="${order.shipTime}" type="time" var="shipTime"
+                                   pattern="yyyy-MM-dd'T'HH:mm:ss"/>
+                    <fmt:formatDate value="${shipTime}" type="TIME" pattern="dd/MM/yyyy HH:mm:ss"/>
+                </div>
+            </div>
+        </c:if>
         <c:if test="${not empty order.completedTime}">
             <div class="order__summary__time-line-item">
-                <div class="order__summary__time-line-item__name">Thời gian giao</div>
+                <div class="order__summary__time-line-item__name">Thời gian hoàn thành</div>
 
                 <div class="order__summary__time-line-item__value price">
                     <fmt:parseDate value="${order.completedTime}" type="time" var="completedTime"

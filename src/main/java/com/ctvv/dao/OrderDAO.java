@@ -2,7 +2,6 @@ package com.ctvv.dao;
 
 import com.ctvv.model.Order;
 import com.ctvv.model.OrderDetail;
-import com.mysql.cj.xdevapi.Type;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -23,7 +22,7 @@ public class OrderDAO
 	public Order get(int id) {
 		String sql = "SELECT * FROM customer_order WHERE order_id = ?";
 		try (Connection connection = dataSource.getConnection();
-		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+		     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			preparedStatement.setInt(1, id);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
@@ -52,12 +51,12 @@ public class OrderDAO
 			statement.setString(5, order.getPhoneNumber());
 			statement.setString(6, order.getAddress());
 			statement.setTimestamp(7, Timestamp.valueOf(order.getOrderTime()));
-			statement.setNull(8, Types.TIMESTAMP);
-			statement.setNull(9, Types.TIMESTAMP);
-			statement.setNull(10, Types.TIMESTAMP);
+			statement.setTimestamp(8, null);
+			statement.setTimestamp(9,null);
+			statement.setTimestamp(10, null);
 			statement.setString(11, Order.OrderStatus.PENDING.name());
 			statement.setInt(12, order.getShippingFee());
-			statement.executeUpdate();
+			statement.execute();
 			statement.close();
 			connection.close();
 			orderDetailDAO.create(order.getOrderDetailList());
@@ -71,32 +70,30 @@ public class OrderDAO
 	@Override
 	public Order update(Order order) {
 		String sql = "UPDATE customer_order SET recipient_name=?, phone_number=?, address=?, order_status=?, " +
-				"completed_time=?, confirm_time=?, ship_time=? " +
-				"WHERE " +
-				"order_id=?";
+				" confirm_time=?, ship_time=?, completed_time=? WHERE order_id=?";
 		try (Connection connection = dataSource.getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, order.getRecipientName());
 			statement.setString(2, order.getPhoneNumber());
 			statement.setString(3, order.getAddress());
 			statement.setString(4, order.getStatus().name());
-			if (order.getCompletedTime() != null) {
-				statement.setTimestamp(5, Timestamp.valueOf(order.getCompletedTime()));
-			}
-			else{
-				statement.setNull(5, Types.TIMESTAMP);
-			}
 			if (order.getConfirmTime() != null){
-				statement.setTimestamp(6,Timestamp.valueOf(order.getConfirmTime()));
+				statement.setTimestamp(5,Timestamp.valueOf(order.getConfirmTime()));
+			}
+			else {
+				statement.setNull(5,Types.TIMESTAMP);
+			}
+			if (order.getShipTime() != null){
+				statement.setTimestamp(6,Timestamp.valueOf(order.getShipTime()));
 			}
 			else {
 				statement.setNull(6,Types.TIMESTAMP);
 			}
-			if (order.getShipTime() != null){
-				statement.setTimestamp(7,Timestamp.valueOf(order.getShipTime()));
+			if (order.getCompletedTime() != null) {
+				statement.setTimestamp(7, Timestamp.valueOf(order.getCompletedTime()));
 			}
-			else {
-				statement.setNull(7,Types.TIMESTAMP);
+			else{
+				statement.setNull(7, Types.TIMESTAMP);
 			}
 			statement.setString(8, order.getOrderId());
 			statement.executeUpdate();
@@ -121,18 +118,17 @@ public class OrderDAO
 			String phoneNumber = resultSet.getString("phone_number");
 			String address = resultSet.getString("address");
 			LocalDateTime orderTime = resultSet.getTimestamp("order_time").toLocalDateTime();
+			LocalDateTime confirmTime = resultSet.getTimestamp("confirm_time") != null ? resultSet.getTimestamp(
+					"confirm_time").toLocalDateTime() : null;
+			LocalDateTime shipTime = resultSet.getTimestamp("ship_time") != null ? resultSet.getTimestamp(
+					"ship_time").toLocalDateTime() : null;
 			LocalDateTime completedTime = resultSet.getTimestamp("completed_time") != null ? resultSet.getTimestamp(
 					"completed_time").toLocalDateTime() : null;
 			int shippingFee = resultSet.getInt("shipping_fee");
 			Order.OrderStatus status = Order.OrderStatus.valueOf(resultSet.getString("order_status").toUpperCase());
 			List<OrderDetail> orderDetailList = orderDetailDAO.getGroup(orderId);
-			LocalDateTime confirmTime = resultSet.getTimestamp("confirm_time") != null ? resultSet.getTimestamp(
-					"confirm_time").toLocalDateTime() : null;
-			LocalDateTime shipTime = resultSet.getTimestamp("ship_time") != null ? resultSet.getTimestamp(
-					"ship_time").toLocalDateTime() : null;
-			return new Order(orderId, customerId, customerName, recipientName, phoneNumber, address, orderTime,
-					completedTime,
-					status, orderDetailList, shippingFee, confirmTime, shipTime);
+			return new Order(orderId, customerId, customerName, recipientName, phoneNumber, address, orderTime, confirmTime, shipTime,
+					completedTime, status, orderDetailList, shippingFee);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -145,7 +141,7 @@ public class OrderDAO
 		String sql = "SELECT * FROM customer_order " +
 				(sortBy != null ? " ORDER BY " + sortBy + " " + order : "");
 		try (Connection connection = dataSource.getConnection();
-		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+		     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				orderList.add(map(resultSet));
@@ -160,7 +156,7 @@ public class OrderDAO
 		List<Order> orderList = new ArrayList<>();
 		String sql = "SELECT * FROM customer_order WHERE order_status=?";
 		try (Connection connection = dataSource.getConnection();
-		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+		     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			preparedStatement.setString(1, status.toString());
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
@@ -268,10 +264,10 @@ public class OrderDAO
 	public Order get(String id) {
 		String sql = "SELECT * FROM customer_order WHERE order_id = ?";
 		try (Connection connection = dataSource.getConnection();
-		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+		     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			preparedStatement.setString(1, id);
 			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next()) {
+			while (resultSet.next   ()) {
 				return map(resultSet);
 			}
 		} catch (SQLException e) {
@@ -279,10 +275,11 @@ public class OrderDAO
 		}
 		return null;
 	}
+
 	public Order get(LocalDateTime shipTime) {
 		String sql = "SELECT * FROM customer_order WHERE ship_time = ?";
 		try (Connection connection = dataSource.getConnection();
-			 PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+			 PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			preparedStatement.setString(1, String.valueOf(shipTime));
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {

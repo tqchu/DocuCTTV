@@ -113,7 +113,7 @@
     flex-direction: column;
 }
 .order__summary__time-line-item__name {
-    width: 160px;
+    width: 240px;
 }
 .order__summary__price {
     margin-left: auto;

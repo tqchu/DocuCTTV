@@ -5,7 +5,7 @@
 <tr>
     <th>Mã đơn hàng</th>
     <th>Tên khách hàng</th>
-    <th>Thời gian đặt</th>
+    <th>Thời gian giao hàng cho vận chuyển</th>
     <th>Tổng giá</th>
     <th></th>
     <th></th>
@@ -18,7 +18,7 @@
         <td>${order.orderId}</td>
         <td>${order.customerName}</td>
         <td>
-                ${order.orderTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))}
+                ${order.shipTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))}
         </td>
         <td>${order.totalPrice}</td>
         <td class="column__action">
