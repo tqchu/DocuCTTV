@@ -136,8 +136,7 @@ public class CustomerPurchaseController
 
 	private void create(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String recipientName = request.getParameter("recipientName");
-		String
-				phoneNumber = request.getParameter("phoneNumber");
+		String phoneNumber = request.getParameter("phoneNumber");
 		String address = request.getParameter("address");
 		int shippingFee = Integer.parseInt(request.getParameter("shippingFee"));
 
@@ -170,17 +169,14 @@ public class CustomerPurchaseController
 		String customerName = request.getParameter("customerName");
 		LocalDateTime orderTime = LocalDateTime.now();
 		Order order = new Order(orderId, customerId, customerName, recipientName, phoneNumber, address, orderTime,
-				null
-				, null, orderDetailList, shippingFee, null, null);
+				null, null, null, null, orderDetailList, shippingFee);
 		orderDAO.create(order);
-		session.setAttribute("successMessage", "Đơn hàng " + orderId + " đã được đặt thành công, đang chờ xác " +
-				"nhận!");
+		session.setAttribute("successMessage", "Đơn hàng " + orderId + " đã được đặt thành công, đang chờ xác nhận!");
 		response.sendRedirect(request.getContextPath() + request.getServletPath() + PENDING);
 	}
 
 	@Override
 	public void init() throws ServletException {
-		super.init();
 		super.init();
 		try {
 			Context context = new InitialContext();

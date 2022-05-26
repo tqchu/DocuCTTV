@@ -132,21 +132,6 @@ public class ManageOrdersController
 		dispatcher.forward(request, response);
 	}
 
-	private void viewPendingOrders(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-			IOException {
-
-	}
-
-	private void viewToShipOrders(HttpServletRequest request, HttpServletResponse response) {
-
-	}
-
-	private void viewToReceiveOrders(HttpServletRequest request, HttpServletResponse response) {
-	}
-
-	private void viewCompletedOrders(HttpServletRequest request, HttpServletResponse response) {
-	}
-
 	@Override
 	public void init() throws ServletException {
 		super.init();

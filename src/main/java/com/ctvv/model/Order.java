@@ -12,34 +12,36 @@ public class Order {
 	private String phoneNumber;
 	private String address;
 	private LocalDateTime orderTime;
+	private LocalDateTime confirmTime;
+	private LocalDateTime shipTime;
 	private LocalDateTime completedTime;
 	private OrderStatus status;
 	private int shippingFee;
 	private long totalPrice;
 	private List<OrderDetail> orderDetailList;
-	private LocalDateTime confirmTime;
-	private LocalDateTime shipTime;
+
 
 	public Order(Order order) {
 		this.orderId = order.orderId;
 		this.customerId = order.customerId;
 		this.customerName = order.customerName;
+		this.recipientName = order.recipientName;
 		this.phoneNumber = order.phoneNumber;
 		this.address = order.address;
 		this.orderTime = order.orderTime;
+		this.confirmTime = order.confirmTime;
+		this.shipTime = order.shipTime;
 		this.completedTime = order.completedTime;
 		this.status = order.status;
 		this.orderDetailList = new ArrayList<>(order.orderDetailList);
 		this.shippingFee = order.shippingFee;
 		this.totalPrice = order.totalPrice;
-		this.confirmTime = order.confirmTime;
-		this.shipTime = order.shipTime;
 	}
 
 	public Order(
 			String orderId, int customerId, String customerName, String recipientName, String phoneNumber, String address,
-			LocalDateTime orderTime, LocalDateTime completedTime, OrderStatus status,
-			List<OrderDetail> orderDetailList, int shippingFee, LocalDateTime confirmTime, LocalDateTime shipTime) {
+			LocalDateTime orderTime,LocalDateTime confirmTime, LocalDateTime shipTime, LocalDateTime completedTime, OrderStatus status,
+			List<OrderDetail> orderDetailList, int shippingFee) {
 		this.orderId = orderId;
 		this.customerId = customerId;
 		this.customerName = customerName;
@@ -47,12 +49,12 @@ public class Order {
 		this.phoneNumber = phoneNumber;
 		this.address = address;
 		this.orderTime = orderTime;
+		this.confirmTime = confirmTime;
+		this.shipTime = shipTime;
 		this.completedTime = completedTime;
 		this.status = status;
 		this.orderDetailList = new ArrayList<>(orderDetailList);
 		this.shippingFee = shippingFee;
-		this.confirmTime = confirmTime;
-		this.shipTime = shipTime;
 		setTotalPrice();
 	}
 
@@ -112,6 +114,20 @@ public class Order {
 		this.orderTime = orderTime;
 	}
 
+	public LocalDateTime getConfirmTime() {
+		return confirmTime;
+	}
+
+	public void setConfirmTime(LocalDateTime confirmTime) {
+		this.confirmTime = confirmTime;
+	}
+
+	public LocalDateTime getShipTime() { return shipTime;}
+
+	public void setShipTime(LocalDateTime shipTime) {
+		this.shipTime = shipTime;
+	}
+
 	public LocalDateTime getCompletedTime() {
 		return completedTime;
 	}
@@ -156,19 +172,6 @@ public class Order {
 		return totalPrice;
 	}
 
-	public LocalDateTime getConfirmTime() {
-		return confirmTime;
-	}
-
-	public void setConfirmTime(LocalDateTime confirmTime) {
-		this.confirmTime = confirmTime;
-	}
-
-	public LocalDateTime getShipTime() { return shipTime;}
-
-	public void setShipTime(LocalDateTime shipTime) {
-		this.shipTime = shipTime;
-	}
 
 	public enum OrderStatus {
 		PENDING,
