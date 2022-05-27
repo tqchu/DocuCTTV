@@ -52,7 +52,7 @@ public class OrderDAO
 			statement.setString(6, order.getAddress());
 			statement.setTimestamp(7, Timestamp.valueOf(order.getOrderTime()));
 			statement.setTimestamp(8, null);
-			statement.setTimestamp(9,null);
+			statement.setTimestamp(9, null);
 			statement.setTimestamp(10, null);
 			statement.setString(11, Order.OrderStatus.PENDING.name());
 			statement.setInt(12, order.getShippingFee());
@@ -77,22 +77,19 @@ public class OrderDAO
 			statement.setString(2, order.getPhoneNumber());
 			statement.setString(3, order.getAddress());
 			statement.setString(4, order.getStatus().name());
-			if (order.getConfirmTime() != null){
-				statement.setTimestamp(5,Timestamp.valueOf(order.getConfirmTime()));
+			if (order.getConfirmTime() != null) {
+				statement.setTimestamp(5, Timestamp.valueOf(order.getConfirmTime()));
+			} else {
+				statement.setNull(5, Types.TIMESTAMP);
 			}
-			else {
-				statement.setNull(5,Types.TIMESTAMP);
-			}
-			if (order.getShipTime() != null){
-				statement.setTimestamp(6,Timestamp.valueOf(order.getShipTime()));
-			}
-			else {
-				statement.setNull(6,Types.TIMESTAMP);
+			if (order.getShipTime() != null) {
+				statement.setTimestamp(6, Timestamp.valueOf(order.getShipTime()));
+			} else {
+				statement.setNull(6, Types.TIMESTAMP);
 			}
 			if (order.getCompletedTime() != null) {
 				statement.setTimestamp(7, Timestamp.valueOf(order.getCompletedTime()));
-			}
-			else{
+			} else {
 				statement.setNull(7, Types.TIMESTAMP);
 			}
 			statement.setString(8, order.getOrderId());
@@ -127,7 +124,8 @@ public class OrderDAO
 			int shippingFee = resultSet.getInt("shipping_fee");
 			Order.OrderStatus status = Order.OrderStatus.valueOf(resultSet.getString("order_status").toUpperCase());
 			List<OrderDetail> orderDetailList = orderDetailDAO.getGroup(orderId);
-			return new Order(orderId, customerId, customerName, recipientName, phoneNumber, address, orderTime, confirmTime, shipTime,
+			return new Order(orderId, customerId, customerName, recipientName, phoneNumber, address, orderTime,
+					confirmTime, shipTime,
 					completedTime, status, orderDetailList, shippingFee);
 
 		} catch (SQLException e) {
@@ -236,6 +234,39 @@ public class OrderDAO
 		return count;
 	}
 
+	public int count(Order.OrderStatus status, LocalDateTime from, LocalDateTime to) {
+		String time = null;
+		switch (status.name()){
+			case "PENDING":
+				time = "order_time";
+				break;
+			case "TO-SHIP":
+				time = "confirm_time";
+				break;
+			case "TO-RECEIVE":
+				time = "ship_time";
+				break;
+			case "COMPLETED":
+				time = "completed_time";
+				break;
+		}
+		int count = 0;
+		String sql = "SELECT COUNT(*) AS count FROM customer_order WHERE order_status=? AND " + time +" BETWEEN  ? " +
+				"and ? ";
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setString(1, status.name());
+			statement.setTimestamp(2, Timestamp.valueOf(from));
+			statement.setTimestamp(3, Timestamp.valueOf(to));
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			count = resultSet.getInt("count");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
 	public int countForCustomer(Order.OrderStatus status, String keyword, int id) {
 		String sql;
 		if (keyword != null) {
@@ -267,7 +298,7 @@ public class OrderDAO
 		     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			preparedStatement.setString(1, id);
 			ResultSet resultSet = preparedStatement.executeQuery();
-			while (resultSet.next   ()) {
+			while (resultSet.next()) {
 				return map(resultSet);
 			}
 		} catch (SQLException e) {
@@ -279,7 +310,7 @@ public class OrderDAO
 	public Order get(LocalDateTime shipTime) {
 		String sql = "SELECT * FROM customer_order WHERE ship_time = ?";
 		try (Connection connection = dataSource.getConnection();
-			 PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+		     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			preparedStatement.setString(1, String.valueOf(shipTime));
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
