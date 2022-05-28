@@ -115,7 +115,7 @@ public class ManageOrdersController
 				order.setStatus(Order.OrderStatus.COMPLETED);
 				order.setCompletedTime(LocalDateTime.now());
 				String toEmail = "truongquangchu.tqc@gmail.com";
-				EmailUtils.send(toEmail);
+				EmailUtils.send(EmailUtils.EMAIL_TYPE.SHIPPED,toEmail,order, null, null);
 				break;
 			case "cancel":
 				order.setStatus(Order.OrderStatus.CANCELED);
