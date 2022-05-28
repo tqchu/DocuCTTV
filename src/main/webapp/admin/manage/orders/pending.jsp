@@ -87,8 +87,10 @@
                                 <input type="hidden" value="cancel" name="action">
                                 <input type="hidden" value="${order.orderId}" name="id">
                                 Bạn có chắc chắn hủy đơn hàng ${order.orderId}
+                                <input type="text" name="reason" placeholder="Lý do" class="form-control cancel-info-input">
+                                <input type="text" name="recommend" placeholder="Đề xuất" class="form-control cancel-info-input">
                                 <button type="submit"
-                                        class="btn btn-delete">
+                                        class="btn btn-delete mt-4">
                                     Xác nhận
                                 </button>
                             </form>

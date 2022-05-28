@@ -3,6 +3,7 @@ package com.ctvv.controller.customer;
 import com.ctvv.dao.OrderDAO;
 import com.ctvv.dao.StockItemDAO;
 import com.ctvv.model.*;
+import com.ctvv.util.EmailUtils;
 import com.ctvv.util.UniqueStringUtils;
 
 import javax.naming.Context;
@@ -117,12 +118,13 @@ public class CustomerPurchaseController
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession();
 		String action = request.getParameter("action");
+		Customer customer = (Customer) session.getAttribute("customer");
 		// to-ship, to-receive, cancel
-		String id = (request.getParameter("id"));
-		Order order = orderDAO.get(id);
 		if (action.equals("create")) {
 			create(request, response);
 		} else {
+			String id = (request.getParameter("id"));
+			Order order = orderDAO.get(id);
 			switch (action) {
 				case "cancel":
 					order.setStatus(Order.OrderStatus.CANCELED);
@@ -171,6 +173,7 @@ public class CustomerPurchaseController
 		Order order = new Order(orderId, customerId, customerName, recipientName, phoneNumber, address, orderTime,
 				null, null, null, null, orderDetailList, shippingFee);
 		orderDAO.create(order);
+		EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.ORDERED_ORDER, "truongquangchu.tqc@gmail.com",order,null,null);
 		session.setAttribute("successMessage", "Đơn hàng " + orderId + " đã được đặt thành công, đang chờ xác nhận!");
 		response.sendRedirect(request.getContextPath() + request.getServletPath() + PENDING);
 	}
