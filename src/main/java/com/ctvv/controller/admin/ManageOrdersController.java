@@ -2,6 +2,7 @@ package com.ctvv.controller.admin;
 
 import com.ctvv.dao.OrderDAO;
 import com.ctvv.model.Order;
+import com.ctvv.util.EmailUtils;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -113,6 +114,8 @@ public class ManageOrdersController
 			case "completed":
 				order.setStatus(Order.OrderStatus.COMPLETED);
 				order.setCompletedTime(LocalDateTime.now());
+				String toEmail = "truongquangchu.tqc@gmail.com";
+				EmailUtils.send(toEmail);
 				break;
 			case "cancel":
 				order.setStatus(Order.OrderStatus.CANCELED);

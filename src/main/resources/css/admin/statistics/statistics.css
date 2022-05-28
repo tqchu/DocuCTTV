@@ -1,0 +1,51 @@
+#period-form {
+    margin-left: 24px;
+    margin-bottom: 20px;
+}
+
+#revenueImportChart {
+    height: 370px;
+    width: 100%;
+    margin-right: 40px;
+    margin-bottom: 100px;
+}
+
+#orderChart {
+    height: 370px;
+    width: 100%;
+    margin-bottom: 100px;
+}
+.revenue-import-information {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+.revenue-import-information-item {
+    display: flex;
+    margin-left: 320px;
+}
+.revenue-import-information-item__text {
+    width: 160px;
+    font-weight: 500;
+}
+
+.paginate_button {
+    color: var(--primary-color);
+    padding: 4px 14px;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: NONE;
+    border: 1px solid #dee2e6;
+}
+.paginate_button.current {
+    color: #fff;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.stats-product-list__heading-text {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 60px;
+}
