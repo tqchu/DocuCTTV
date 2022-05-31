@@ -67,26 +67,30 @@ public class CustomerLoginController
 		if (Objects.equals(from, "")) {
 			from = request.getContextPath() + HOME_SERVLET;
 		}
-		String phoneNumber = request.getParameter("phoneNumber");
+		String account = request.getParameter("account");
 		String password = request.getParameter("password");
-		Customer customer = new Customer(phoneNumber, password);
+		Customer customer = new Customer();
+		boolean isPhoneNumber = (account.indexOf('@') == -1);
+		if (isPhoneNumber){
+			customer.setPhoneNumber(account);
+		}
+		else{
+			customer.setEmail(account);
+		}
+		customer.setPassword(password);
+
 		Customer authenticatedCustomer;
 		// TH1: validate thành công
-		try {
-			authenticatedCustomer = customerDAO.validate(customer);
-		} catch (SQLException e) {
-			throw new ServletException();
-		}
+		authenticatedCustomer = customerDAO.validate(customer);
 		if (authenticatedCustomer != null) {
 			session.setAttribute("customer", authenticatedCustomer);
 			String postData = (String) session.getAttribute("postData");
-			if (postData!=null){
-//				response.set
-//				response.se
+			if (postData != null) {
+				//				response.set
+				//				response.se
 				response.setStatus(307);
 				response.setHeader("Location", from);
-			}
-			else {
+			} else {
 				response.sendRedirect(from);
 			}
 		} else {

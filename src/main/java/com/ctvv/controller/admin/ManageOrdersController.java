@@ -1,6 +1,8 @@
 package com.ctvv.controller.admin;
 
+import com.ctvv.dao.CustomerDAO;
 import com.ctvv.dao.OrderDAO;
+import com.ctvv.model.Customer;
 import com.ctvv.model.Order;
 import com.ctvv.util.EmailUtils;
 
@@ -26,6 +28,7 @@ public class ManageOrdersController
 	private final String CANCELED = "/canceled";
 	private final String HOME_PAGE = "/admin/manage/home.jsp";
 	private OrderDAO orderDAO;
+	private CustomerDAO customerDAO;
 	private HttpSession session;
 
 	@Override
@@ -102,26 +105,29 @@ public class ManageOrdersController
 		// to-ship, to-receive, cancel
 		String id = (request.getParameter("id"));
 		Order order = orderDAO.get(id);
+		String toEmail = ((Customer) session.getAttribute("customer")).getEmail();
 		switch (action) {
 			case "to-ship":
 				order.setStatus(Order.OrderStatus.TO_SHIP);
 				order.setConfirmTime(LocalDateTime.now());
+				EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.CONFIRMED_ORDER,toEmail, order, null, null);
 				break;
 			case "to-receive":
 				order.setStatus(Order.OrderStatus.TO_RECEIVE);
 				order.setShipTime(LocalDateTime.now());
+				EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.SHIPPED_ORDER,toEmail, order, null, null);
 				break;
 			case "completed":
 				order.setStatus(Order.OrderStatus.COMPLETED);
 				order.setCompletedTime(LocalDateTime.now());
-				String toEmail = "truongquangchu.tqc@gmail.com";
-				EmailUtils.send(toEmail);
+				EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.COMPLETED_ORDER,toEmail,order, null, null);
 				break;
 			case "cancel":
+				String reason = request.getParameter("reason");
+				String recommend = request.getParameter("recommend");
+				EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.CANCELED_ORDER,toEmail, order, reason, recommend);
 				order.setStatus(Order.OrderStatus.CANCELED);
 				break;
-
-
 		}
 		orderDAO.update(order);
 		response.sendRedirect(request.getParameter("from"));
@@ -142,6 +148,7 @@ public class ManageOrdersController
 			Context context = new InitialContext();
 			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
 			orderDAO = new OrderDAO(dataSource);
+			customerDAO = new CustomerDAO(dataSource);
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}

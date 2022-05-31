@@ -34,3 +34,4 @@ context.xml
 web.xml
 test/
 src/main/resources/images/products
+config.properties
