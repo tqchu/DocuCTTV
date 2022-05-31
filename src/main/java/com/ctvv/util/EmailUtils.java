@@ -8,7 +8,9 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 public class EmailUtils {
-	public static void sendOrderEmail(EMAIL_TYPE type, String toEmail, Order order, String reason, String recommend) {
+	public static void sendOrderEmail(
+			EMAIL_TYPE type, String toEmail, Order order, String reason,
+			String recommend) {
 		String fromEmail = "quangchu12112002@gmail.com";
 		String host = "smtp.gmail.com";
 
@@ -21,11 +23,13 @@ public class EmailUtils {
 		properties.put("mail.smtp.ssl.enable", "true");
 		properties.put("mail.smtp.auth", "true");
 
+		Properties appProps = PropertiesUtil.get("config.properties");
 		Session session = Session.getInstance(properties, new Authenticator() {
 
 			protected PasswordAuthentication getPasswordAuthentication() {
 
-				return new PasswordAuthentication("noithatctvv@gmail.com", "noithatctvv70959798");
+				return new PasswordAuthentication(appProps.getProperty("email.user"), appProps.getProperty("email" +
+						".password"));
 
 			}
 
@@ -74,6 +78,20 @@ public class EmailUtils {
 		}
 	}
 
+	private static String getOrderedOrderEmailContent(Order order) {
+		return "<p>Xin chào " + order.getCustomerName() + ",</p>\r\n"
+				+ "    <p>Đơn hàng " + "<a href='http://localhost:8080" +
+				"/noithatctvv/user/purchase/" + order.getOrderId() + "'>" + order.getOrderId() + "</a> đã được đặt " +
+				"thành công!"
+				+ "<p>Mọi cập nhật về đơn hàng quý khách có thể theo dõi trên website của chúng tôi hoặc qua " +
+				"email!</p>"
+				+
+				"<p>Mọi vấn đề xin quý khách hàng vui lòng liên hệ chúng tôi để được giải " +
+				"quyết!" +
+				"<p>Chúc quý khách một ngày tốt lành! " +
+				"</p>";
+	}
+
 	private static String getCanceledEmailContent(Order order, String reason, String recommend) {
 		return "<p>Xin chào " + order.getCustomerName() + ",</p>\r\n"
 				+ "    <p>CTVV chân thành xin lỗi quý khách hàng vì đơn hàng " + "<a href='http://localhost:8080" +
@@ -88,17 +106,6 @@ public class EmailUtils {
 				"vào" +
 				" lần sau.</p> "
 				+ "<p> Chân thành cảm ơn quý khách! Chúc quý khách một ngày tốt lành! </p>";
-	}
-
-	private static String getCompletedOrderEmailContent(Order order) {
-		return "<p>Xin chào " + order.getCustomerName() + ",</p>\r\n"
-				+ "    <p>Đơn hàng " + "<a href='http://localhost:8080" +
-				"/noithatctvv/user/purchase/" + order.getOrderId() + "'>" + order.getOrderId() + "</a> đã được giao!"
-				+ "<p> CTVV chân thành cảm ơn quý khách vì đã tin tưởng cửa hàng chúng tôi!</p>" +
-				"<p>Mọi vấn đề liên quan đến sản phẩm, xin quý khách hàng vui lòng liên hệ chúng tôi để được giải " +
-				"quyết!" +
-				"<p>Chúc quý khách một ngày tốt lành! " +
-				"</p>";
 	}
 
 	private static String getConfirmedOrderEmailContent(Order order) {
@@ -127,21 +134,15 @@ public class EmailUtils {
 				"</p>";
 	}
 
-	private static String getOrderedOrderEmailContent(Order order) {
+	private static String getCompletedOrderEmailContent(Order order) {
 		return "<p>Xin chào " + order.getCustomerName() + ",</p>\r\n"
 				+ "    <p>Đơn hàng " + "<a href='http://localhost:8080" +
-				"/noithatctvv/user/purchase/" + order.getOrderId() + "'>" + order.getOrderId() + "</a> đã được đặt " +
-				"thành công!"
-				+ "<p>Mọi cập nhật về đơn hàng quý khách có thể theo dõi trên website của chúng tôi hoặc qua " +
-				"email!</p>"
-				+
-				"<p>Mọi vấn đề xin quý khách hàng vui lòng liên hệ chúng tôi để được giải " +
+				"/noithatctvv/user/purchase/" + order.getOrderId() + "'>" + order.getOrderId() + "</a> đã được giao!"
+				+ "<p> CTVV chân thành cảm ơn quý khách vì đã tin tưởng cửa hàng chúng tôi!</p>" +
+				"<p>Mọi vấn đề liên quan đến sản phẩm, xin quý khách hàng vui lòng liên hệ chúng tôi để được giải " +
 				"quyết!" +
 				"<p>Chúc quý khách một ngày tốt lành! " +
 				"</p>";
-	}
-
-	public static void main(String[] args) {
 	}
 
 	public enum EMAIL_TYPE {
@@ -151,4 +152,5 @@ public class EmailUtils {
 		COMPLETED_ORDER,
 		CANCELED_ORDER,
 	}
+
 }

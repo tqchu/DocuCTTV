@@ -58,6 +58,10 @@ public class Order {
 		setTotalPrice();
 	}
 
+	public Order() {
+
+	}
+
 	private void setTotalPrice() {
 		totalPrice = 0;
 		for (OrderDetail orderDetail : orderDetailList) {
