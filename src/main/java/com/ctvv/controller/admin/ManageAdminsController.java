@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-@WebServlet(name = "ManageAdminsController", value = "/admin/admins")
+@WebServlet(name = "ManageAdminsController", value = "/admin/admins/*")
 public class ManageAdminsController
 		extends HttpServlet {
 	HttpSession session;

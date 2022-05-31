@@ -1,8 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <div class="search">
-    <form action="" class="search__form">
-        <input type="search" class="search__bar form-control">
+    <form action="${context}/admin/admins/search" class="search__form">
+        <input type="search" class="search__bar form-control" name="keyword"
+               placeholder="Tìm kiếm"
+               value="${param.keyword}">
         <button type="submit" class="btn btn-primary btn-search">
             <i class="las la-search"></i>
         </button>
@@ -42,6 +44,7 @@
     <c:remove var="errorMessage" scope="session"/>
 
 </c:if>
+
 <div class="list">
     <table class="table table-hover table-bordered ">
         <thead>
