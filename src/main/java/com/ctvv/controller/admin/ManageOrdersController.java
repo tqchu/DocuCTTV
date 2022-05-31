@@ -2,6 +2,7 @@ package com.ctvv.controller.admin;
 
 import com.ctvv.dao.CustomerDAO;
 import com.ctvv.dao.OrderDAO;
+import com.ctvv.model.Customer;
 import com.ctvv.model.Order;
 import com.ctvv.util.EmailUtils;
 
@@ -104,7 +105,7 @@ public class ManageOrdersController
 		// to-ship, to-receive, cancel
 		String id = (request.getParameter("id"));
 		Order order = orderDAO.get(id);
-		String toEmail = "truongquangchu.tqc@gmail.com";
+		String toEmail = ((Customer) session.getAttribute("customer")).getEmail();
 		switch (action) {
 			case "to-ship":
 				order.setStatus(Order.OrderStatus.TO_SHIP);
