@@ -3,8 +3,11 @@ package com.ctvv.dao;
 import com.ctvv.model.Customer;
 import com.ctvv.model.Customer;
 import com.ctvv.model.ShippingAddress;
+import com.ctvv.util.PasswordHashingUtil;
 
 import javax.sql.DataSource;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -81,14 +84,15 @@ public class CustomerDAO
 		String password = customer.getPassword();
 		String sql = "SELECT * FROM customer WHERE " +
 				(isPhoneNumber ? "phonenumber=?" : "email=?") +
-				" and (password=?) LIMIT 1";
+				" LIMIT 1";
 		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql)) {
 			statement.setString(1, account);
-			statement.setString(2, password);
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				return map(resultSet);
+				String validPassword = resultSet.getString("password");
+				if (PasswordHashingUtil.validatePassword(password,validPassword))
+					return map(resultSet);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -119,18 +123,16 @@ public class CustomerDAO
 	public Customer updatePassword(Customer customer) throws SQLException {
 		int userId = customer.getUserId();
 		String newPassword = customer.getPassword();
-		Connection connection = null;
 		String sql = "UPDATE customer SET password = ? WHERE user_id = ?";
-		PreparedStatement statement = null;
-		try {
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(sql);
+
+		try (Connection connection = dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql)){
 			statement.setString(1, newPassword);
 			statement.setInt(2, userId);
 			statement.execute();
-		} finally {
-			if (statement != null) statement.close();
-			if (connection != null) connection.close();
+		}
+		catch(SQLException e){
+			e.printStackTrace();
 		}
 		return customer;
 	}
