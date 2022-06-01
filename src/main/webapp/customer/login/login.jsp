@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
 </head>
 <body>
-<c:set var="action" value="Đăng ký" scope="request"/>
+<c:set var="action" value="Đăng nhập" scope="request"/>
 <jsp:include page="../common/search-header.jsp"/>
 
 <div class="content">
