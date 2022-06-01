@@ -1,7 +1,10 @@
 package com.ctvv.controller.admin;
 
+import com.ctvv.dao.CustomerDAO;
 import com.ctvv.dao.OrderDAO;
+import com.ctvv.model.Customer;
 import com.ctvv.model.Order;
+import com.ctvv.util.EmailUtils;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -25,11 +28,13 @@ public class ManageOrdersController
 	private final String CANCELED = "/canceled";
 	private final String HOME_PAGE = "/admin/manage/home.jsp";
 	private OrderDAO orderDAO;
+	private CustomerDAO customerDAO;
 	private HttpSession session;
 
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session= request.getSession();
 		// orders/
 		String path = request.getPathInfo(); //
 		Order.OrderStatus status = Order.OrderStatus.PENDING;
@@ -97,26 +102,35 @@ public class ManageOrdersController
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession();
 		String action = request.getParameter("action");
 		// to-ship, to-receive, cancel
 		String id = (request.getParameter("id"));
 		Order order = orderDAO.get(id);
+		Customer customer = customerDAO.get(order.getCustomerId());
+		String toEmail = customer.getEmail();
 		switch (action) {
 			case "to-ship":
 				order.setStatus(Order.OrderStatus.TO_SHIP);
+				order.setConfirmTime(LocalDateTime.now());
+				EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.CONFIRMED_ORDER,toEmail, order, null, null);
 				break;
 			case "to-receive":
 				order.setStatus(Order.OrderStatus.TO_RECEIVE);
+				order.setShipTime(LocalDateTime.now());
+				EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.SHIPPED_ORDER,toEmail, order, null, null);
 				break;
 			case "completed":
 				order.setStatus(Order.OrderStatus.COMPLETED);
 				order.setCompletedTime(LocalDateTime.now());
+				EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.COMPLETED_ORDER,toEmail,order, null, null);
 				break;
 			case "cancel":
+				String reason = request.getParameter("reason");
+				String recommend = request.getParameter("recommend");
+				EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.CANCELED_ORDER,toEmail, order, reason, recommend);
 				order.setStatus(Order.OrderStatus.CANCELED);
 				break;
-
-
 		}
 		orderDAO.update(order);
 		response.sendRedirect(request.getParameter("from"));
@@ -130,21 +144,6 @@ public class ManageOrdersController
 		dispatcher.forward(request, response);
 	}
 
-	private void viewPendingOrders(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-			IOException {
-
-	}
-
-	private void viewToShipOrders(HttpServletRequest request, HttpServletResponse response) {
-
-	}
-
-	private void viewToReceiveOrders(HttpServletRequest request, HttpServletResponse response) {
-	}
-
-	private void viewCompletedOrders(HttpServletRequest request, HttpServletResponse response) {
-	}
-
 	@Override
 	public void init() throws ServletException {
 		super.init();
@@ -152,6 +151,7 @@ public class ManageOrdersController
 			Context context = new InitialContext();
 			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
 			orderDAO = new OrderDAO(dataSource);
+			customerDAO = new CustomerDAO(dataSource);
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}

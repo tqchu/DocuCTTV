@@ -11,9 +11,11 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.sql.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import javax.sql.DataSource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -54,36 +56,43 @@ public class CustomerLoginController
 
 	@Override
 	protected void doPost(
-			HttpServletRequest request, HttpServletResponse response) throws ServletException {
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		authenticate(request, response);
 	}
 
-	private void authenticate(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+	private void authenticate(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                           IOException {
 		session = request.getSession();
 		String from = request.getParameter("from");
 		if (Objects.equals(from, "")) {
 			from = request.getContextPath() + HOME_SERVLET;
 		}
-		String phoneNumber = request.getParameter("phoneNumber");
+		String account = request.getParameter("account");
 		String password = request.getParameter("password");
-		Customer customer = new Customer(phoneNumber, password);
+		Customer customer = new Customer();
+		boolean isPhoneNumber = (account.indexOf('@') == -1);
+		if (isPhoneNumber){
+			customer.setPhoneNumber(account);
+		}
+		else{
+			customer.setEmail(account);
+		}
+		customer.setPassword(password);
+
 		Customer authenticatedCustomer;
 		// TH1: validate thành công
-		try {
-			authenticatedCustomer = customerDAO.validate(customer);
-		} catch (SQLException e) {
-			throw new ServletException();
-		}
+		authenticatedCustomer = customerDAO.validate(customer);
 		if (authenticatedCustomer != null) {
-
 			session.setAttribute("customer", authenticatedCustomer);
-
-			try {
+			String postData = (String) session.getAttribute("postData");
+			if (postData != null) {
+				//				response.set
+				//				response.se
+				response.setStatus(307);
+				response.setHeader("Location", from);
+			} else {
 				response.sendRedirect(from);
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
-
 		} else {
 
 			request.setAttribute("loginMessage", "Sai tài khoản hoặc mật khẩu");

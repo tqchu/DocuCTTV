@@ -39,8 +39,8 @@
         <form action="${context}/login" method="post" class="login-form form" autocomplete="off">
             <input type="hidden" name="from" value="${param.from}">
             <div class="form-group form-floating">
-                <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Số điện thoại">
-                <label for="phoneNumber" class="form-label">Số điện thoại</label>
+                <input type="text" class="form-control" id="account" name="account" placeholder="Số điện thoại">
+                <label for="account" class="form-label">Số điện thoại/ Email</label>
             </div>
             <div class="form-group form-floating">
                 <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">

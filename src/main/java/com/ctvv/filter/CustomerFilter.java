@@ -2,6 +2,7 @@ package com.ctvv.filter;
 
 import com.ctvv.dao.ProductDAO;
 import com.ctvv.model.CartItem;
+import org.apache.commons.io.IOUtils;
 
 import javax.servlet.*;
 import javax.servlet.annotation.*;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @WebFilter(filterName = "CustomerFilter", urlPatterns = "/*")
 public class CustomerFilter
@@ -29,6 +31,7 @@ public class CustomerFilter
 		request.setCharacterEncoding("UTF-8");
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+		HttpSession session = httpServletRequest.getSession();
 		String requestURL = httpServletRequest.getRequestURL().toString();
 		String queryString = httpServletRequest.getQueryString();
 		String servletPath = httpServletRequest.getServletPath();
@@ -40,7 +43,15 @@ public class CustomerFilter
 				((requestURL.endsWith(".css")) || (requestURL.endsWith(".js")) || (requestURL.endsWith(".jpg") || (requestURL.endsWith("favicon.ico"))));
 
 		if ((!isAdminRequest) && isLogInRequired(servletPath) && (!isLoggedIn) && (!isLoginRequest) && (!isLoginPage) && (!isResourceRequest)) {
-			httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/login?from=" + requestURL +(queryString==null?"":"?"+queryString));
+			String method = httpServletRequest.getMethod();
+			if (method.equals("POST")) {
+				session.setAttribute("postData", IOUtils.toString(request.getReader()));
+				httpServletResponse.sendRedirect(
+						httpServletRequest.getContextPath() + "/login?from=" + requestURL + (queryString == null ? "" : "?" + queryString));
+			}
+			else{
+				httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/login?from=" + requestURL + (queryString == null ? "" : "?" + queryString));
+			}
 		} else {
 			httpServletRequest.setAttribute("uri", requestURL + (queryString==null?"":"?"+queryString));
 			chain.doFilter(request, response);

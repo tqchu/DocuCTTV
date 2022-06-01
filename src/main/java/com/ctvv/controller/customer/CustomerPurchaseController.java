@@ -3,6 +3,7 @@ package com.ctvv.controller.customer;
 import com.ctvv.dao.OrderDAO;
 import com.ctvv.dao.StockItemDAO;
 import com.ctvv.model.*;
+import com.ctvv.util.EmailUtils;
 import com.ctvv.util.UniqueStringUtils;
 
 import javax.naming.Context;
@@ -117,12 +118,13 @@ public class CustomerPurchaseController
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession();
 		String action = request.getParameter("action");
+		Customer customer = (Customer) session.getAttribute("customer");
 		// to-ship, to-receive, cancel
-		String id = (request.getParameter("id"));
-		Order order = orderDAO.get(id);
 		if (action.equals("create")) {
 			create(request, response);
 		} else {
+			String id = (request.getParameter("id"));
+			Order order = orderDAO.get(id);
 			switch (action) {
 				case "cancel":
 					order.setStatus(Order.OrderStatus.CANCELED);
@@ -136,8 +138,7 @@ public class CustomerPurchaseController
 
 	private void create(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String recipientName = request.getParameter("recipientName");
-		String
-				phoneNumber = request.getParameter("phoneNumber");
+		String phoneNumber = request.getParameter("phoneNumber");
 		String address = request.getParameter("address");
 		int shippingFee = Integer.parseInt(request.getParameter("shippingFee"));
 
@@ -170,17 +171,15 @@ public class CustomerPurchaseController
 		String customerName = request.getParameter("customerName");
 		LocalDateTime orderTime = LocalDateTime.now();
 		Order order = new Order(orderId, customerId, customerName, recipientName, phoneNumber, address, orderTime,
-				null
-				, null, orderDetailList, shippingFee);
+				null, null, null, null, orderDetailList, shippingFee);
 		orderDAO.create(order);
-		session.setAttribute("successMessage", "Đơn hàng " + orderId + " đã được đặt thành công, đang chờ xác " +
-				"nhận!");
+		EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.ORDERED_ORDER, "truongquangchu.tqc@gmail.com",order,null,null);
+		session.setAttribute("successMessage", "Đơn hàng " + orderId + " đã được đặt thành công, đang chờ xác nhận!");
 		response.sendRedirect(request.getContextPath() + request.getServletPath() + PENDING);
 	}
 
 	@Override
 	public void init() throws ServletException {
-		super.init();
 		super.init();
 		try {
 			Context context = new InitialContext();

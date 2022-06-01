@@ -12,6 +12,9 @@ import java.io.IOException;
 @WebFilter(filterName = "AdminFilter", urlPatterns = "/admin/*")
 public class AdminFilter
 		implements Filter {
+	public static final String[] notLoginRequiredURLs = {
+			"/admin/forgot-password"
+	};
 	public void init(FilterConfig config) throws ServletException {
 	}
 
@@ -27,7 +30,8 @@ public class AdminFilter
 		boolean isLoggedIn = (admin != null);
 		boolean isLoginPage = (httpServletRequest.getRequestURI().endsWith("login.jsp"));
 		boolean isLoginRequest = httpServletRequest.getServletPath().equals("/admin");
-		if ((!isLoggedIn) && (!isLoginRequest) && (!isLoginPage)) {
+		// Force login
+		if ((!isLoggedIn) && (!isLoginRequest) && (!isLoginPage) && (!notLoginRequired(requestURL))) {
 			httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/admin?from=" + requestURL +(queryString==null?"":"?"+queryString));
 		}
 		// Trường hợp admin truy cập phần quản lý admins
@@ -36,6 +40,13 @@ public class AdminFilter
 		} else {
 			chain.doFilter(request, response);
 		}
+	}
+
+	private boolean notLoginRequired(String requestURL) {
+		for(String url: notLoginRequiredURLs){
+			if (requestURL.endsWith(url)) return true;
+		}
+		return false;
 	}
 
 	public void destroy() {

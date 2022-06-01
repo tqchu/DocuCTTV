@@ -1,3 +1,4 @@
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <thead>
@@ -18,9 +19,7 @@
         <td>${order.orderId}</td>
         <td>${order.customerName}</td>
         <td>
-            <fmt:parseDate value="${order.orderTime}" type="time" var="orderTime"
-                           pattern="yyyy-MM-dd'T'HH:mm:ss"/>
-            <fmt:formatDate value="${orderTime}" type="TIME" pattern="dd/MM/yyyy HH:mm:ss"/>
+                ${order.orderTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))}
         </td>
         <td>${order.totalPrice}</td>
         <td class="column__action">
@@ -88,8 +87,10 @@
                                 <input type="hidden" value="cancel" name="action">
                                 <input type="hidden" value="${order.orderId}" name="id">
                                 Bạn có chắc chắn hủy đơn hàng ${order.orderId}
+                                <input type="text" name="reason" placeholder="Lý do" class="form-control cancel-info-input">
+                                <input type="text" name="recommend" placeholder="Đề xuất" class="form-control cancel-info-input">
                                 <button type="submit"
-                                        class="btn btn-delete">
+                                        class="btn btn-delete mt-4">
                                     Xác nhận
                                 </button>
                             </form>

@@ -84,9 +84,13 @@
                             <span class="navbar__tab__icon"><i class="las la-balance-scale"></i></span>
                             <span class="navbar__tab__text-description">Thống kê</span>
                         </a>
+                        <a href="${context}/admin/customers" class="navbar__tab ${tab=='customers'?'active':''}">
+                            <span class="navbar__tab__icon"><i class="las la-user-tie"></i></span>
+                            <span class="navbar__tab__text-description">Khách hàng</span>
+                        </a>
                         <c:if test="${admin.role=='super'}">
                             <a href="${context}/admin/admins" class="navbar__tab ${tab=='admins'?'active':''}">
-                                <span class="navbar__tab__icon"><i class="las la-user-tie"></i></span>
+                                <span class="navbar__tab__icon"><i class="las la-user-cog"></i></span>
                                 <span class="navbar__tab__text-description">Quản trị viên</span>
                             </a>
                         </c:if>
@@ -119,8 +123,13 @@
                     <c:if test="${tab=='orderDetail'}">
                         <jsp:include page="orders/orderDetail.jsp"/>
                     </c:if>
+                    <c:if test="${tab=='statistics'}">
+                        <jsp:include page="../statistics.jsp"/>
+                    </c:if><c:if test="${tab=='customers'}">
+                    <jsp:include page="customer/customerHome.jsp"/>
+                </c:if>
                     <!-- PAGINATION -->
-                    <c:if test="${tab!='orderDetail'}">
+                    <c:if test="${tab!='orderDetail'&&tab!='statistics'}">
                         <jsp:include page="../../common/pagination.jsp"/>
                     </c:if>
                 </div>

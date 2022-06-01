@@ -12,6 +12,8 @@ public class Order {
 	private String phoneNumber;
 	private String address;
 	private LocalDateTime orderTime;
+	private LocalDateTime confirmTime;
+	private LocalDateTime shipTime;
 	private LocalDateTime completedTime;
 	private OrderStatus status;
 	private int shippingFee;
@@ -22,9 +24,12 @@ public class Order {
 		this.orderId = order.orderId;
 		this.customerId = order.customerId;
 		this.customerName = order.customerName;
+		this.recipientName = order.recipientName;
 		this.phoneNumber = order.phoneNumber;
 		this.address = order.address;
 		this.orderTime = order.orderTime;
+		this.confirmTime = order.confirmTime;
+		this.shipTime = order.shipTime;
 		this.completedTime = order.completedTime;
 		this.status = order.status;
 		this.orderDetailList = new ArrayList<>(order.orderDetailList);
@@ -34,7 +39,7 @@ public class Order {
 
 	public Order(
 			String orderId, int customerId, String customerName, String recipientName, String phoneNumber, String address,
-			LocalDateTime orderTime, LocalDateTime completedTime, OrderStatus status,
+			LocalDateTime orderTime,LocalDateTime confirmTime, LocalDateTime shipTime, LocalDateTime completedTime, OrderStatus status,
 			List<OrderDetail> orderDetailList, int shippingFee) {
 		this.orderId = orderId;
 		this.customerId = customerId;
@@ -43,11 +48,17 @@ public class Order {
 		this.phoneNumber = phoneNumber;
 		this.address = address;
 		this.orderTime = orderTime;
+		this.confirmTime = confirmTime;
+		this.shipTime = shipTime;
 		this.completedTime = completedTime;
 		this.status = status;
 		this.orderDetailList = new ArrayList<>(orderDetailList);
 		this.shippingFee = shippingFee;
 		setTotalPrice();
+	}
+
+	public Order() {
+
 	}
 
 	private void setTotalPrice() {
@@ -106,6 +117,20 @@ public class Order {
 		this.orderTime = orderTime;
 	}
 
+	public LocalDateTime getConfirmTime() {
+		return confirmTime;
+	}
+
+	public void setConfirmTime(LocalDateTime confirmTime) {
+		this.confirmTime = confirmTime;
+	}
+
+	public LocalDateTime getShipTime() { return shipTime;}
+
+	public void setShipTime(LocalDateTime shipTime) {
+		this.shipTime = shipTime;
+	}
+
 	public LocalDateTime getCompletedTime() {
 		return completedTime;
 	}
@@ -149,6 +174,7 @@ public class Order {
 	public long getTotalPrice() {
 		return totalPrice;
 	}
+
 
 	public enum OrderStatus {
 		PENDING,

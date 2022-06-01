@@ -1,6 +1,10 @@
 package com.ctvv.model;
 import java.time.LocalDate;
 public class Customer {
+    public Customer() {
+
+    }
+
     public enum Gender{
         FEMALE,
         MALE,
@@ -18,6 +22,7 @@ public class Customer {
     private String fullName;
     private String phoneNumber;
     private LocalDate dateOfBirth;
+    private String email;
     ShippingAddress address;
 
     public ShippingAddress getAddress() {
@@ -28,11 +33,13 @@ public class Customer {
         this.address = address;
     }
 
-    public Customer(int user_id, String password, String fullName, String phoneNumber, Gender gender, LocalDate DoB,
+    public Customer(int user_id, String password, String email, String fullName, String phoneNumber, Gender gender,
+                    LocalDate DoB,
                     ShippingAddress address) {
         this.userId = user_id;
         this.password = password;
         this.fullName = fullName;
+        this.email = email;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
         this.dateOfBirth = DoB;
@@ -44,16 +51,12 @@ public class Customer {
         this.password = password;
     }
 
-    public Customer(String phoneNumber, String password) {
-        this.phoneNumber = phoneNumber;
-        this.password = password;
-    }
-
     public Customer(Customer customer) {
         this.userId = customer.userId;
         this.password = customer.password;
         this.fullName = customer.fullName;
         this.phoneNumber = customer.phoneNumber;
+        this.email = customer.email;
         this.gender = customer.gender;
         this.dateOfBirth = customer.dateOfBirth;
         this.address=new ShippingAddress(customer.address);
@@ -107,5 +110,11 @@ public class Customer {
         this.dateOfBirth = date;
     }
 
+    public String getEmail() {
+        return email;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

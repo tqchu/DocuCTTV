@@ -9,9 +9,7 @@
         </button>
 
     </form>
-    <a href="${context}/admin/inventory?action=create" class="search__add-btn btn btn-primary"
-       title="Thêm đơn"><i
-            class="las la-plus"></i></a>
+
 </div>
 <c:if test="${successMessage!=null}">
     <div class="toast align-items-center toast-message toast-message--success" role="alert"
