@@ -20,7 +20,6 @@ public class Order {
 	private long totalPrice;
 	private List<OrderDetail> orderDetailList;
 
-
 	public Order(Order order) {
 		this.orderId = order.orderId;
 		this.customerId = order.customerId;

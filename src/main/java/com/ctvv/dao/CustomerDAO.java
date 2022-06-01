@@ -1,6 +1,7 @@
 package com.ctvv.dao;
 
 import com.ctvv.model.Customer;
+import com.ctvv.model.Customer;
 import com.ctvv.model.ShippingAddress;
 
 import javax.sql.DataSource;
@@ -17,7 +18,21 @@ public class CustomerDAO
 
 	@Override
 	public Customer get(int id) {
-		return null;
+		Customer customer = new Customer();
+		String sql = "SELECT * FROM customer WHERE user_id=? ";
+		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+				connection.prepareStatement(sql);) {
+			statement.setInt(1, id);
+			ResultSet resultSet = statement.executeQuery();
+			// loop the result set
+			while (resultSet.next()) {
+				return  map(resultSet);
+			}
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return customer;
 	}
 
 	@Override
