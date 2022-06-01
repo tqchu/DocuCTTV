@@ -11,7 +11,6 @@ public class EmailUtils {
 	public static void sendOrderEmail(
 			EMAIL_TYPE type, String toEmail, Order order, String reason,
 			String recommend) {
-		String fromEmail = "quangchu12112002@gmail.com";
 		String host = "smtp.gmail.com";
 
 		Properties properties = System.getProperties();
@@ -34,13 +33,12 @@ public class EmailUtils {
 			}
 
 		});
-
 		session.setDebug(true);
 
 		try {
 			MimeMessage message = new MimeMessage(session);
 
-			message.setFrom(new InternetAddress(fromEmail));
+			message.setFrom(new InternetAddress(appProps.getProperty("user.email")));
 
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
 

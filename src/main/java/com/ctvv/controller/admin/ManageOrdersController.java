@@ -34,6 +34,7 @@ public class ManageOrdersController
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session= request.getSession();
 		// orders/
 		String path = request.getPathInfo(); //
 		Order.OrderStatus status = Order.OrderStatus.PENDING;
@@ -101,11 +102,13 @@ public class ManageOrdersController
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession();
 		String action = request.getParameter("action");
 		// to-ship, to-receive, cancel
 		String id = (request.getParameter("id"));
 		Order order = orderDAO.get(id);
-		String toEmail = ((Customer) session.getAttribute("customer")).getEmail();
+		Customer customer = customerDAO.get(order.getCustomerId());
+		String toEmail = customer.getEmail();
 		switch (action) {
 			case "to-ship":
 				order.setStatus(Order.OrderStatus.TO_SHIP);
