@@ -89,7 +89,7 @@ public class 	AdminDAO {
 			statement.setString(1, fullName);
 			statement.setString(2, username);
 			statement.setString(3, email);
-			statement.setString(4, password);
+			statement.setString(4, PasswordHashingUtil.createHash(password));
 			statement.setInt(5, id);
 			statement.execute();
 		}
