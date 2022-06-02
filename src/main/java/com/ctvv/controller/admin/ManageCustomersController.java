@@ -2,6 +2,7 @@ package com.ctvv.controller.admin;
 
 import com.ctvv.dao.CustomerDAO;
 import com.ctvv.model.Customer;
+import com.ctvv.model.Provider;
 import org.glassfish.jersey.internal.inject.Custom;
 
 import javax.naming.Context;
@@ -18,16 +19,25 @@ import java.util.List;
 @WebServlet(name = "ManageCustomersController", value = "/admin/customers/*")
 public class ManageCustomersController
 		extends HttpServlet {
-	private final  String HOME_PAGE = "/admin/manage/home.jsp";
+	final int NUMBER_OF_RECORDS_PER_PAGE = 10;
 	private CustomerDAO customerDAO;
+	private final  String HOME_PAGE = "/admin/manage/home.jsp";
+	private  final String HOME_SERVLET = "/admin/customers";
+	HttpSession session;
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<Customer> customerList  = new ArrayList<>();
-		Customer customer = new Customer();
-		customer.setEmail("truongquangchu.tqc@gmail.com");
-		customer.setPassword("dochautrinh");
-		customerList.add(customerDAO.validate(customer));
+			listCustomers(request, response);
+	}
+
+	private void listCustomers(
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String keyword = request.getParameter("keyword");
+		List<Customer> customerList;
+		int begin = getBegin(request);
+		customerList = customerDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword);
+		int numberOfPages = (customerDAO.count(keyword) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("customerList", customerList);
 		goHome(request, response);
 	}
@@ -38,10 +48,40 @@ public class ManageCustomersController
 		dispatcher.forward(request, response);
 	}
 
+	public int getBegin(HttpServletRequest request){
+		String pageParam = request.getParameter("page");
+		int page;
+		if(pageParam == null){
+			page = 1;
+		} else {
+			page = Integer.parseInt(pageParam);
+		}
+		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
+	}
+
+	private void delete(HttpServletRequest request, HttpServletResponse response) {
+		int customerId = Integer.parseInt(request.getParameter("id"));
+		customerDAO.delete(customerId);
+		session = request.getSession();
+		session.setAttribute("successMessage", "Xóa nhà khách hàng thành công");
+		try {
+			response.sendRedirect(request.getContextPath() + "/admin/customers");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+		session = request.getSession();
+		String action = request.getParameter("action");
+		switch (action) {
+			case "delete":
+				delete(request, response);
+				break;
+		}
 	}
 
 	@Override
