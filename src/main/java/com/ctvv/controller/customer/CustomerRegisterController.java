@@ -2,10 +2,11 @@ package com.ctvv.controller.customer;
 
 import com.ctvv.dao.CustomerDAO;
 import com.ctvv.model.Customer;
+import com.ctvv.model.ShippingAddress;
+import com.ctvv.util.EmailUtils;
 import com.ctvv.util.SMSUtils;
 import com.ctvv.util.StringUtils;
 import com.ctvv.util.UniqueStringUtils;
-import org.checkerframework.checker.units.qual.C;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -15,7 +16,6 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,7 +26,9 @@ public class CustomerRegisterController
 
 	private static final String HOME_SERVLET = "/register";
 	private final String HOME_PAGE = "/customer/register/register.jsp";
-	private final String OTP_PAGE = "/customer/register/otp.jsp";
+	private final String PHONE_OTP_PAGE = "/customer/register/otp.jsp";
+	private final String EMAIL_PAGE = "/customer/register/email.jsp";
+	private final String EMAIL_OTP_PAGE = "/customer/register/otpEmail.jsp";
 	private final String SETUP_PAGE = "/customer/register/setUp.jsp";
 	private HttpSession session;
 	private CustomerDAO customerDAO;
@@ -38,20 +40,26 @@ public class CustomerRegisterController
 		Customer customer = (Customer) session.getAttribute("customer");
 		// Dispatch về home_page
 		if (customer == null) {
-			String registerAction = (String) session.getAttribute("registerAction");
+			String registerPhase = (String) session.getAttribute("registerPhase");
 			String page = "";
-			if (registerAction == null) {
+			if (registerPhase == null) {
 				page = HOME_PAGE;
 			} else {
-				switch (registerAction) {
-					case "otp":
-						page = OTP_PAGE;
+				switch (registerPhase) {
+					case "phone-otp":
+						page = PHONE_OTP_PAGE;
 						break;
-					case "setUp":
+					case "email":
+						page = EMAIL_PAGE;
+						break;
+					case "email-otp":
+						page = EMAIL_OTP_PAGE;
+						break;
+					case "set-up":
 						page = SETUP_PAGE;
 						break;
 				}
-				session.removeAttribute("registerAction");
+				session.removeAttribute("registerPhase");
 			}
 			RequestDispatcher dispatcher = request.getRequestDispatcher(page);
 			dispatcher.forward(request, response);
@@ -64,23 +72,29 @@ public class CustomerRegisterController
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession();
-		String phoneNumber = request.getParameter("phoneNumber");
-		String otpParam = request.getParameter("otp");
-		// Yêu cầu lấy mã otp
-		if (phoneNumber != null) {
-			sendOtp(request, response);
-
-		} else if (otpParam != null) {
-			verifyOtp(request, response);
-		} else {
-			register(request, response);
+		String phase = request.getParameter("phase");
+		switch (phase) {
+			case "phone":
+				sendSMSOTP(request, response);
+				break;
+			case "otp-phone":
+				verifyPhoneOTP(request, response);
+				break;
+			case "email":
+				sendMailOTP(request, response);
+				break;
+			case "otp-email":
+				verifyMailOTP(request, response);
+				break;
+			case "set-up":
+				register(request, response);
+				break;
 		}
-		// Set up
 
 		redirectToHome(request, response);
 	}
 
-	private void sendOtp(HttpServletRequest request, HttpServletResponse response) {
+	private void sendSMSOTP(HttpServletRequest request, HttpServletResponse response) {
 		String phoneNumber = request.getParameter("phoneNumber");
 
 		phoneNumber = StringUtils.regionPhoneNumber(phoneNumber);
@@ -90,10 +104,10 @@ public class CustomerRegisterController
 		SMSUtils.send(phoneNumber, otp);
 		session.setAttribute("otp", otp);
 		session.setAttribute("expireTime", LocalDateTime.now().plusSeconds(SMSUtils.otpTime));
-		session.setAttribute("registerAction", "otp");
+		session.setAttribute("registerPhase", "phone-otp");
 	}
 
-	private void verifyOtp(HttpServletRequest request, HttpServletResponse response) {
+	private void verifyPhoneOTP(HttpServletRequest request, HttpServletResponse response) {
 		String otpParam = request.getParameter("otp");
 		LocalDateTime expireTime = (LocalDateTime) session.getAttribute("expireTime");
 		// Trường hợp otp còn hiệu lực
@@ -105,22 +119,63 @@ public class CustomerRegisterController
 				));
 				if (customer != null) {
 					session.setAttribute("duplicatePhoneNumberMessage", "Số điện thoại này đã được đăng ký");
-					session.setAttribute("substituteCustomer", customer );
-					session.setAttribute("registerAction", "otp");
-				}
-				else
-				// Chuyển tới trang thiết lập mật khẩu
-				session.setAttribute("registerAction", "setUp");
+					session.setAttribute("substituteCustomer", customer);
+					session.setAttribute("registerPhase", "phone-otp");
+				} else
+					// Chuyển tới trang email
+					session.setAttribute("registerPhase", "email");
 			}
 			// Sai otp
 			else {
-				session.setAttribute("registerAction", "otp");
+				session.setAttribute("registerPhase", "phone-otp");
 				session.setAttribute("errorMessage", "Sai OTP");
 			}
 		}
 		// Trường hợp otp đã hết hạn
 		else {
-			session.setAttribute("registerAction", "otp");
+			session.setAttribute("registerPhase", "phone-otp");
+			session.setAttribute("errorMessage", "OTP đã hết hạn");
+		}
+	}
+
+	private void sendMailOTP(HttpServletRequest request, HttpServletResponse response) {
+		String email = request.getParameter("email");
+		Customer customer = null;
+		customer = customerDAO.findCustomerByEmail(email);
+		if (customer != null) {
+			session.setAttribute("registerPhase", "email");
+			session.setAttribute("errorMessage", "Email đã được sử dụng");
+		} else {
+			session.setAttribute("email", email);
+			// Tạo otp
+			String otp = UniqueStringUtils.otp();
+			EmailUtils.sendOTP(email, otp);
+			session.setAttribute("otp", otp);
+			session.setAttribute("expireTime", LocalDateTime.now().plusSeconds(SMSUtils.otpTime));
+			session.setAttribute("registerPhase", "email-otp");
+		}
+
+	}
+
+	private void verifyMailOTP(HttpServletRequest request, HttpServletResponse response) {
+		String otpParam = request.getParameter("otp");
+		LocalDateTime expireTime = (LocalDateTime) session.getAttribute("expireTime");
+		// Trường hợp otp còn hiệu lực
+		if (!expireTime.isBefore(LocalDateTime.now())) {
+			// Success
+			if (otpParam.equals(session.getAttribute("otp"))) {
+					// Chuyển tới trang thiết lập tài khoản
+					session.setAttribute("registerPhase", "set-up");
+			}
+			// Sai otp
+			else {
+				session.setAttribute("registerPhase", "email-otp");
+				session.setAttribute("errorMessage", "Sai OTP");
+			}
+		}
+		// Trường hợp otp đã hết hạn
+		else {
+			session.setAttribute("registerPhase", "email-otp");
 			session.setAttribute("errorMessage", "OTP đã hết hạn");
 		}
 	}
@@ -131,31 +186,31 @@ public class CustomerRegisterController
 		String fullName = request.getParameter("fullName");
 		String password = request.getParameter("password");
 		String dateOfBirthParam = request.getParameter("dateOfBirth");
-		String genderParam = request.getParameter("gender");
-		Customer.Gender gender = null;
-		String address = request.getParameter("address");
-		Customer customer = new Customer();
-		customer.setPhoneNumber(phoneNumber);
-		customer.setFullName(fullName);
-		customer.setPassword(password);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate dateOfBirth = LocalDate.parse(dateOfBirthParam, formatter);
-		customer.setDateOfBirth(dateOfBirth);
-		switch (genderParam){
+		String genderParam = request.getParameter("gender");
+		Customer.Gender gender = null;
+		switch (genderParam) {
 			case "male":
 				gender = Customer.Gender.MALE;
 				break;
 			case "female":
-				gender= Customer.Gender.FEMALE;
+				gender = Customer.Gender.FEMALE;
 				break;
 			case "undefined":
 				gender = Customer.Gender.OTHER;
 				break;
 
 		}
-		customer.setGender(gender);
+		String address = request.getParameter("address");
+		ShippingAddress shippingAddress = new ShippingAddress(fullName,phoneNumber,address);
+		String email = (String) session.getAttribute("email");
+		session.removeAttribute("email");
+		Customer customer = new Customer(password, gender, fullName, phoneNumber, dateOfBirth, email,shippingAddress);
+		session.setAttribute("customer", customerDAO.create(customer));
+
 		// Khi register tạo shipping address dựa vào address, sdt, tên
-//		customer.setAddress();
+		//		customer.setAddress();
 	}
 
 	private void redirectToHome(HttpServletRequest request, HttpServletResponse response) throws IOException {

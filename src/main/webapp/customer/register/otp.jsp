@@ -49,6 +49,7 @@
                 <c:remove var="errorMessage" scope="session"/>
             </c:if>
             <form action="${context}/register" method="post" class="register-form form" autocomplete="off">
+                <input type="hidden" name="phase" value="otp-phone">
                 <div class="form-group form-floating w-100">
                     <input type="text" class="form-control " id="otp" name="otp" placeholder="Mã xác minh">
                     <label for="otp" class="form-label">Mã xác minh</label>

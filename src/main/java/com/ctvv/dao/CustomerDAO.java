@@ -2,6 +2,7 @@ package com.ctvv.dao;
 
 import com.ctvv.model.Customer;
 import com.ctvv.model.Customer;
+import com.ctvv.model.Order;
 import com.ctvv.model.ShippingAddress;
 
 import javax.sql.DataSource;
@@ -26,10 +27,9 @@ public class CustomerDAO
 			ResultSet resultSet = statement.executeQuery();
 			// loop the result set
 			while (resultSet.next()) {
-				return  map(resultSet);
+				return map(resultSet);
 			}
-		}
-		catch (SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return customer;
@@ -42,6 +42,39 @@ public class CustomerDAO
 
 	@Override
 	public Customer create(Customer customer) {
+		String sql = "INSERT INTO customer(phonenumber, email, password, fullname, date_of_birth, gender) VALUES (?," +
+				"?,?,?,?,?)";
+
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
+			connection.setAutoCommit(false);
+			statement.setString(1, customer.getPhoneNumber());
+			statement.setString(2, customer.getEmail());
+			statement.setString(3, customer.getPassword());
+			statement.setString(4, customer.getFullName());
+			statement.setDate(5, Date.valueOf(customer.getDateOfBirth()));
+			statement.setInt(6, customer.getGender().ordinal());
+			statement.execute();
+			ResultSet resultSet = statement.getGeneratedKeys();
+			int customerId = 0;
+			while (resultSet.next()) {
+				customerId = resultSet.getInt(1);
+			}
+			customer.setUserId(customerId);
+			customer.getAddress().setCustomerId(customerId);
+			resultSet.close();
+			connection.commit();
+			statement.close();
+			connection.close();
+
+			ShippingAddressDAO addressDAO = new ShippingAddressDAO(dataSource);
+			addressDAO.create(customer.getAddress());
+
+			return customer;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
@@ -143,10 +176,25 @@ public class CustomerDAO
 			ResultSet resultSet = statement.executeQuery();
 			// loop the result set
 			while (resultSet.next()) {
-				return  map(resultSet);
+				return map(resultSet);
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		catch (SQLException e){
+		return null;
+	}
+
+	public Customer findCustomerByEmail(String email) {
+		String sql = "SELECT * FROM customer WHERE email=? ";
+		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+				connection.prepareStatement(sql);) {
+			statement.setString(1, email);
+			ResultSet resultSet = statement.executeQuery();
+			// loop the result set
+			while (resultSet.next()) {
+				return map(resultSet);
+			}
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;

@@ -30,7 +30,8 @@
 <div class="register-box">
     <div class="form__heading-text">Thiết lập tài khoản</div>
 
-    <form action="${context}" method="post" class="register-form form" autocomplete="off">
+    <form action="${context}/register" method="post" class="register-form form" autocomplete="off">
+        <input type="hidden" name="phase" value="set-up">
         <div class="form-group form-floating">
             <input type="text" class="form-control" id="fullName" name="fullName"
                    placeholder="Họ tên">

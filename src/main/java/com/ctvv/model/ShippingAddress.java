@@ -13,6 +13,12 @@ public class ShippingAddress {
         this.address = address;
     }
 
+    public ShippingAddress(String recipientName, String phoneNumber, String address) {
+        this.recipientName = recipientName;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
+
     public ShippingAddress(ShippingAddress shippingAddress) {
         this.customerId = shippingAddress.customerId;
         this.recipientName = shippingAddress.recipientName;

@@ -33,6 +33,18 @@ public class Customer {
         this.address = address;
     }
 
+    public Customer(
+            String password, Gender gender, String fullName, String phoneNumber, LocalDate dateOfBirth,
+            String email, ShippingAddress address) {
+        this.password = password;
+        this.gender = gender;
+        this.fullName = fullName;
+        this.phoneNumber = phoneNumber;
+        this.dateOfBirth = dateOfBirth;
+        this.email = email;
+        this.address = address;
+    }
+
     public Customer(int user_id, String password, String email, String fullName, String phoneNumber, Gender gender,
                     LocalDate DoB,
                     ShippingAddress address) {

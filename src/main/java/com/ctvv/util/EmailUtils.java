@@ -38,7 +38,7 @@ public class EmailUtils {
 		try {
 			MimeMessage message = new MimeMessage(session);
 
-			message.setFrom(new InternetAddress(appProps.getProperty("user.email")));
+			message.setFrom(new InternetAddress(appProps.getProperty("email.user")));
 
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
 
@@ -143,12 +143,60 @@ public class EmailUtils {
 				"</p>";
 	}
 
+	public static void sendOTP(String email, String otp) {
+		String host = "smtp.gmail.com";
+
+		Properties properties = System.getProperties();
+
+		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.port", "465");
+		properties.put("mail.smtp.starttls.required", "true");
+		properties.put("mail.smtp.ssl.protocols", "TLSv1.2");
+		properties.put("mail.smtp.ssl.enable", "true");
+		properties.put("mail.smtp.auth", "true");
+
+		Properties appProps = PropertiesUtil.get("config.properties");
+		Session session = Session.getInstance(properties, new Authenticator() {
+
+			protected PasswordAuthentication getPasswordAuthentication() {
+
+				return new PasswordAuthentication(appProps.getProperty("email.user"), appProps.getProperty("email" +
+						".password"));
+
+			}
+
+		});
+		session.setDebug(true);
+
+		try {
+			MimeMessage message = new MimeMessage(session);
+
+			message.setFrom(new InternetAddress(appProps.getProperty("email.user")));
+
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+			String subject= "Xác thực email";
+			String content="Mã xác nhận là " + otp +". Mã có hiệu lực trong 10 phút.";
+
+			message.setSubject(subject, "UTF-8");
+
+			message.setContent(content, "text/html;charset=UTF-8");
+
+			Transport.send(message);
+		} catch (MessagingException mex) {
+			mex.printStackTrace();
+		}
+	}
+
 	public enum EMAIL_TYPE {
 		ORDERED_ORDER,
 		CONFIRMED_ORDER,
 		SHIPPED_ORDER,
 		COMPLETED_ORDER,
 		CANCELED_ORDER,
+	}
+
+	public static void main(String[] args) {
+		sendOTP("truongquangchu.tqc@gmail.com","234933");
 	}
 
 }

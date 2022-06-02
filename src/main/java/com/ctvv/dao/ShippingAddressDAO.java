@@ -53,4 +53,21 @@ public class ShippingAddressDAO {
 		}
 		return shippingAddress;
 	}
+
+	public ShippingAddress create(ShippingAddress address) {
+		String sql = "INSERT INTO shipping_address VALUES (?,?,?,?)";
+		try(Connection connection = dataSource.getConnection();
+		PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+			preparedStatement.setInt(1, address.getCustomerId());
+			preparedStatement.setString(2, address.getRecipientName());
+			preparedStatement.setString(3, address.getPhoneNumber());
+			preparedStatement.setString(4, address.getAddress());
+			preparedStatement.executeUpdate();
+			return address;
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
