@@ -122,6 +122,23 @@ public class 	AdminDAO {
 		return adminList;
 	}
 
+	public Admin map(ResultSet resultSet)
+	{
+		try{
+			int id = resultSet.getInt("user_id");
+			String username = resultSet.getString("username");
+			String email = resultSet.getString("email");
+			String password = resultSet.getString("password");
+			String fullName = resultSet.getString("fullname");
+			String role = resultSet.getString("role");
+			return new Admin(id, username, email, password, fullName, role);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
 	public void createAdmin(Admin admin) {
 		Connection connection = null;
 		String sql = "INSERT INTO admin(username,email, password, fullname, role)  VALUES(?,?, ?, ?, ?)";
@@ -208,5 +225,46 @@ public class 	AdminDAO {
 			e.printStackTrace();
 		}
 		return admin;
+	}
+
+	public List<Admin> get(int begin, int numberOfRec, String keyword, String sortBy, String order) {
+		List<Admin> adminList = new ArrayList<>();
+		String sql = "SELECT * FROM admin " +
+				(keyword != null ? " WHERE ( username LIKE '%" + keyword + "%' " +
+						"OR fullname LIKE '%" + keyword + "%' " +
+						"OR email LIKE '%" + keyword + "%' ) "
+						: "") +
+				(sortBy != null ? "ORDER BY " + sortBy +" " + order: "") +
+				" LIMIT " + begin + "," + numberOfRec;
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				adminList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return adminList;
+	}
+
+	public int count(String keyword){
+		int count = 0;
+		String sql =
+				"SELECT COUNT(user_id) AS no FROM admin " +
+						(keyword != null ? " WHERE username LIKE '%" + keyword + "%' "
+								+ "OR fullname LIKE '%" + keyword + "%' "
+								+ "OR email LIKE '%" + keyword + "%'": "");
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			count = resultSet.getInt("no");
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return  count;
 	}
 }
