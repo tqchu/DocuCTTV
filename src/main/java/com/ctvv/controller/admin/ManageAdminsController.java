@@ -20,6 +20,7 @@ public class ManageAdminsController
 	HttpSession session;
 	private AdminDAO adminDAO;
 	private  final String HOME_SERVLET = "/admin/admins";
+	final int NUMBER_OF_RECORDS_PER_PAGE = 10;
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,13 +38,52 @@ public class ManageAdminsController
 
 	private void listAdmins(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                         IOException {
+		String keyword = request.getParameter("keyword");
+		String sortBy = getOrder(request);
 		List<Admin> adminList = adminDAO.getAdminList();
+		int begin = getBegin(request);
+		adminList = adminDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, sortBy, null);
+		int numberOfPages = (adminDAO.count(keyword) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
 		Admin i = (Admin) session.getAttribute("admin");
 		// Xóa bản thân ra khỏi danh sách
 		adminList.remove(i);
+		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("adminList", adminList);
 		goHome(request, response);
 	}
+
+	public String getOrder(HttpServletRequest request) {
+		String sortBy = request.getParameter("sortBy");
+		if (sortBy != null) {
+			switch (sortBy) {
+				case "default":
+					sortBy = null;
+					break;
+				case "name":
+					sortBy = "username";
+					break;
+				case "fullname":
+					sortBy = "fullname";
+					break;
+				case "email":
+					sortBy = "email";
+					break;
+			}
+		}
+		return sortBy;
+	}
+
+	public int getBegin(HttpServletRequest request) {
+		String pageParam = request.getParameter("page");
+		int page;
+		if (pageParam == null) {
+			page = 1;
+		} else {
+			page = Integer.parseInt(pageParam);
+		}
+		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
+	}
+
 
 	private void deleteAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		adminDAO.delete(Integer.parseInt(request.getParameter("id")));
@@ -125,7 +165,6 @@ public class ManageAdminsController
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override

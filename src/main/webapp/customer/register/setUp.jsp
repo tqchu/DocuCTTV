@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
 </head>
 <body>
+<c:set var="action" value="Hoàn tất đăng ký" scope="request" />
 <jsp:include page="../common/search-header.jsp"/>
 
 <div class="register-box">
@@ -31,23 +32,24 @@
 
     <form action="${context}" method="post" class="register-form form" autocomplete="off">
         <div class="form-group form-floating">
-            <input type="text" class="form-control" id="password" name="password" placeholder="Mật khẩu">
-            <label for="password" class="form-label">Mật khẩu</label>
-        </div>
-        <div class="form-group form-floating">
-            <input type="text" class="form-control" id="confirmPassword" name="confirmPassword"
-                   placeholder="Xác nhận mật khẩu">
-            <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
-        </div>
-        <div class="form-group form-floating">
             <input type="text" class="form-control" id="fullName" name="fullName"
                    placeholder="Họ tên">
             <label for="fullName" class="form-label">Họ tên</label>
         </div>
         <div class="form-group form-floating">
-            <input type="date" class="form-control" id="birthday" name="birthday"
+            <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">
+            <label for="password" class="form-label">Mật khẩu</label>
+        </div>
+        <div class="form-group form-floating">
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                   placeholder="Xác nhận mật khẩu">
+            <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
+        </div>
+
+        <div class="form-group form-floating">
+            <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth"
                    placeholder="Ngày sinh">
-            <label for="birthday" class="form-label">Ngày sinh</label>
+            <label for="dateOfBirth" class="form-label">Ngày sinh</label>
         </div>
         <div class="form-group register__gender">
             Giới tính:
@@ -69,8 +71,11 @@
                        placeholder="Giới tính">
                 <label for="gender-undefined" class="form-label">Khác</label>
             </span>
-
-
+        </div>
+        <div class="form-group form-floating">
+            <input type="text" class="form-control" id="address" name="address"
+                   placeholder="Địa chỉ">
+            <label for="address" class="form-label">Địa chỉ</label>
         </div>
         <div class="form-group register__accept-policy">
             <input type="checkbox" id="accept-policy" name="accept-policy" value="accept">

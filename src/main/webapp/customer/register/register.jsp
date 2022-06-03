@@ -26,20 +26,23 @@
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
 </head>
 <body>
+<c:set var="action" value="Đăng ký" scope="request"/>
 <jsp:include page="../common/search-header.jsp"/>
-
 
 <div class="register-box">
     <div class="form__heading-text">Đăng ký</div>
 
-    <form action="${context}" method="post" class="register-form form" autocomplete="off">
-        <div class="form-group form-floating">
-            <input type="text" class="form-control" id="phone" name="phone" placeholder="Số điện thoại">
+    <form action="${context}/register" method="post" class="register-form form" autocomplete="off">
+        <div class="form-group form-floating w-100">
+            <input type="text" class="form-control" id="phone" name="phoneNumber" placeholder="Số điện thoại">
             <label for="phone" class="form-label">Nhập số điện thoại</label>
         </div>
-        <button type="submit" class="btn submit-btn">Tiếp tục</button>
+        <button type="submit" class="btn submit-btn w-100">Tiếp tục</button>
 
     </form>
+    <div class="register-form__suggestion">
+        Bạn đã có tài khoản? <a href="${context}/login" class="text-primary">Đăng nhập</a>
+    </div>
 </div>
 <jsp:include page="../../common/footer.jsp"/>
 
