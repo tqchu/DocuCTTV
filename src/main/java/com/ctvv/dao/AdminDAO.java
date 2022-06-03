@@ -129,24 +129,6 @@ public class 	AdminDAO {
 		}
 		return adminList;
 	}
-
-	public Admin map(ResultSet resultSet)
-	{
-		try{
-			int id = resultSet.getInt("user_id");
-			String username = resultSet.getString("username");
-			String email = resultSet.getString("email");
-			String password = resultSet.getString("password");
-			String fullName = resultSet.getString("fullname");
-			String role = resultSet.getString("role");
-			return new Admin(id, username, email, password, fullName, role);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-
 	public void createAdmin(Admin admin) {
 		Connection connection = null;
 		String sql = "INSERT INTO admin(username,email, password, fullname, role)  VALUES(?,?, ?, ?, ?)";
