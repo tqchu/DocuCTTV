@@ -82,6 +82,10 @@
                     class="import-detail-box__column__content">${anImport.importDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))}
             </span>
             </div>
+        <form action="${context}/admin/inventory/history/download" method="post" class="mt-5">
+            <input type="hidden" name="id" value="${anImport.importId}">
+            <button type="submit" class="btn btn-primary">Xuất file</button>
+        </form>
     </div>
 
 </div>

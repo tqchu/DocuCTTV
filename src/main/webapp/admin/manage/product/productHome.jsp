@@ -45,7 +45,7 @@
             <th>Tên sản phẩm</th>
             <th>Ảnh sản phẩm</th>
             <th>Doanh mục</th>
-            <th>Đánh giá</th>
+
             <th></th>
             <th></th>
         </tr>
@@ -103,7 +103,6 @@
                             </c:otherwise>
                         </c:choose>
                     </td>
-                    <td class="product__rating">-</td>
                     <td class="column__action">
                         <form action="${context}/admin/products" method="get">
                             <input type="hidden" name="action" value="view">

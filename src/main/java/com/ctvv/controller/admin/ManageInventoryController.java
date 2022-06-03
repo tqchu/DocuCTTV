@@ -2,6 +2,7 @@ package com.ctvv.controller.admin;
 
 import com.ctvv.dao.*;
 import com.ctvv.model.*;
+import com.ctvv.util.JasperReportUtils;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -12,6 +13,7 @@ import javax.servlet.annotation.*;
 import javax.sql.DataSource;
 import javax.xml.crypto.Data;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -71,13 +73,54 @@ public class ManageInventoryController
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		httpSession = request.getSession();
-		String action = request.getParameter("action");
-		switch (action) {
-			case "create":
-				create(request, response);
-				break;
+		String path = request.getPathInfo();
+		if (path.equals("/history/download")) {
+			downloadImportReport(request, response);
+		} else {
+			String action = request.getParameter("action");
+			switch (action) {
+				case "create":
+					create(request, response);
+					break;
 
+			}
 		}
+	}
+
+	private void downloadImportReport(HttpServletRequest request, HttpServletResponse response) {
+
+
+
+		// gets MIME type of the file
+		String mimeType = "application/pdf";
+
+		// modifies response
+		response.setContentType(mimeType);
+
+		// forces download
+		String headerKey = "Content-Disposition";
+		response.setCharacterEncoding("UTF-8");
+		String headerValue = String.format("attachment; filename=\"%s\"", "Chi tiết đơn nhập.pdf");
+		response.setHeader(headerKey, headerValue);
+
+		// obtains response's output stream
+
+
+		Import anImport = importDAO.get(13);
+		byte[] bytes = JasperReportUtils.createImportReport(anImport);
+		OutputStream os ;
+		try {
+			os = response.getOutputStream();
+			os.write(bytes);
+			os.flush();
+			os.close();
+
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
 	}
 
 	private void create(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -141,7 +184,7 @@ public class ManageInventoryController
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
 		String sortBy = request.getParameter("sortBy");
-		if (sortBy==null || sortBy.equals("name")){
+		if (sortBy == null || sortBy.equals("name")) {
 			sortBy = "product_name";
 		}
 		int begin = getBegin(request);
