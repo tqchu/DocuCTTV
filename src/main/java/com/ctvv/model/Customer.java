@@ -45,6 +45,15 @@ public class Customer {
         this.dateOfBirth = DoB;
         this.address=address;
     }
+    public Customer(int user_id, String email, String fullName, String phoneNumber, Gender gender,
+                    LocalDate DoB) {
+        this.userId = user_id;
+        this.fullName = fullName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.dateOfBirth = DoB;
+    }
 
     public Customer(int user_id, String password) {
         this.userId = user_id;

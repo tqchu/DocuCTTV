@@ -165,7 +165,6 @@ public class ManageAdminsController
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
