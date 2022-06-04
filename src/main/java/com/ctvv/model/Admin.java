@@ -6,6 +6,8 @@ public class Admin {
 	private int userId;
 	private String username;
 	private String email;
+	private String phoneNumber;
+	private String address;
 	private String password;
 	private String fullName;
 	private String role;
@@ -13,16 +15,23 @@ public class Admin {
 	public Admin() {
 	}
 	public Admin(Admin admin){
-		this.userId=admin.getUserId();
-		this.username =admin.getUsername();
-		this.email=admin.getEmail();
-		this.password=admin.getPassword();
-		this.role=admin.getRole();
+		this.userId=admin.userId;
+		this.username =admin.username;
+		this.phoneNumber = admin.phoneNumber;
+		this.fullName=admin.fullName;
+		this.address = admin.address;
+		this.email=admin.email;
+		this.password=admin.password;
+		this.role=admin.role;
 	}
-	public Admin(int userId, String username, String email, String password, String fullName, String role) {
+	public Admin(int userId, String username, String email, String password, String fullName, String phoneNumber,
+	             String address,
+	             String role) {
 		this.userId = userId;
 		this.username = username;
 		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.address = address;
 		this.password = password;
 		this.fullName = fullName;
 		this.role = role;
@@ -34,15 +43,21 @@ public class Admin {
 		this.password = password;
 	}
 
-	public Admin(int id, String username, String email, String fullName, String role) {
+	public Admin(int id, String username, String email, String fullName,String phoneNumber,
+	             String address, String role) {
 		this.userId=id;
 		this.username=username;
 		this.email=email;
+		this.phoneNumber = phoneNumber;
+		this.address = address;
 		this.fullName=fullName;
 		this.role=role;
 	}
 
-	public Admin(String username, String email, String fullName, String password, String role) {
+	public Admin(String username, String email, String fullName, String password,String phoneNumber,
+	             String address, String role) {
+		this.phoneNumber = phoneNumber;
+		this.address = address;
 		this.username=username;
 		this.email=email;
 		this.fullName=fullName;
@@ -67,6 +82,30 @@ public class Admin {
 		this.username = username;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	public String getPassword() {
 		return password;
 	}
@@ -89,14 +128,6 @@ public class Admin {
 
 	public void setRole(String role) {
 		this.role = role;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	@Override

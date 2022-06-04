@@ -59,28 +59,32 @@ public class ManageCustomersController
 		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
 	}
 
-	private void delete(HttpServletRequest request, HttpServletResponse response) {
-		int customerId = Integer.parseInt(request.getParameter("id"));
-		customerDAO.delete(customerId);
-		session = request.getSession();
-		session.setAttribute("successMessage", "Xóa nhà khách hàng thành công");
-		try {
-			response.sendRedirect(request.getContextPath() + "/admin/customers");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		session = request.getSession();
+		int customerId = Integer.parseInt(request.getParameter("id"));
+		Customer customer = customerDAO.get(customerId);
 		String action = request.getParameter("action");
 		switch (action) {
-			case "delete":
-				delete(request, response);
+			case "activate":
+				customer.setActive(true);
 				break;
+			case "deactivate":
+				customer.setActive(false);
+				break;
+
+		}
+		customerDAO.update(customer);
+		session.setAttribute("successMessage", action.equals("activate")?"Bỏ khóa":"Khóa"+" tài khoản khách hàng " +
+				"thành " +
+				"công");
+		try {
+			response.sendRedirect(request.getContextPath() + "/admin/customers");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

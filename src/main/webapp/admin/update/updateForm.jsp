@@ -1,7 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
-<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %></c:set>
+<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %>
+</c:set>
 
 <html>
 <head>
@@ -44,9 +45,20 @@
             <label for="username" class="">Tên đăng nhập</label>
         </div>
         <div class="admin__update__form-group form-floating">
-            <input type="text" class="form-control" id="email" name="email" placeholder="Email"
-                   value="${admin.email}">
-            <label for="username" class="">Email</label>
+            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Số điện thoại"
+                   value="${admin.phoneNumber}">
+            <label for="phoneNumber" class="">Số điện thoại</label>
+
+            <div class="admin__update__form-group form-floating">
+                <input type="text" class="form-control" id="email" name="email" placeholder="Email"
+                       value="${admin.email}">
+                <label for="username" class="">Email</label>
+            </div>
+        </div>
+        <div class="admin__update__form-group form-floating">
+            <input type="text" class="form-control" id="address" name="address" placeholder="Địa chỉ"
+                   value="${admin.address}">
+            <label for="username" class="">Địa chỉ</label>
         </div>
         <div class="admin__update__form-group form-floating">
             <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">

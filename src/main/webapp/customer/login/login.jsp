@@ -35,19 +35,20 @@
         <div class="form__heading-text">Đăng nhập</div>
         <c:if test="${loginMessage!=null}">
             <div class="error-message">${loginMessage}</div>
+            <c:remove var="loginMessage" scope="session"/>
         </c:if>
         <form action="${context}/login" method="post" class="login-form form" autocomplete="off">
             <input type="hidden" name="from" value="${param.from}">
-            <div class="form-group form-floating">
+            <div class="form-group form-floating w-100">
                 <input type="text" class="form-control" id="account" name="account" placeholder="Số điện thoại">
                 <label for="account" class="form-label">Số điện thoại/ Email</label>
             </div>
-            <div class="form-group form-floating">
+            <div class="form-group form-floating w-100">
                 <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">
                 <label for="password" class="form-label">Mật khẩu</label>
             </div>
             <a href="${context}/forgot-password" class="login__forget-password">Quên mật khẩu?</a>
-            <button type="submit" class="btn submit-btn">Đăng nhập</button>
+            <button type="submit" class="btn submit-btn btn-md">Đăng nhập</button>
         </form>
         <div class="register-suggestion">
             Người dùng mới? <a href="${context}/register" class="register-suggestion-link">Đăng ký</a>

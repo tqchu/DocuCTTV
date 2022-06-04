@@ -2,6 +2,8 @@ package com.ctvv.controller.admin;
 
 import com.ctvv.dao.*;
 import com.ctvv.model.*;
+import com.ctvv.util.JasperReportUtils;
+import org.bouncycastle.util.encoders.UTF8;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -12,6 +14,9 @@ import javax.servlet.annotation.*;
 import javax.sql.DataSource;
 import javax.xml.crypto.Data;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -71,18 +76,66 @@ public class ManageInventoryController
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		httpSession = request.getSession();
-		String action = request.getParameter("action");
-		switch (action) {
-			case "create":
-				create(request, response);
-				break;
+		String path = request.getPathInfo();
+		if (path.equals("/history/download")) {
+			downloadImportReport(request, response);
+		} else {
+			String action = request.getParameter("action");
+			switch (action) {
+				case "create":
+					create(request, response);
+					break;
 
+			}
 		}
+	}
+
+	private void downloadImportReport(HttpServletRequest request, HttpServletResponse response) {
+
+
+
+		// gets MIME type of the file
+		String mimeType = "application/pdf";
+
+		// modifies response
+		response.setContentType(mimeType);
+
+		// forces download
+		String headerKey = "Content-Disposition";
+		String headerValue = null;
+		try {
+			headerValue = String.format("attachment; filename=\"%s\"", URLEncoder.encode("Chi-tiết-đơn-nhập.pdf",
+					"UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		response.setHeader(headerKey, headerValue);
+
+		// obtains response's output stream
+
+		int id = Integer.parseInt(request.getParameter("id"));
+		Import anImport = importDAO.get(id);
+		byte[] bytes = JasperReportUtils.createImportReport(anImport);
+		response.setContentLength(bytes.length);
+		OutputStream os ;
+		try {
+			os = response.getOutputStream();
+			os.write(bytes);
+			os.flush();
+			os.close();
+
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
 	}
 
 	private void create(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		int providerId = Integer.parseInt(request.getParameter("providerId"));
 		Provider provider = providerDAO.get(providerId);
+		String providerTaxId = provider.getTaxId();
 		String importerName = request.getParameter("importerName");
 
 		LocalDateTime importDate = LocalDateTime.now();
@@ -101,7 +154,7 @@ public class ManageInventoryController
 			double tax = Integer.parseInt(taxParams[i]) / 100.0;
 			importDetailList.add(new ImportDetail(productId, product.getName(), quantity, price, tax));
 		}
-		Import anImport = new Import(importerName, providerId, provider.getProviderName(), importDate, 0,
+		Import anImport = new Import(importerName, providerId, providerTaxId,provider.getProviderName(), importDate, 0,
 				importDetailList);
 		importDAO.create(anImport);
 
@@ -141,7 +194,7 @@ public class ManageInventoryController
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
 		String sortBy = request.getParameter("sortBy");
-		if (sortBy==null || sortBy.equals("name")){
+		if (sortBy == null || sortBy.equals("name")) {
 			sortBy = "product_name";
 		}
 		int begin = getBegin(request);

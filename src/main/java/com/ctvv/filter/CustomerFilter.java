@@ -37,7 +37,7 @@ public class CustomerFilter
 		String servletPath = httpServletRequest.getServletPath();
 		boolean isAdminRequest = servletPath.startsWith("/admin");
 		boolean isLoggedIn = httpServletRequest.getSession().getAttribute("customer") != null;
-		boolean isLoginRequest = servletPath.equals("");
+		boolean isLoginRequest = servletPath.equals("/login");
 		boolean isLoginPage = requestURL.endsWith("login.jsp");
 		boolean isResourceRequest =
 				((requestURL.endsWith(".css")) || (requestURL.endsWith(".js")) || (requestURL.endsWith(".jpg") || (requestURL.endsWith("favicon.ico"))));

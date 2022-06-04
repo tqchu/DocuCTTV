@@ -88,19 +88,14 @@ public class CustomerAccountController
 		updatedCustomer.setGender(gender);
 		updatedCustomer.setDateOfBirth(date_of_birth);
 
+		updatedCustomer = customerDAO.update(updatedCustomer);
+		session.setAttribute("customer", updatedCustomer);
+		request.setAttribute("successMessage", "Cập nhật thành công");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
 		try {
-			updatedCustomer = customerDAO.updateProfile(updatedCustomer);
-			session.setAttribute("customer", updatedCustomer);
-			request.setAttribute("successMessage", "Cập nhật thành công");
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
-			try {
-				dispatcher.forward(request, response);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} catch (SQLException e) {
-			throw new ServletException();
-
+			dispatcher.forward(request, response);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 	}
