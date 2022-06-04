@@ -19,8 +19,8 @@
             <th class="column__full-name">Họ và tên</th>
             <th class="column__phone-number">Số điện thoại</th>
             <th class="column__email">Email</th>
-            <th class="column__day-of-birth">Ngày sinh</th>
-            <th class="column__gender">Giới tính</th>
+
+            <th class="column__status">Trạng thái</th>
 
             <th></th>
         </tr>
@@ -28,7 +28,7 @@
         <tbody>
         <c:if test="${empty customerList}">
             <tr>
-                <td colspan="7" class="no-records">
+                <td colspan="8" class="no-records">
                     Không có dữ liệu
                 </td>
             </tr>
@@ -41,34 +41,28 @@
                     <td>${currentRow.fullName}</td>
                     <td>${currentRow.phoneNumber}</td>
                     <td>${currentRow.email}</td>
-                    <td>${currentRow.dateOfBirth}</td>
+
+                    <td>${currentRow.active?'Bình thường':'Bị khóa'}</td>
                     <td>
-                        <c:choose>
-                            <c:when test="${currentRow.gender=='MALE'}">Nam</c:when>
-                            <c:when test="${currentRow.gender=='FEMALE'}">Nữ</c:when>
-                            <c:when test="${currentRow.gender=='OTHER'}">Khác</c:when>
-                        </c:choose>
-                    </td>
-                    <td>
-                        <button class="btn btn-delete" title="Xoá khách hàng"
+                        <button class="btn btn-delete activate-btn" title="${currentRow.active?'Khóa':'Bỏ khóa'}"
                                 data-bs-toggle="modal"
-                                data-bs-target="#deleteCustomerModal${currentRow.userId}">
-                            Xoá
+                                data-bs-target="#activateCustomerModal${currentRow.userId}">
+                                ${currentRow.active?'Khóa':'Bỏ khóa'}
                         </button>
                     </td>
                     <!-- MODAL CONTENT -->
                     <div class="modal fade"
-                         id="deleteCustomerModal${currentRow.userId}"
+                         id="activateCustomerModal${currentRow.userId}"
                          tabindex="-1"
-                         aria-labelledby="deleteCustomerModal${currentRow.userId}Label"
+                         aria-labelledby="activateCustomerModal${currentRow.userId}Label"
                          aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
 
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title"
-                                        id="deleteCustomerModal${currentRow.userId}Label">
-                                        Xóa khách hàng
+                                        id="activateCustomerModal${currentRow.userId}Label">
+                                            ${currentRow.active?'Khóa':'Bỏ khóa'} khách hàng
                                     </h5>
                                     <button type="button" class="btn-close"
                                             data-bs-dismiss="modal"
@@ -78,10 +72,10 @@
                                     <div class="form-in-modal">
                                         <form action="${context}/admin/customers"
                                               class="delete-form" method="post">
-                                            Bạn có chắc chắn xóa khách hàng này?
-                                            (Thông tin khách hàng đã xóa sẽ không
-                                            thể khôi phục)
-                                            <input type="hidden" name="action" value="delete">
+                                            Bạn có chắc chắn ${currentRow.active?'khóa':'bỏ khóa'} tài khoản khách hàng
+                                            này?
+                                            <input type="hidden" name="action"
+                                                   value="${currentRow.active?'deactivate':'activate'}">
                                             <input type="hidden" name="id"
                                                    value="${currentRow.userId}">
                                             <button type="submit"

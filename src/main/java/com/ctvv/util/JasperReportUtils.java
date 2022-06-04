@@ -1,7 +1,10 @@
 package com.ctvv.util;
 
+import com.ctvv.dao.ImportDAO;
 import com.ctvv.model.Import;
+import com.ctvv.model.ImportDetail;
 import com.ctvv.model.JasperReportImportDetail;
+import com.mysql.cj.jdbc.MysqlDataSource;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JRDesignStyle;
@@ -18,6 +21,8 @@ public class JasperReportUtils {
 		// Map to hold JR Param
 		Map<String, Object> parameters = new HashMap<>();
 		parameters.put("providerName", anImport.getProviderName());
+		parameters.put("providerTaxId", anImport.getProviderTaxId());
+
 		parameters.put("totalPrice", (long)anImport.getTotalPrice());
 		parameters.put("day", 3);
 		parameters.put("month", 6);
@@ -27,15 +32,12 @@ public class JasperReportUtils {
 
 		try{
 			// Read template
-			InputStream inputStream = new FileInputStream("C:\\Users\\T490\\JaspersoftWorkspace\\MyReports\\ImportDetail" +
-					".jrxml");
+			InputStream inputStream = new FileInputStream(Thread.currentThread().getContextClassLoader().getResource(
+					"").getPath()+ "/report/ImportDetail.jrxml");
 
 			JasperDesign jasperDesign = JRXmlLoader.load(inputStream);
 			JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
-			JRDesignStyle jrDesignStyle = new JRDesignStyle();
-			jrDesignStyle.setPdfEncoding("UTF-8");
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, new JREmptyDataSource());
-			jasperPrint.addStyle(jrDesignStyle);
 
 			return JasperExportManager.exportReportToPdf(jasperPrint);
 		}
@@ -44,4 +46,5 @@ public class JasperReportUtils {
 		}
 		return null;
 	}
+
 }

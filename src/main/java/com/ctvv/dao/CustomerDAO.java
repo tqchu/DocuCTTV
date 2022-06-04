@@ -1,13 +1,12 @@
 package com.ctvv.dao;
 
 import com.ctvv.model.Customer;
-import com.ctvv.model.Customer;
-import com.ctvv.model.Order;
 import com.ctvv.model.ShippingAddress;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerDAO
@@ -40,6 +39,41 @@ public class CustomerDAO
 		return null;
 	}
 
+	public List<Customer> get(int begin, int numberOfRec, String keyword) {
+		List<Customer> customerList = new ArrayList<>();
+		String sql =
+				"SELECT * FROM customer " +
+						(keyword != null ? " WHERE fullname LIKE '%" + keyword + "%' " : "") +
+						" LIMIT " + begin + "," + numberOfRec;
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				customerList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return customerList;
+	}
+
+	public int count(String keyword) {
+		int count = 0;
+		String sql =
+				"SELECT COUNT(user_id) AS no FROM customer " +
+						(keyword != null ? " WHERE fullname" +  " LIKE '%" + keyword + "%' " : "");
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			count = resultSet.getInt("no");
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
 	@Override
 	public Customer create(Customer customer) {
 		String sql = "INSERT INTO customer(phonenumber, email, password, fullname, date_of_birth, gender) VALUES (?," +
@@ -80,14 +114,38 @@ public class CustomerDAO
 
 	@Override
 	public Customer update(Customer customer) {
-		return null;
+		String sql = "UPDATE customer  SET phonenumber =?, email=?, password=?, fullname=?, date_of_birth =?, " +
+				"gender=?, status=? WHERE user_id =?";
+		try (Connection connection= dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setString(1, customer.getPhoneNumber());
+			statement.setString(2, customer.getEmail());
+			statement.setString(3, customer.getPassword());
+			statement.setString(4, customer.getFullName());
+			statement.setDate(5, Date.valueOf(customer.getDateOfBirth()));
+			statement.setInt(6, customer.getGender().getValue());
+			statement.setBoolean(7,customer.isActive());
+			statement.setInt(8, customer.getUserId());
+			statement.executeUpdate();
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return customer;
+
 	}
 
 	@Override
 	public void delete(int id) {
-
+		String sql = "DELETE FROM customer WHERE user_id = ?";
+		try (Connection connection = dataSource.getConnection();
+			 PreparedStatement statement = connection.prepareStatement(sql)) {
+			statement.setInt(1, id);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
-
 	@Override
 	public Customer map(ResultSet resultSet) {
 		try {
@@ -100,8 +158,9 @@ public class CustomerDAO
 			LocalDate dateOfBirth = resultSet.getDate("date_of_birth").toLocalDate();
 			ShippingAddressDAO addressDAO = new ShippingAddressDAO(dataSource);
 			ShippingAddress address = addressDAO.getAddress(userId);
+			boolean status = resultSet.getBoolean("status");
 			return new Customer(userId, password, email, fullName, pNumber, gender, dateOfBirth,
-					address);
+					address, status);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -128,46 +187,6 @@ public class CustomerDAO
 		}
 		return null;
 	}
-
-	public Customer updateProfile(Customer customer) throws SQLException {
-		String fullName = customer.getFullName();
-		Customer.Gender gender = customer.getGender();
-		LocalDate dateOfBirth = customer.getDateOfBirth();
-		int id = customer.getUserId();
-
-		String sql = "UPDATE customer SET fullname=?, gender=?, date_of_birth=? WHERE user_id=? ";
-
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
-				connection.prepareStatement(sql)) {
-			statement.setString(1, fullName);
-			statement.setInt(2, gender.getValue());
-			statement.setDate(3, Date.valueOf(dateOfBirth));
-			statement.setInt(4, id);
-			statement.execute();
-		}
-		return customer;
-
-	}
-
-	public Customer updatePassword(Customer customer) throws SQLException {
-		int userId = customer.getUserId();
-		String newPassword = customer.getPassword();
-		Connection connection = null;
-		String sql = "UPDATE customer SET password = ? WHERE user_id = ?";
-		PreparedStatement statement = null;
-		try {
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(sql);
-			statement.setString(1, newPassword);
-			statement.setInt(2, userId);
-			statement.execute();
-		} finally {
-			if (statement != null) statement.close();
-			if (connection != null) connection.close();
-		}
-		return customer;
-	}
-
 	public Customer findCustomerByPhoneNumber(String phoneNumber) {
 		String sql = "SELECT * FROM customer WHERE phonenumber=? ";
 		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =

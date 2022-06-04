@@ -87,19 +87,14 @@ public class CustomerAccountController
 		updatedCustomer.setGender(gender);
 		updatedCustomer.setDateOfBirth(date_of_birth);
 
+		updatedCustomer = customerDAO.update(updatedCustomer);
+		session.setAttribute("customer", updatedCustomer);
+		request.setAttribute("successMessage", "Cập nhật thành công");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
 		try {
-			updatedCustomer = customerDAO.updateProfile(updatedCustomer);
-			session.setAttribute("customer", updatedCustomer);
-			request.setAttribute("successMessage", "Cập nhật thành công");
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
-			try {
-				dispatcher.forward(request, response);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} catch (SQLException e) {
-			throw new ServletException();
-
+			dispatcher.forward(request, response);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -116,19 +111,15 @@ public class CustomerAccountController
 		String confirmedPassword = request.getParameter("confirmedPassword");
 
 
-		try {
-			if (oldPassword.equals(customer.getPassword())) {
-				//đổi mật khẩu trong database
-				customer.setPassword(newPassword);
-				customer = customerDAO.updatePassword(customer);
-				//đổi mật khẩu cho session hien tai
-				session.setAttribute("customer", customer);
-				request.setAttribute("successMessage", "Đổi mật khẩu thành công");
-			} else {
-				request.setAttribute("wrongOldPasswordMessage", "Sai mật khẩu cũ");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (oldPassword.equals(customer.getPassword())) {
+			//đổi mật khẩu trong database
+			customer.setPassword(newPassword);
+			customer = customerDAO.update(customer);
+			//đổi mật khẩu cho session hien tai
+			session.setAttribute("customer", customer);
+			request.setAttribute("successMessage", "Đổi mật khẩu thành công");
+		} else {
+			request.setAttribute("wrongOldPasswordMessage", "Sai mật khẩu cũ");
 		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
 		dispatcher.forward(request, response);

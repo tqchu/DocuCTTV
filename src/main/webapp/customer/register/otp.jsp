@@ -36,7 +36,12 @@
             <a href="${context}" class="btn btn-primary w-100">
                 Đăng nhập
             </a>
+            <form action="${context}/register" method="post">
+                <input type="hidden" name="phase" value="takeBackAccount">
+                <button type="submit" class="btn w-100 take-back-account-btn">Lấy lại và đăng ký mới</button>
+            </form>
             <c:remove var="duplicatePhoneNumberMessage" scope="session" />
+
         </c:when>
         <c:otherwise>
             <div class="form__heading-text">Vui lòng nhập mã xác minh</div>

@@ -42,6 +42,10 @@
             <span class="import-detail-box__column__label">Nhà cung cấp:</span>
             <span class="import-detail-box__column__content">${anImport.providerName}
             </span>
+        </div><div class="import-detail-box__group">
+            <span class="import-detail-box__column__label">Mã số thuế:</span>
+            <span class="import-detail-box__column__content">${anImport.providerTaxId}
+            </span>
         </div>
         <table class="table table-hover table-bordered import-detail-box__table">
             <thead>

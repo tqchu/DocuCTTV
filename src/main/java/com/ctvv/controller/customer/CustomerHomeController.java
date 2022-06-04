@@ -36,6 +36,7 @@ public class CustomerHomeController
 			session.setAttribute("customer", session.getAttribute("substituteCustomer"));
 		}
 		session.removeAttribute("substituteCustomer");
+		session.removeAttribute("oldCustomer");
 		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
 		if (cart != null) {
 			for (CartItem cartItem : cart) {

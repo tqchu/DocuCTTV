@@ -23,7 +23,8 @@ public class Customer {
     private String phoneNumber;
     private LocalDate dateOfBirth;
     private String email;
-    ShippingAddress address;
+    private ShippingAddress address;
+    private boolean active;
 
     public ShippingAddress getAddress() {
         return address;
@@ -47,7 +48,7 @@ public class Customer {
 
     public Customer(int user_id, String password, String email, String fullName, String phoneNumber, Gender gender,
                     LocalDate DoB,
-                    ShippingAddress address) {
+                    ShippingAddress address, boolean active) {
         this.userId = user_id;
         this.password = password;
         this.fullName = fullName;
@@ -56,6 +57,17 @@ public class Customer {
         this.gender = gender;
         this.dateOfBirth = DoB;
         this.address=address;
+        this.active = active;
+    }
+    public Customer(int user_id, String email, String fullName, String phoneNumber, Gender gender,
+                    LocalDate DoB, boolean active) {
+        this.userId = user_id;
+        this.fullName = fullName;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+        this.dateOfBirth = DoB;
+        this.active = active;
     }
 
     public Customer(int user_id, String password) {
@@ -72,6 +84,7 @@ public class Customer {
         this.gender = customer.gender;
         this.dateOfBirth = customer.dateOfBirth;
         this.address=new ShippingAddress(customer.address);
+        this.active = customer.active;
     }
 
     public int getUserId() {
@@ -128,5 +141,13 @@ public class Customer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

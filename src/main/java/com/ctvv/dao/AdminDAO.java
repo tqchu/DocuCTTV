@@ -7,50 +7,37 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class 	AdminDAO {
-
-	private final DataSource dataSource;
+public class 	AdminDAO extends GenericDAO<Admin> {
 
 	public AdminDAO(DataSource dataSource) {
-		this.dataSource = dataSource;
+		super(dataSource);
 	}
+
 
 	public Admin validate(Admin admin) throws SQLException {
 		// Tạo connection
-		Admin authenticatedAdmin = null;
 		String usernameToAuthenticate = admin.getUsername();
 		String emailToAuthenticate = admin.getEmail();
 		String passwordToAuthenticate = admin.getPassword();
 		String sql = "SELECT * FROM admin WHERE ((username=?) or email=? ) and (password=?) LIMIT 1";
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
-		try {
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(sql);
+
+		try (Connection	connection = dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql);){
+
 			statement.setString(1, usernameToAuthenticate);
 			statement.setString(2, emailToAuthenticate);
 			statement.setString(3, passwordToAuthenticate);
-			resultSet = statement.executeQuery();
+			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				int userId = resultSet.getInt("user_id");
-				String fullName = resultSet.getString("fullname");
-				String username = resultSet.getString("username");
-				String email = resultSet.getString("email");
-				String passWord = resultSet.getString("password");
-				String role = resultSet.getString("role");
-				authenticatedAdmin = new Admin(userId, username, email, passWord, fullName, role);
+				return map(resultSet);
 			}
-		} finally {
-			if (resultSet != null) resultSet.close();
-			if (statement != null) statement.close();
-			if (connection != null) connection.close();
+		} catch (SQLException e){
+			e.printStackTrace();
 		}
-		return authenticatedAdmin;
+		return null;
 	}
 
-	public Admin get(int id) throws SQLException {
-		Admin admin = new Admin();
+	public Admin get(int id){
 		String sql = "SELECT * FROM admin WHERE user_id=? ";
 		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql);) {
@@ -58,17 +45,48 @@ public class 	AdminDAO {
 			ResultSet resultSet = statement.executeQuery();
 			// loop the result set
 			while (resultSet.next()) {
-				String username = resultSet.getString("username");
-				String fullName = resultSet.getString("fullname");
-				String email = resultSet.getString("email");
-				String role = resultSet.getString("role");
-				admin = new Admin(id, username, email, fullName, role);
+				return map(resultSet);
 			}
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public List<Admin> getAll() {
+		return null;
+	}
+
+	@Override
+	public Admin create(Admin admin) {
+		String sql = "INSERT INTO admin(username, password, fullname, phone_number, address, email, role)  VALUES(?," +
+				"?, ?, " +
+				"?, ?,?,?)";
+		try (Connection	connection = dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);){
+
+			statement.setString(1, admin.getUsername());
+			statement.setString(2, admin.getPassword());
+			statement.setString(3, admin.getFullName());
+			statement.setString(4, admin.getPhoneNumber());
+			statement.setString(5, admin.getAddress());
+			statement.setString(6, admin.getEmail());
+			statement.setString(7, admin.getRole());
+			statement.executeUpdate();
+			ResultSet resultSet = statement.getGeneratedKeys();
+			resultSet.next();
+			admin.setUserId(resultSet.getInt(1));
+			resultSet.close();
+		}
+		catch (SQLException e){
+			e.printStackTrace();
 		}
 		return admin;
 	}
 
-	public Admin update(Admin admin) throws SQLException {
+	public Admin update(Admin admin) {
 		String fullName = admin.getFullName();
 		String username = admin.getUsername();
 		String email = admin.getEmail();
@@ -84,6 +102,9 @@ public class 	AdminDAO {
 			statement.setString(4, password);
 			statement.setInt(5, id);
 			statement.execute();
+		}
+		catch (SQLException e){
+			e.printStackTrace();
 		}
 		return admin;
 	}
@@ -107,13 +128,7 @@ public class 	AdminDAO {
 			ResultSet resultSet = statement.executeQuery(sql);
 			// loop the result set
 			while (resultSet.next()) {
-				int id = resultSet.getInt("user_id");
-				String username = resultSet.getString("username");
-				String email = resultSet.getString("email");
-				String fullName = resultSet.getString("fullname");
-				String role = resultSet.getString("role");
-				Admin admin = new Admin(id, username, email, fullName, role);
-				adminList.add(admin);
+				adminList.add(map(resultSet));
 			}
 		}
 		catch (SQLException e){
@@ -122,51 +137,24 @@ public class 	AdminDAO {
 		return adminList;
 	}
 
+	@Override
 	public Admin map(ResultSet resultSet)
 	{
 		try{
 			int id = resultSet.getInt("user_id");
 			String username = resultSet.getString("username");
 			String email = resultSet.getString("email");
+			String phoneNumber = resultSet.getString("phone_number");
+			String address = resultSet.getString("address");
 			String password = resultSet.getString("password");
 			String fullName = resultSet.getString("fullname");
 			String role = resultSet.getString("role");
-			return new Admin(id, username, email, password, fullName, role);
+			return new Admin(id, username, email, password, fullName, phoneNumber, address,role);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-
-
-	public void createAdmin(Admin admin) {
-		Connection connection = null;
-		String sql = "INSERT INTO admin(username,email, password, fullname, role)  VALUES(?,?, ?, ?, ?)";
-		PreparedStatement statement = null;
-		try {
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(sql);
-			statement.setString(1, admin.getUsername());
-			statement.setString(2, admin.getEmail());
-			statement.setString(3, admin.getPassword());
-			statement.setString(4, admin.getFullName());
-			statement.setString(5, admin.getRole());
-			statement.execute();
-		}
-		catch (SQLException e){
-			e.printStackTrace();
-		}
-		finally {
-			try{
-				if (statement != null) statement.close();
-				if (connection != null) connection.close();
-			}
-			catch (SQLException e){
-				e.printStackTrace();
-			}
-		}
-	}
-
 
 
 	public void delete(int id) {
@@ -190,11 +178,7 @@ public class 	AdminDAO {
 			statement.setString(1, username);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()){
-				int id = resultSet.getInt("user_id");
-				String fullName = resultSet.getString("fullname");
-				String email = resultSet.getString("email");
-				String role = resultSet.getString("role");
-				admin = new Admin(id, username, email, fullName, role);
+				admin = map(resultSet);
 			}
 			resultSet.close();
 		}
@@ -213,11 +197,7 @@ public class 	AdminDAO {
 			statement.setString(1, email);
 			resultSet = statement.executeQuery();
 			while (resultSet.next()){
-				int id = resultSet.getInt("user_id");
-				String username = resultSet.getString("username");
-				String fullName = resultSet.getString("fullname");
-				String role = resultSet.getString("role");
-				admin = new Admin(id, username, email, fullName, role);
+				admin = map(resultSet);
 			}
 			resultSet.close();
 		}
@@ -266,5 +246,24 @@ public class 	AdminDAO {
 			e.printStackTrace();
 		}
 		return  count;
+	}
+
+	public Admin findByPhoneNumber(String phoneNumber) {
+		String sql = "SELECT * FROM admin WHERE phone_number=?";
+		Admin admin = null;
+		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+				connection.prepareStatement(sql); ) {
+			ResultSet resultSet;
+			statement.setString(1, phoneNumber);
+			resultSet = statement.executeQuery();
+			while (resultSet.next()){
+				admin = map(resultSet);
+			}
+			resultSet.close();
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return admin;
 	}
 }

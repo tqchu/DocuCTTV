@@ -42,6 +42,7 @@ public class CustomerRegisterController
 		if (customer == null) {
 			String registerPhase = (String) session.getAttribute("registerPhase");
 			String page = "";
+
 			if (registerPhase == null) {
 				page = HOME_PAGE;
 			} else {
@@ -73,6 +74,19 @@ public class CustomerRegisterController
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession();
 		String phase = request.getParameter("phase");
+		if (phase.equals("takeBackAccount")){
+				// Đổi sdt người dùng cũ sang null
+				Customer oldCustomer = (Customer) session.getAttribute("oldCustomer");
+				oldCustomer.setPhoneNumber(null);
+				customerDAO.update(oldCustomer);
+				// remove các attribute k cần thiết
+				session.removeAttribute("oldCustomer");
+				session.removeAttribute("substituteCustomer");
+
+				session.setAttribute("registerPhase", "email");
+
+		}
+		else
 		switch (phase) {
 			case "phone":
 				sendSMSOTP(request, response);
@@ -118,7 +132,12 @@ public class CustomerRegisterController
 				Customer customer = customerDAO.findCustomerByPhoneNumber((String) session.getAttribute("phoneNumber"
 				));
 				if (customer != null) {
-					session.setAttribute("duplicatePhoneNumberMessage", "Số điện thoại này đã được đăng ký");
+					session.setAttribute("oldCustomer", customer);
+					session.setAttribute("duplicatePhoneNumberMessage", "Số điện thoại này đã được đăng ký. " +
+							" \n" +
+							" Bạn " +
+							"muốn" +
+							" đăng nhập hay lấy lại tài khoản?");
 					session.setAttribute("substituteCustomer", customer);
 					session.setAttribute("registerPhase", "phone-otp");
 				} else
@@ -164,8 +183,8 @@ public class CustomerRegisterController
 		if (!expireTime.isBefore(LocalDateTime.now())) {
 			// Success
 			if (otpParam.equals(session.getAttribute("otp"))) {
-					// Chuyển tới trang thiết lập tài khoản
-					session.setAttribute("registerPhase", "set-up");
+				// Chuyển tới trang thiết lập tài khoản
+				session.setAttribute("registerPhase", "set-up");
 			}
 			// Sai otp
 			else {
@@ -203,10 +222,10 @@ public class CustomerRegisterController
 
 		}
 		String address = request.getParameter("address");
-		ShippingAddress shippingAddress = new ShippingAddress(fullName,phoneNumber,address);
+		ShippingAddress shippingAddress = new ShippingAddress(fullName, phoneNumber, address);
 		String email = (String) session.getAttribute("email");
 		session.removeAttribute("email");
-		Customer customer = new Customer(password, gender, fullName, phoneNumber, dateOfBirth, email,shippingAddress);
+		Customer customer = new Customer(password, gender, fullName, phoneNumber, dateOfBirth, email, shippingAddress);
 		session.setAttribute("customer", customerDAO.create(customer));
 
 		// Khi register tạo shipping address dựa vào address, sdt, tên

@@ -133,9 +133,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 60px auto auto;
+    margin: 100px auto auto;
 }
-
 .admin__update-form {
     width: 320px;
     display: flex;
@@ -638,4 +637,14 @@
     font-size: 15px;
     text-align: start;
     margin-bottom: 10px;
+}
+
+
+.create-admin__form-box {
+    margin-top: 100px;
+}
+.take-back-account-btn {
+    color: #fff;
+    margin-top: 10px;
+    background-color: var(--solid-red);
 }
