@@ -63,7 +63,7 @@ public class ManageCustomersController
 		int customerId = Integer.parseInt(request.getParameter("id"));
 		customerDAO.delete(customerId);
 		session = request.getSession();
-		session.setAttribute("successMessage", "Xóa nhà khách hàng thành công");
+		session.setAttribute("successMessage", "Xóa khách hàng thành công");
 		try {
 			response.sendRedirect(request.getContextPath() + "/admin/customers");
 		} catch (IOException e) {
