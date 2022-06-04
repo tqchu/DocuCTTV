@@ -25,7 +25,7 @@ import javax.naming.NamingException;
 
 public class CustomerLoginController
 		extends HttpServlet {
-	private final String HOME_SERVLET = "";
+	private final String HOME_SERVLET = "/login";
 	private final String HOME_PAGE = "/customer/login/login.jsp";
 	HttpSession session;
 	private CustomerDAO customerDAO;
@@ -64,6 +64,7 @@ public class CustomerLoginController
 	                                                                                           IOException {
 		session = request.getSession();
 		String from = request.getParameter("from");
+		if (from.equals("/noithatctvv/login")) from = request.getContextPath();
 		if (Objects.equals(from, "")) {
 			from = request.getContextPath() + HOME_SERVLET;
 		}
@@ -80,28 +81,31 @@ public class CustomerLoginController
 		customer.setPassword(password);
 
 		Customer authenticatedCustomer;
-		// TH1: validate thành công
+		// TH1: tài khoản tồn tại
 		authenticatedCustomer = customerDAO.validate(customer);
 		if (authenticatedCustomer != null) {
-			session.setAttribute("customer", authenticatedCustomer);
-			String postData = (String) session.getAttribute("postData");
-			if (postData != null) {
-				//				response.set
-				//				response.se
-				response.setStatus(307);
-				response.setHeader("Location", from);
-			} else {
-				response.sendRedirect(from);
+			// Tài khoản bình thường (active)
+			if (authenticatedCustomer.isActive()){
+				session.setAttribute("customer", authenticatedCustomer);
+				String postData = (String) session.getAttribute("postData");
+				if (postData != null) {
+					response.setStatus(307);
+					response.setHeader("Location", from);
+				} else {
+					response.sendRedirect(from);
+				}
 			}
+			// Tài khoản bị khóa
+			else{
+				session.setAttribute("loginMessage", "Tài khoản của bạn đã bị khóa vì vi phạm chính sách của chúng tôi");
+				response.sendRedirect(request.getContextPath() + HOME_SERVLET);
+			}
+
+
 		} else {
 
-			request.setAttribute("loginMessage", "Sai tài khoản hoặc mật khẩu");
-			try {
-				RequestDispatcher dispatcher = request.getRequestDispatcher(HOME_PAGE);
-				dispatcher.forward(request, response);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			session.setAttribute("loginMessage", "Sai tài khoản hoặc mật khẩu");
+			response.sendRedirect(request.getContextPath()+ HOME_SERVLET);
 		}
 	}
 }

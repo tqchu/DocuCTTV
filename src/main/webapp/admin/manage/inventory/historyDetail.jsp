@@ -42,6 +42,10 @@
             <span class="import-detail-box__column__label">Nhà cung cấp:</span>
             <span class="import-detail-box__column__content">${anImport.providerName}
             </span>
+        </div><div class="import-detail-box__group">
+            <span class="import-detail-box__column__label">Mã số thuế:</span>
+            <span class="import-detail-box__column__content">${anImport.providerTaxId}
+            </span>
         </div>
         <table class="table table-hover table-bordered import-detail-box__table">
             <thead>
@@ -82,6 +86,10 @@
                     class="import-detail-box__column__content">${anImport.importDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))}
             </span>
             </div>
+        <form action="${context}/admin/inventory/history/download" method="post" class="mt-5">
+            <input type="hidden" name="id" value="${anImport.importId}">
+            <button type="submit" class="btn btn-primary">Xuất file</button>
+        </form>
     </div>
 
 </div>

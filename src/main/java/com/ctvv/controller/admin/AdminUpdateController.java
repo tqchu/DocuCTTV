@@ -51,21 +51,30 @@ public class AdminUpdateController
 
 		session = request.getSession();
 		Admin admin = (Admin) session.getAttribute("admin");
-
+		String phoneNumber = request.getParameter("phoneNumber");
+		String address = request.getParameter("address");
 		String fullName = request.getParameter("fullName");
 		String username = request.getParameter("username");
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
+
+		boolean isUsernameValid =
+				(adminDAO.findByUsername(username).equals(admin) || adminDAO.findByUsername(username) == null);
+		boolean isEmailValid = (adminDAO.findByEmail(email).equals(admin) || adminDAO.findByEmail(email) == null);
+		boolean isPhoneNumberValid =
+				(adminDAO.findByPhoneNumber(phoneNumber).equals(admin) || adminDAO.findByPhoneNumber(phoneNumber) == null);
 		// Tạo 1 bản sao của admin (session)
-		Admin updatedAdmin = new Admin(admin);
-		updatedAdmin.setFullName(fullName);
-		updatedAdmin.setUsername(username);
-		updatedAdmin.setPassword(password);
-		updatedAdmin.setEmail(email);
-		try {
+		if (isPhoneNumberValid && isEmailValid && isUsernameValid) {
+			Admin updatedAdmin = new Admin(admin);
+			updatedAdmin.setFullName(fullName);
+			updatedAdmin.setEmail(email);
+			updatedAdmin.setPhoneNumber(phoneNumber);
+			updatedAdmin.setAddress(address);
+			updatedAdmin.setUsername(username);
+			updatedAdmin.setPassword(password);
+			updatedAdmin.setEmail(email);
 			updatedAdmin = adminDAO.update(updatedAdmin);
 			// Thành côngs
-			// Gán admin trong session bằng admin vừa được câp nhật nếu không có exception xảy ra.
 			session.setAttribute("admin", updatedAdmin);
 			// Đặt tin nhắn thành công
 			request.setAttribute("successMessage", "Cập nhật thành công!");
@@ -75,23 +84,25 @@ public class AdminUpdateController
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
-		}
-		// Catch tất cả exception của SQLException
-		catch (SQLException e) {
-			// Trường hợp username đã tồn tại
-			if (e instanceof SQLIntegrityConstraintViolationException) {
-				request.setAttribute("errorMessage", "Tên đăng nhập đã tồn tại, vui lòng chọn tên khác");
-				// Dispatch về form cập nhật
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/update/updateForm.jsp");
-				try {
-					dispatcher.forward(request, response);
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
+		} else {
+			if (!isUsernameValid) {
+				request.setAttribute("usernameErrorMessage", "Tên đăng nhập đã tồn tại, vui lòng chọn tên khác");
 			}
-			else throw new ServletException();
+			if (!isEmailValid) {
+				request.setAttribute("emailErrorMessage", "Email đã tồn tại, vui lòng chọn tên khác");
+			}
+			if (!isPhoneNumberValid) {
+				request.setAttribute("phoneNumberErrorMessage", "Số điện thoại đã tồn tại, vui lòng chọn tên khác");
+			}
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/update/updateForm.jsp");
+			try {
+				dispatcher.forward(request, response);
+			} catch (IOException | ServletException ex) {
+				ex.printStackTrace();
+			}
 		}
+
+
 	}
 
 	@Override

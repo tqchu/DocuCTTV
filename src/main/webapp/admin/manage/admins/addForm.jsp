@@ -45,27 +45,37 @@
     <div class="error-message">
             ${emailErrorMessage}
     </div>
+</c:if><c:if test="${phoneNumberErrorMessage!=null}">
+    <div class="error-message">
+            ${phoneNumberErrorMessage}
+    </div>
 </c:if>
     <form action="${context}/admin/admins" method="post" class="create-admin-form form" autocomplete="off">
         <input
             type="hidden" name="action" value="create">
-        <div class="form-group form-floating">
-            <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Tên đăng nhập"
-            >
-            <label for="fullName" class="form-label">Họ và tên</label>
-        </div>
         <div class="form-group form-floating">
             <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập"
             >
             <label for="username" class="form-label">Tên đăng nhập</label>
         </div>
         <div class="form-group form-floating">
+            <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Họ và tên"
+            >
+            <label for="fullName" class="form-label">Họ và tên</label>
+        </div>
+        <div class="form-group form-floating">
+            <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Số điện thoại"
+            >
+            <label for="phoneNumber" class="form-label">Số điện thoại</label>
+        </div>
+
+        <div class="form-group form-floating">
             <input type="text" class="form-control" id="email" name="email" placeholder="Email">
             <label for="email" class="form-label">Email</label>
         </div>
         <div class="form-group form-floating">
-            <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu">
-            <label for="password" class="form-label">Mật khẩu</label>
+            <input type="text" class="form-control" id="address" name="address" placeholder="Địa chỉ">
+            <label for="address" class="form-label">Địa chỉ</label>
         </div>
         <%-- SELECT ROLE --%>
         <select class="form-select  create-admin-form__select" name="role">

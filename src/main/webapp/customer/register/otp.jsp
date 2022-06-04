@@ -36,7 +36,12 @@
             <a href="${context}" class="btn btn-primary w-100">
                 Đăng nhập
             </a>
+            <form action="${context}/register" method="post">
+                <input type="hidden" name="phase" value="takeBackAccount">
+                <button type="submit" class="btn w-100 take-back-account-btn">Lấy lại và đăng ký mới</button>
+            </form>
             <c:remove var="duplicatePhoneNumberMessage" scope="session" />
+
         </c:when>
         <c:otherwise>
             <div class="form__heading-text">Vui lòng nhập mã xác minh</div>
@@ -49,6 +54,7 @@
                 <c:remove var="errorMessage" scope="session"/>
             </c:if>
             <form action="${context}/register" method="post" class="register-form form" autocomplete="off">
+                <input type="hidden" name="phase" value="otp-phone">
                 <div class="form-group form-floating w-100">
                     <input type="text" class="form-control " id="otp" name="otp" placeholder="Mã xác minh">
                     <label for="otp" class="form-label">Mã xác minh</label>

@@ -127,20 +127,14 @@
     text-decoration: none;
 }
 
-.error-message {
-    color: red;
-    margin-left: 20px;
-    margin-bottom: 20px;
-}
 
 .admin__update-box {
     width: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 60px auto auto;
+    margin: 100px auto auto;
 }
-
 .admin__update-form {
     width: 320px;
     display: flex;
@@ -160,7 +154,6 @@
 
 .error-message {
     color: red;
-    margin-left: 22px;
     margin-bottom: 20px;
 }
 
@@ -639,4 +632,19 @@
 .duplicate-phone-number{
     text-align: center;
     margin-bottom: 10px;
+}
+.form__small-heading-text{
+    font-size: 15px;
+    text-align: start;
+    margin-bottom: 10px;
+}
+
+
+.create-admin__form-box {
+    margin-top: 100px;
+}
+.take-back-account-btn {
+    color: #fff;
+    margin-top: 10px;
+    background-color: var(--solid-red);
 }

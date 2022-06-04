@@ -1,7 +1,9 @@
 package com.ctvv.dao;
 
-import com.ctvv.model.*;
 import com.ctvv.model.Customer;
+import com.ctvv.model.ShippingAddress;
+import com.ctvv.util.PasswordHashingUtil;
+
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -26,10 +28,9 @@ public class CustomerDAO
 			ResultSet resultSet = statement.executeQuery();
 			// loop the result set
 			while (resultSet.next()) {
-				return  map(resultSet);
+				return map(resultSet);
 			}
-		}
-		catch (SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return customer;
@@ -38,29 +39,6 @@ public class CustomerDAO
 	@Override
 	public List<Customer> getAll() {
 		return null;
-	}
-
-	public List<Customer> getCustomerList() {
-		List<Customer> customerList = new ArrayList<>();
-		String sql = "SELECT * FROM customer";
-		try (Connection connection = dataSource.getConnection(); Statement statement = connection.createStatement();) {
-			ResultSet resultSet = statement.executeQuery(sql);
-			// loop the result set
-			while (resultSet.next()) {
-				int user_id = resultSet.getInt("user_id");
-				String phonenumber = resultSet.getString("phonenumber");
-				String email = resultSet.getString("email");
-				String fullname = resultSet.getString("fullname");
-				LocalDate dateOfBirth = resultSet.getDate("date_of_birth").toLocalDate();
-				Customer.Gender gender = Customer.Gender.values()[resultSet.getByte("gender")];
-				Customer customer = new Customer(user_id, email, fullname, phonenumber, gender, dateOfBirth);
-				customerList.add(customer);
-			}
-		}
-		catch (SQLException e){
-			e.printStackTrace();
-		}
-		return customerList;
 	}
 
 	public List<Customer> get(int begin, int numberOfRec, String keyword) {
@@ -100,12 +78,63 @@ public class CustomerDAO
 	}
 	@Override
 	public Customer create(Customer customer) {
+		String sql = "INSERT INTO customer(phonenumber, email, password, fullname, date_of_birth, gender) VALUES (?," +
+				"?,?,?,?,?)";
+
+		try (Connection connection = dataSource.getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
+			connection.setAutoCommit(false);
+			statement.setString(1, customer.getPhoneNumber());
+			statement.setString(2, customer.getEmail());
+			statement.setString(3, PasswordHashingUtil.createHash(customer.getPassword()));
+			statement.setString(4, customer.getFullName());
+			statement.setDate(5, Date.valueOf(customer.getDateOfBirth()));
+			statement.setInt(6, customer.getGender().ordinal());
+			statement.execute();
+			ResultSet resultSet = statement.getGeneratedKeys();
+			int customerId = 0;
+			while (resultSet.next()) {
+				customerId = resultSet.getInt(1);
+			}
+			customer.setUserId(customerId);
+			customer.getAddress().setCustomerId(customerId);
+			resultSet.close();
+			connection.commit();
+			statement.close();
+			connection.close();
+
+			ShippingAddressDAO addressDAO = new ShippingAddressDAO(dataSource);
+			addressDAO.create(customer.getAddress());
+
+			return customer;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	@Override
 	public Customer update(Customer customer) {
-		return null;
+		String sql = "UPDATE customer  SET phonenumber =?, email=?, password=?, fullname=?, date_of_birth =?, " +
+				"gender=?, status=? WHERE user_id =?";
+		try (Connection connection= dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setString(1, customer.getPhoneNumber());
+			statement.setString(2, customer.getEmail());
+			statement.setString(3, PasswordHashingUtil.createHash(customer.getPassword()));
+			statement.setString(4, customer.getFullName());
+			statement.setDate(5, Date.valueOf(customer.getDateOfBirth()));
+			statement.setInt(6, customer.getGender().getValue());
+			statement.setBoolean(7,customer.isActive());
+			statement.setInt(8, customer.getUserId());
+			statement.executeUpdate();
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return customer;
+
 	}
 
 	@Override
@@ -131,8 +160,9 @@ public class CustomerDAO
 			LocalDate dateOfBirth = resultSet.getDate("date_of_birth").toLocalDate();
 			ShippingAddressDAO addressDAO = new ShippingAddressDAO(dataSource);
 			ShippingAddress address = addressDAO.getAddress(userId);
+			boolean status = resultSet.getBoolean("status");
 			return new Customer(userId, password, email, fullName, pNumber, gender, dateOfBirth,
-					address);
+					address, status);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -145,12 +175,28 @@ public class CustomerDAO
 		String password = customer.getPassword();
 		String sql = "SELECT * FROM customer WHERE " +
 				(isPhoneNumber ? "phonenumber=?" : "email=?") +
-				" and (password=?) LIMIT 1";
+				" LIMIT 1";
 		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql)) {
 			statement.setString(1, account);
-			statement.setString(2, password);
 			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				String validPassword = resultSet.getString("password");
+				if (PasswordHashingUtil.validatePassword(password,validPassword))
+					return map(resultSet);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public Customer findCustomerByPhoneNumber(String phoneNumber) {
+		String sql = "SELECT * FROM customer WHERE phonenumber=? ";
+		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+				connection.prepareStatement(sql);) {
+			statement.setString(1, phoneNumber);
+			ResultSet resultSet = statement.executeQuery();
+			// loop the result set
 			while (resultSet.next()) {
 				return map(resultSet);
 			}
@@ -160,57 +206,17 @@ public class CustomerDAO
 		return null;
 	}
 
-	public Customer updateProfile(Customer customer) throws SQLException {
-		String fullName = customer.getFullName();
-		Customer.Gender gender = customer.getGender();
-		LocalDate dateOfBirth = customer.getDateOfBirth();
-		int id = customer.getUserId();
-
-		String sql = "UPDATE customer SET fullname=?, gender=?, date_of_birth=? WHERE user_id=? ";
-
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
-				connection.prepareStatement(sql)) {
-			statement.setString(1, fullName);
-			statement.setInt(2, gender.getValue());
-			statement.setDate(3, Date.valueOf(dateOfBirth));
-			statement.setInt(4, id);
-			statement.execute();
-		}
-		return customer;
-
-	}
-
-	public Customer updatePassword(Customer customer) throws SQLException {
-		int userId = customer.getUserId();
-		String newPassword = customer.getPassword();
-		Connection connection = null;
-		String sql = "UPDATE customer SET password = ? WHERE user_id = ?";
-		PreparedStatement statement = null;
-		try {
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(sql);
-			statement.setString(1, newPassword);
-			statement.setInt(2, userId);
-			statement.execute();
-		} finally {
-			if (statement != null) statement.close();
-			if (connection != null) connection.close();
-		}
-		return customer;
-	}
-
-	public Customer findCustomerByPhoneNumber(String phoneNumber) {
-		String sql = "SELECT * FROM customer WHERE phonenumber=? ";
+	public Customer findCustomerByEmail(String email) {
+		String sql = "SELECT * FROM customer WHERE email=? ";
 		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql);) {
-			statement.setString(1, phoneNumber);
+			statement.setString(1, email);
 			ResultSet resultSet = statement.executeQuery();
 			// loop the result set
 			while (resultSet.next()) {
-				return  map(resultSet);
+				return map(resultSet);
 			}
-		}
-		catch (SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;

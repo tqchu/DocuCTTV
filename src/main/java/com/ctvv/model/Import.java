@@ -8,9 +8,10 @@ public class Import {
 	private int importId;
 	private String importerName;
 	private int providerId;
+	private String providerTaxId;
 	private String providerName;
 	private LocalDateTime importDate;
-	private int totalPrice;
+	private long totalPrice;
 	private List<ImportDetail> importDetailList;
 
 	public Import() {
@@ -18,12 +19,14 @@ public class Import {
 	}
 
 	public Import(
-			int importId, String importerName, int providerId, String providerName, LocalDateTime importDate,
-			int totalPrice,
+			int importId, String importerName, int providerId,String providerTaxId, String providerName,
+			LocalDateTime importDate,
+			long totalPrice,
 			List<ImportDetail> importDetailList) {
 		this.importId = importId;
 		this.importerName = importerName;
 		this.providerId = providerId;
+		this.providerTaxId = providerTaxId;
 		this.providerName = providerName;
 		this.importDate = importDate;
 		this.totalPrice = totalPrice;
@@ -32,11 +35,12 @@ public class Import {
 	}
 
 	public Import(
-			String importerName, int providerId, String providerName, LocalDateTime importDate,
-			int totalPrice,
+			String importerName, int providerId, String providerName, String providerTaxId,LocalDateTime importDate,
+			long totalPrice,
 			List<ImportDetail> importDetailList) {
 		this.importerName = importerName;
 		this.providerId = providerId;
+		this.providerTaxId = providerTaxId;
 		this.providerName = providerName;
 		this.importDate = importDate;
 		this.totalPrice = totalPrice;
@@ -85,11 +89,11 @@ public class Import {
 		this.importDate = importDate;
 	}
 
-	public int getTotalPrice() {
+	public long getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(int totalPrice) {
+	public void setTotalPrice(long totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
@@ -99,5 +103,13 @@ public class Import {
 
 	public void setImportDetailList(List<ImportDetail> importDetailList) {
 		this.importDetailList = new ArrayList<>(importDetailList);
+	}
+
+	public String getProviderTaxId() {
+		return providerTaxId;
+	}
+
+	public void setProviderTaxId(String providerTaxId) {
+		this.providerTaxId = providerTaxId;
 	}
 }

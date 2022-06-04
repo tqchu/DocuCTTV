@@ -45,17 +45,18 @@ public class ImportDAO
 
 	@Override
 	public Import create(Import pImport) {
-		String sql = "INSERT INTO import(importer_name, provider_id, provider_name, import_date) VALUES (?,?,?,?)";
-		Connection connection = null;
-		PreparedStatement statement = null;
-		try {
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		String sql = "INSERT INTO import(importer_name, provider_id, provider_tax_id,provider_name, import_date) " +
+				"VALUES (?,?,?,?,?)";
+
+		try (Connection connection = dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);){
+
 			connection.setAutoCommit(false);
 			statement.setString(1, pImport.getImporterName());
 			statement.setInt(2, pImport.getProviderId());
-			statement.setString(3, pImport.getProviderName());
-			statement.setTimestamp(4, Timestamp.valueOf(pImport.getImportDate()));
+			statement.setString(3, pImport.getProviderTaxId());
+			statement.setString(4, pImport.getProviderName());
+			statement.setTimestamp(5, Timestamp.valueOf(pImport.getImportDate()));
 			statement.execute();
 			ResultSet resultSet = statement.getGeneratedKeys();
 			while (resultSet.next()) {
@@ -72,19 +73,7 @@ public class ImportDAO
 			return pImport;
 
 		} catch (SQLException e) {
-			try {
-				if (connection != null) connection.rollback();
-			} catch (SQLException ex) {
-				ex.printStackTrace();
-			}
 			e.printStackTrace();
-		} finally {
-			try {
-				if (statement != null) statement.close();
-				if (connection != null) connection.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 		return null;
 	}
@@ -112,12 +101,13 @@ public class ImportDAO
 			int importId = resultSet.getInt("import_id");
 			String importerName = resultSet.getString("importer_name");
 			int providerId = resultSet.getInt("provider_id");
+			String providerTaxId = resultSet.getString("provider_tax_id");
 			String providerName = resultSet.getString("provider_name");
 			LocalDateTime importDate = resultSet.getTimestamp("import_date").toLocalDateTime();
 			List<ImportDetail> importDetailList = importDetailDAO.getGroup(importId);
-			int totalPrice = totalPrice(importDetailList);
+			long totalPrice = totalPrice(importDetailList);
 
-			return new Import(importId, importerName, providerId, providerName, importDate, totalPrice,
+			return new Import(importId, importerName, providerId,providerTaxId, providerName, importDate, totalPrice,
 					importDetailList);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -126,10 +116,10 @@ public class ImportDAO
 
 	}
 
-	public int totalPrice(List<ImportDetail> importDetailList) {
-		int totalPrice = 0;
+	public long totalPrice(List<ImportDetail> importDetailList) {
+		long totalPrice = 0;
 		for (ImportDetail importDetail : importDetailList) {
-			totalPrice += importDetail.getPrice() * importDetail.getQuantity() * (1 - importDetail.getTax());
+			totalPrice += (long) importDetail.getPrice() * importDetail.getQuantity() * (1 - importDetail.getTax());
 		}
 		return totalPrice;
 	}

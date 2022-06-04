@@ -2,6 +2,8 @@ package com.ctvv.controller.admin;
 
 import com.ctvv.dao.AdminDAO;
 import com.ctvv.model.Admin;
+import com.ctvv.util.EmailUtils;
+import com.ctvv.util.UniqueStringUtils;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -17,14 +19,15 @@ import java.util.List;
 @WebServlet(name = "ManageAdminsController", value = "/admin/admins/*")
 public class ManageAdminsController
 		extends HttpServlet {
+	final int NUMBER_OF_RECORDS_PER_PAGE = 10;
+	private final String HOME_SERVLET = "/admin/admins";
 	HttpSession session;
 	private AdminDAO adminDAO;
-	private  final String HOME_SERVLET = "/admin/admins";
-	final int NUMBER_OF_RECORDS_PER_PAGE = 10;
+
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session= request.getSession();
+		session = request.getSession();
 		String action = request.getParameter("action");
 		RequestDispatcher dispatcher;
 		if (action == null) listAdmins(request, response);
@@ -84,16 +87,6 @@ public class ManageAdminsController
 		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
 	}
 
-
-	private void deleteAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-		adminDAO.delete(Integer.parseInt(request.getParameter("id")));
-		try {
-			response.sendRedirect( request.getContextPath()+HOME_SERVLET);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
 		request.setAttribute("tab", "admins");
@@ -122,17 +115,21 @@ public class ManageAdminsController
 
 	private void createAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		String username = request.getParameter("username");
-		String password = request.getParameter("password");
+		String password = UniqueStringUtils.randomUUID(8);
 		String email = request.getParameter("email");
+		String phoneNumber = request.getParameter("phoneNumber");
+		String address = request.getParameter("address");
 		String fullName = request.getParameter("fullName");
 		String role = request.getParameter("role");
 
-		if ((adminDAO.findByUsername(username) == null) && (adminDAO.findByEmail(email) == null)) {
-			Admin admin = new Admin(username, email, fullName, password, role);
-			request.setAttribute("successMessage", "Thêm thành công");
-			adminDAO.createAdmin(admin);
+		if ((adminDAO.findByUsername(username) == null) && (adminDAO.findByEmail(email) == null) && (adminDAO.findByPhoneNumber(phoneNumber)==null)) {
+			Admin admin = new Admin(username, email, fullName, password, phoneNumber, address, role);
+			// Gửi email  thông báo về cho nhân viên
+			EmailUtils.sendPasswordForNewAdmin(email, password);
+			adminDAO.create(admin);
+			session.setAttribute("successMessage", "Thêm quản trị viên thành công");
 			try {
-				response.sendRedirect(request.getContextPath() + "/admin");
+				response.sendRedirect(request.getContextPath() + "/admin/admins");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -142,6 +139,9 @@ public class ManageAdminsController
 			}
 			if (adminDAO.findByEmail(email) != null) {
 				request.setAttribute("emailErrorMessage", "Email đã tồn tại, vui lòng chọn tên khác");
+			}
+			if (adminDAO.findByPhoneNumber(phoneNumber) != null) {
+				request.setAttribute("phoneNumberErrorMessage", "Số điện thoại đã tồn tại, vui lòng chọn tên khác");
 			}
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/admins/addForm.jsp");
 			try {
@@ -160,8 +160,17 @@ public class ManageAdminsController
 		adminDAO.updateRole(role, id);
 		request.setAttribute("successMessage", "Cập nhật thành công");
 		try {
-			response.sendRedirect( request.getContextPath()+HOME_SERVLET);
+			response.sendRedirect(request.getContextPath() + HOME_SERVLET);
 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void deleteAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+		adminDAO.delete(Integer.parseInt(request.getParameter("id")));
+		try {
+			response.sendRedirect(request.getContextPath() + HOME_SERVLET);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

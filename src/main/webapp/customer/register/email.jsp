@@ -1,15 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%-- set context path--%>
-<c:set var="context" value="${pageContext.request.contextPath}"/>
-<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %></c:set>
-
+<c:set var="context" value="${pageContext.request.contextPath}" scope="request"/>
+<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %>
+</c:set>
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
-    <link rel="shortcut icon" href="${context}/favicon.ico" />
-
+    <link rel="shortcut icon" href="${context}/favicon.ico">
     <!-- RESET CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
           integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
@@ -21,31 +20,35 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
           rel="stylesheet">
-    <%-- APP--%>
+    <!-- APP -->
     <link rel="stylesheet" href="${context}/css/base.css?rd=${rand}">
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
 </head>
 <body>
-<c:set var="action" value="Đăng ký" scope="request"/>
+<c:set var="action" value="Hoàn tất đăng ký" scope="request" />
 <jsp:include page="../common/search-header.jsp"/>
 
 <div class="register-box">
-    <div class="form__heading-text">Đăng ký</div>
-
+    <div class="form__small-heading-text">Để nhận thông báo về thông tin đơn hàng, khuyến mãi, quý khách vui lòng cung
+        cấp địa chỉ email</div>
+    <c:if test="${not empty errorMessage}">
+        <div class="error-message">
+                ${errorMessage}
+        </div>
+        <c:remove var="errorMessage" scope="session"/>
+    </c:if>
     <form action="${context}/register" method="post" class="register-form form" autocomplete="off">
-        <input type="hidden" name="phase" value="phone">
+        <input type="hidden" name="phase" value="email">
         <div class="form-group form-floating w-100">
-            <input type="text" class="form-control" id="phone" name="phoneNumber" placeholder="Số điện thoại">
-            <label for="phone" class="form-label">Nhập số điện thoại</label>
+            <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+            <label for="email" class="form-label">Email</label>
         </div>
         <button type="submit" class="btn submit-btn w-100">Tiếp tục</button>
 
     </form>
-    <div class="register-form__suggestion">
-        Bạn đã có tài khoản? <a href="${context}/login" class="text-primary">Đăng nhập</a>
-    </div>
 </div>
-<jsp:include page="../../common/footer.jsp"/>
+<%--<jsp:include page="../../common/footer.jsp"/>--%>
+
 
 </body>
 </html>

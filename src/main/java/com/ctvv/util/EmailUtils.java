@@ -11,36 +11,6 @@ public class EmailUtils {
 	public static void sendOrderEmail(
 			EMAIL_TYPE type, String toEmail, Order order, String reason,
 			String recommend) {
-		String host = "smtp.gmail.com";
-
-		Properties properties = System.getProperties();
-
-		properties.put("mail.smtp.host", host);
-		properties.put("mail.smtp.port", "465");
-		properties.put("mail.smtp.starttls.required", "true");
-		properties.put("mail.smtp.ssl.protocols", "TLSv1.2");
-		properties.put("mail.smtp.ssl.enable", "true");
-		properties.put("mail.smtp.auth", "true");
-
-		Properties appProps = PropertiesUtil.get("config.properties");
-		Session session = Session.getInstance(properties, new Authenticator() {
-
-			protected PasswordAuthentication getPasswordAuthentication() {
-
-				return new PasswordAuthentication(appProps.getProperty("email.user"), appProps.getProperty("email" +
-						".password"));
-
-			}
-
-		});
-		session.setDebug(true);
-
-		try {
-			MimeMessage message = new MimeMessage(session);
-
-			message.setFrom(new InternetAddress(appProps.getProperty("user.email")));
-
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
 
 			String subject = null;
 			String content = null;
@@ -66,14 +36,7 @@ public class EmailUtils {
 					content = getCompletedOrderEmailContent(order);
 					break;
 			}
-			message.setSubject(subject, "UTF-8");
-
-			message.setContent(content, "text/html;charset=UTF-8");
-
-			Transport.send(message);
-		} catch (MessagingException mex) {
-			mex.printStackTrace();
-		}
+			sendEmail(toEmail, subject, content);
 	}
 
 	private static String getOrderedOrderEmailContent(Order order) {
@@ -143,6 +106,58 @@ public class EmailUtils {
 				"</p>";
 	}
 
+	public static void sendOTP(String email, String otp) {
+		String subject= "Xác thực email";
+		String content="Mã xác nhận là " + otp +". Mã có hiệu lực trong 10 phút.";
+		sendEmail(email, subject,content );
+	}
+	public static void sendPasswordForNewAdmin(String toEmail, String password){
+		String subject = "Bạn đã được cấp tài khoản tại NoithatCTVV";
+		String content = "Mật khẩu của tài khoản được cấp là " + password +". Sử dụng email và mật khẩu này để đăng " +
+				"nhập vào  <a href='http://localhost:8080/noithatctvv/admin'>website quản trị</a>";
+		sendEmail(toEmail, subject, content);
+
+	}
+	private static void sendEmail(String toEmail, String subject, String content){
+		String host = "smtp.gmail.com";
+
+		Properties properties = System.getProperties();
+
+		properties.put("mail.smtp.host", host);
+		properties.put("mail.smtp.port", "465");
+		properties.put("mail.smtp.starttls.required", "true");
+		properties.put("mail.smtp.ssl.protocols", "TLSv1.2");
+		properties.put("mail.smtp.ssl.enable", "true");
+		properties.put("mail.smtp.auth", "true");
+
+		Properties appProps = PropertiesUtil.get("config.properties");
+		Session session = Session.getInstance(properties, new Authenticator() {
+
+			protected PasswordAuthentication getPasswordAuthentication() {
+
+				return new PasswordAuthentication(appProps.getProperty("email.user"), appProps.getProperty("email" +
+						".password"));
+
+			}
+
+		});
+		session.setDebug(true);
+
+		try {
+			MimeMessage message = new MimeMessage(session);
+
+			message.setFrom(new InternetAddress(appProps.getProperty("email.user")));
+
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
+			message.setSubject(subject, "UTF-8");
+
+			message.setContent(content, "text/html;charset=UTF-8");
+
+			Transport.send(message);
+		} catch (MessagingException mex) {
+			mex.printStackTrace();
+		}
+	}
 	public enum EMAIL_TYPE {
 		ORDERED_ORDER,
 		CONFIRMED_ORDER,
