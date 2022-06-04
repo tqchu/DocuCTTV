@@ -7,6 +7,7 @@ import com.ctvv.dao.ShippingAddressDAO;
 import com.ctvv.model.Customer;
 import com.ctvv.model.ShippingAddress;
 import com.ctvv.dao.CustomerDAO;
+import com.ctvv.util.PasswordHashingUtil;
 
 
 import javax.naming.Context;
@@ -114,12 +115,10 @@ public class CustomerAccountController
 		String oldPassword = request.getParameter("oldPassword");
 		String newPassword = request.getParameter("password");
 		String confirmedPassword = request.getParameter("confirmedPassword");
-
-
 		try {
-			if (oldPassword.equals(customer.getPassword())) {
+			if (PasswordHashingUtil.validatePassword(oldPassword,customer.getPassword())) {
 				//đổi mật khẩu trong database
-				customer.setPassword(newPassword);
+				customer.setPassword(PasswordHashingUtil.createHash(newPassword));
 				customer = customerDAO.updatePassword(customer);
 				//đổi mật khẩu cho session hien tai
 				session.setAttribute("customer", customer);
