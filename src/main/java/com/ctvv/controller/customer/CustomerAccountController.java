@@ -7,6 +7,7 @@ import com.ctvv.dao.ShippingAddressDAO;
 import com.ctvv.model.Customer;
 import com.ctvv.model.ShippingAddress;
 import com.ctvv.dao.CustomerDAO;
+import com.ctvv.util.PasswordHashingUtil;
 
 
 import javax.naming.Context;
@@ -109,17 +110,19 @@ public class CustomerAccountController
 		String oldPassword = request.getParameter("oldPassword");
 		String newPassword = request.getParameter("password");
 		String confirmedPassword = request.getParameter("confirmedPassword");
-
-
-		if (oldPassword.equals(customer.getPassword())) {
-			//đổi mật khẩu trong database
-			customer.setPassword(newPassword);
-			customer = customerDAO.update(customer);
-			//đổi mật khẩu cho session hien tai
-			session.setAttribute("customer", customer);
-			request.setAttribute("successMessage", "Đổi mật khẩu thành công");
-		} else {
-			request.setAttribute("wrongOldPasswordMessage", "Sai mật khẩu cũ");
+		try {
+			if (PasswordHashingUtil.validatePassword(oldPassword,customer.getPassword())) {
+				//đổi mật khẩu trong database
+				customer.setPassword(PasswordHashingUtil.createHash(newPassword));
+				customer = customerDAO.updatePassword(customer);
+				//đổi mật khẩu cho session hien tai
+				session.setAttribute("customer", customer);
+				request.setAttribute("successMessage", "Đổi mật khẩu thành công");
+			} else {
+				request.setAttribute("wrongOldPasswordMessage", "Sai mật khẩu cũ");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
 		dispatcher.forward(request, response);
