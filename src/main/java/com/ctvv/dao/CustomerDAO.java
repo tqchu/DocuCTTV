@@ -2,6 +2,8 @@ package com.ctvv.dao;
 
 import com.ctvv.model.Customer;
 import com.ctvv.model.ShippingAddress;
+import com.ctvv.util.PasswordHashingUtil;
+
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -173,14 +175,15 @@ public class CustomerDAO
 		String password = customer.getPassword();
 		String sql = "SELECT * FROM customer WHERE " +
 				(isPhoneNumber ? "phonenumber=?" : "email=?") +
-				" and (password=?) LIMIT 1";
+				" LIMIT 1";
 		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql)) {
 			statement.setString(1, account);
-			statement.setString(2, password);
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				return map(resultSet);
+				String validPassword = resultSet.getString("password");
+				if (PasswordHashingUtil.validatePassword(password,validPassword))
+					return map(resultSet);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -1,8 +1,11 @@
 package com.ctvv.dao;
 
 import com.ctvv.model.Admin;
+import com.ctvv.util.PasswordHashingUtil;
 
 import javax.sql.DataSource;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,31 +16,48 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 		super(dataSource);
 	}
 
-
-	public Admin validate(Admin admin) throws SQLException {
+	public Admin validate(Admin admin)  {
 		// Tạo connection
 		String usernameToAuthenticate = admin.getUsername();
 		String emailToAuthenticate = admin.getEmail();
-		String passwordToAuthenticate = admin.getPassword();
-		String sql = "SELECT * FROM admin WHERE ((username=?) or email=? ) and (password=?) LIMIT 1";
+		String password = admin.getPassword();
+		String sql = "SELECT * FROM admin WHERE ((username=?) or email=? ) LIMIT 1";
 
-		try (Connection	connection = dataSource.getConnection();
-		PreparedStatement statement = connection.prepareStatement(sql);){
-
+		try (Connection connection = dataSource.getConnection();
+		PreparedStatement statement = connection.prepareStatement(sql)){
 			statement.setString(1, usernameToAuthenticate);
 			statement.setString(2, emailToAuthenticate);
-			statement.setString(3, passwordToAuthenticate);
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
-				return map(resultSet);
+				String validPassword = resultSet.getString("password");
+				if (PasswordHashingUtil.validatePassword(password,validPassword))
+					return map(resultSet);
 			}
-		} catch (SQLException e){
+		}
+		catch(SQLException e){
 			e.printStackTrace();
 		}
 		return null;
 	}
-
+	private Admin map(ResultSet resultSet){
+		try {
+		int id = resultSet.getInt("user_id");
+			String username = resultSet.getString("username");
+			String email = resultSet.getString("email");
+			String phoneNumber = resultSet.getString("phone_number");
+			String address = resultSet.getString("address");
+			String password = resultSet.getString("password");
+			String fullName = resultSet.getString("fullname");
+			String role = resultSet.getString("role");
+			return new Admin(id, username, email, password, fullName, phoneNumber, address,role);
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return null;
+	}
 	public Admin get(int id){
+		Admin admin = new Admin();
 		String sql = "SELECT * FROM admin WHERE user_id=? ";
 		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql);) {
@@ -68,7 +88,7 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 		PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);){
 
 			statement.setString(1, admin.getUsername());
-			statement.setString(2, admin.getPassword());
+			statement.setString(2, PasswordHashingUtil.createHash(admin.getPassword()));
 			statement.setString(3, admin.getFullName());
 			statement.setString(4, admin.getPhoneNumber());
 			statement.setString(5, admin.getAddress());
@@ -99,7 +119,7 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 			statement.setString(1, fullName);
 			statement.setString(2, username);
 			statement.setString(3, email);
-			statement.setString(4, password);
+			statement.setString(4, PasswordHashingUtil.createHash(password));
 			statement.setInt(5, id);
 			statement.execute();
 		}
@@ -137,24 +157,7 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 		return adminList;
 	}
 
-	@Override
-	public Admin map(ResultSet resultSet)
-	{
-		try{
-			int id = resultSet.getInt("user_id");
-			String username = resultSet.getString("username");
-			String email = resultSet.getString("email");
-			String phoneNumber = resultSet.getString("phone_number");
-			String address = resultSet.getString("address");
-			String password = resultSet.getString("password");
-			String fullName = resultSet.getString("fullname");
-			String role = resultSet.getString("role");
-			return new Admin(id, username, email, password, fullName, phoneNumber, address,role);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+
 
 
 	public void delete(int id) {

@@ -61,11 +61,7 @@ public class AdminController
 		Admin admin = new Admin(usernameOrEmail, password);
 		Admin authenticatedAdmin;
 		// TH1: validate thành công
-		try {
-			authenticatedAdmin = adminDAO.validate(admin);
-		} catch (SQLException e) {
-			throw new ServletException();
-		}
+		authenticatedAdmin = adminDAO.validate(admin);
 		if (authenticatedAdmin != null) {
 
 			session.setAttribute("admin", authenticatedAdmin);
