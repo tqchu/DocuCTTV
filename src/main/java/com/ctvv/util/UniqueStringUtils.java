@@ -34,5 +34,13 @@ public class UniqueStringUtils {
 		}
 		return new String(random);
 	}
-
+	public static String otp(){
+		char[] random = new char[6];
+		char[] chars = "1234567890".toCharArray();
+		Random r = new Random();
+		for (int i = 0; i < 6; i++) {
+			random[i] = chars[r.nextInt(chars.length)];
+		}
+		return new String(random);
+	}
 }

@@ -2,7 +2,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%-- set context path--%>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
-<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %></c:set>
+<c:set var="rand"><%= java.lang.Math.round(java.lang.Math.random() * 10000) %>
+</c:set>
 
 <html>
 <head>
@@ -24,20 +25,44 @@
     <link rel="stylesheet" href="${context}/css/style.css?rd=${rand}">
 </head>
 <body>
+<c:set var="action" value="Đăng ký" scope="request"/>
 <jsp:include page="../common/search-header.jsp"/>
 
 
 <div class="register-box">
-    <div class="form__heading-text">Vui lòng nhập mã xác minh</div>
+    <c:choose>
+        <c:when test="${not empty duplicatePhoneNumberMessage}">
+            <span class="duplicate-phone-number">${duplicatePhoneNumberMessage}</span>
+            <a href="${context}" class="btn btn-primary w-100">
+                Đăng nhập
+            </a>
+            <c:remove var="duplicatePhoneNumberMessage" scope="session" />
+        </c:when>
+        <c:otherwise>
+            <div class="form__heading-text">Vui lòng nhập mã xác minh</div>
 
-    <form action="${context}" method="post" class="register-form form" autocomplete="off">
-        <div class="form-group form-floating">
-            <input type="text" class="form-control" id="otp" name="otp" placeholder="Mã xác minh">
-            <label for="otp" class="form-label">Mã xác minh</label>
-        </div>
 
-        <button type="submit" class="btn submit-btn">Tiếp tục</button>
-    </form>
+            <c:if test="${not empty errorMessage}">
+                <div class="error-message">
+                        ${errorMessage}
+                </div>
+                <c:remove var="errorMessage" scope="session"/>
+            </c:if>
+            <form action="${context}/register" method="post" class="register-form form" autocomplete="off">
+                <div class="form-group form-floating w-100">
+                    <input type="text" class="form-control " id="otp" name="otp" placeholder="Mã xác minh">
+                    <label for="otp" class="form-label">Mã xác minh</label>
+                </div>
+                <button id="resend-btn" class="btn btn-primary">
+                    Gửi lại
+                </button>
+
+                <button type="submit" class="btn submit-btn w-100">Tiếp tục</button>
+            </form>
+        </c:otherwise>
+    </c:choose>
+
+
 </div>
 <jsp:include page="../../common/footer.jsp"/>
 

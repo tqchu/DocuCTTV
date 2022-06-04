@@ -198,4 +198,21 @@ public class CustomerDAO
 		}
 		return customer;
 	}
+
+	public Customer findCustomerByPhoneNumber(String phoneNumber) {
+		String sql = "SELECT * FROM customer WHERE phonenumber=? ";
+		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+				connection.prepareStatement(sql);) {
+			statement.setString(1, phoneNumber);
+			ResultSet resultSet = statement.executeQuery();
+			// loop the result set
+			while (resultSet.next()) {
+				return  map(resultSet);
+			}
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

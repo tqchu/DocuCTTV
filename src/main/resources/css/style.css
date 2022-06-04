@@ -197,9 +197,9 @@
     margin-left: 10px;
 
 }
-
 .register__gender {
-    margin-top: 6px;
+    margin-top: 10px;
+    margin-left: 6px;
 }
 
 .register-suggestion {
@@ -618,4 +618,25 @@
 .admin__user-name,
 .admin__email {
     white-space: nowrap;
+}
+
+.register-box {
+    margin-top: 120px;
+}
+.register-form {
+    position: relative;
+}
+
+.register-form__suggestion {
+    margin-top: 12px;
+}#resend-btn {
+     left: calc(100% + 10px);
+     top: 6px;
+     position: absolute;
+     height: 40px;
+     width: 72px;
+ }
+.duplicate-phone-number{
+    text-align: center;
+    margin-bottom: 10px;
 }
