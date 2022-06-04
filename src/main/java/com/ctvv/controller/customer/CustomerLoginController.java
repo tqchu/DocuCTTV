@@ -64,7 +64,7 @@ public class CustomerLoginController
 	                                                                                           IOException {
 		session = request.getSession();
 		String from = request.getParameter("from");
-		if (from== null) from = request.getContextPath();
+		if (from.equals("/noithatctvv/login")) from = request.getContextPath();
 		if (Objects.equals(from, "")) {
 			from = request.getContextPath() + HOME_SERVLET;
 		}

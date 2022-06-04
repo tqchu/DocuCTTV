@@ -110,19 +110,15 @@ public class CustomerAccountController
 		String oldPassword = request.getParameter("oldPassword");
 		String newPassword = request.getParameter("password");
 		String confirmedPassword = request.getParameter("confirmedPassword");
-		try {
-			if (PasswordHashingUtil.validatePassword(oldPassword,customer.getPassword())) {
-				//đổi mật khẩu trong database
-				customer.setPassword(PasswordHashingUtil.createHash(newPassword));
-				customer = customerDAO.updatePassword(customer);
-				//đổi mật khẩu cho session hien tai
-				session.setAttribute("customer", customer);
-				request.setAttribute("successMessage", "Đổi mật khẩu thành công");
-			} else {
-				request.setAttribute("wrongOldPasswordMessage", "Sai mật khẩu cũ");
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (PasswordHashingUtil.validatePassword(oldPassword, customer.getPassword())) {
+			//đổi mật khẩu trong database
+			customer.setPassword(PasswordHashingUtil.createHash(newPassword));
+			customer = customerDAO.update(customer);
+			//đổi mật khẩu cho session hien tai
+			session.setAttribute("customer", customer);
+			request.setAttribute("successMessage", "Đổi mật khẩu thành công");
+		} else {
+			request.setAttribute("wrongOldPasswordMessage", "Sai mật khẩu cũ");
 		}
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
 		dispatcher.forward(request, response);

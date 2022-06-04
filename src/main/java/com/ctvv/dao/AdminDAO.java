@@ -39,7 +39,7 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 		}
 		return null;
 	}
-	private Admin map(ResultSet resultSet){
+	public Admin map(ResultSet resultSet){
 		try {
 		int id = resultSet.getInt("user_id");
 			String username = resultSet.getString("username");
