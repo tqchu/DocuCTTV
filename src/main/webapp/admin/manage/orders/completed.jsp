@@ -18,15 +18,18 @@
         <td>${order.orderId}</td>
         <td>${order.customerName}</td>
         <td>
-               ${order.completedTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))}
+                ${order.completedTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))}
         </td>
         <td>${order.totalPrice}</td>
         <td class="column__action">
             <a href="${context}/admin/orders/${order.orderId}" class="btn-primary btn btn-edit">Xem chi tiết</a>
         </td>
         <td class="column__action">
-            Xuất file
+            <button type="submit" class="btn btn-primary" form="export-file-form">Xuất file</button>
         </td>
+        <form action="${context}/admin/orders/download" method="post" id="export-file-form">
+            <input type="hidden" name="id" value="${order.orderId}">
+        </form>
 
     </tr>
 </c:forEach>

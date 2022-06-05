@@ -64,9 +64,8 @@ public class CustomerLoginController
 	                                                                                           IOException {
 		session = request.getSession();
 		String from = request.getParameter("from");
-		if (from.equals("/noithatctvv/login")) from = request.getContextPath();
-		if (Objects.equals(from, "")) {
-			from = request.getContextPath() + HOME_SERVLET;
+		if (from.equals("/noithatctvv/login")) {
+			from = request.getContextPath();
 		}
 		String account = request.getParameter("account");
 		String password = request.getParameter("password");
@@ -88,11 +87,16 @@ public class CustomerLoginController
 			if (authenticatedCustomer.isActive()){
 				session.setAttribute("customer", authenticatedCustomer);
 				String postData = (String) session.getAttribute("postData");
-				if (postData != null) {
-					response.setStatus(307);
-					response.setHeader("Location", from);
-				} else {
-					response.sendRedirect(from);
+				if (from.equals(request.getContextPath())){
+					response.sendRedirect(request.getContextPath());
+				}
+				else{
+					if (postData != null) {
+						response.setStatus(307);
+						response.setHeader("Location", from);
+					} else {
+						response.sendRedirect(from);
+					}
 				}
 			}
 			// Tài khoản bị khóa

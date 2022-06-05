@@ -3,8 +3,10 @@ package com.ctvv.controller.admin;
 import com.ctvv.dao.CustomerDAO;
 import com.ctvv.dao.OrderDAO;
 import com.ctvv.model.Customer;
+import com.ctvv.model.Import;
 import com.ctvv.model.Order;
 import com.ctvv.util.EmailUtils;
+import com.ctvv.util.JasperReportUtils;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -14,6 +16,9 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -102,39 +107,83 @@ public class ManageOrdersController
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session = request.getSession();
-		String action = request.getParameter("action");
-		// to-ship, to-receive, cancel
+		String path = request.getPathInfo();
+		if ("/download".equals(path)){
+			downloadBillFile(request, response);
+		}
+		else {
+			session = request.getSession();
+			String action = request.getParameter("action");
+			// to-ship, to-receive, cancel
+			String id = (request.getParameter("id"));
+			Order order = orderDAO.get(id);
+			Customer customer = customerDAO.get(order.getCustomerId());
+			String toEmail = customer.getEmail();
+			switch (action) {
+				case "to-ship":
+					order.setStatus(Order.OrderStatus.TO_SHIP);
+					order.setConfirmTime(LocalDateTime.now());
+					EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.CONFIRMED_ORDER, toEmail, order, null, null);
+					break;
+				case "to-receive":
+					order.setStatus(Order.OrderStatus.TO_RECEIVE);
+					order.setShipTime(LocalDateTime.now());
+					EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.SHIPPED_ORDER, toEmail, order, null, null);
+					break;
+				case "completed":
+					order.setStatus(Order.OrderStatus.COMPLETED);
+					order.setCompletedTime(LocalDateTime.now());
+					EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.COMPLETED_ORDER, toEmail, order, null, null);
+					break;
+				case "cancel":
+					String reason = request.getParameter("reason");
+					String recommend = request.getParameter("recommend");
+					EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.CANCELED_ORDER, toEmail, order, reason, recommend);
+					order.setStatus(Order.OrderStatus.CANCELED);
+					break;
+			}
+			orderDAO.update(order);
+			response.sendRedirect(request.getParameter("from"));
+		}
+
+	}
+
+	private void downloadBillFile(HttpServletRequest request, HttpServletResponse response) {
+
+		// gets MIME type of the file
+		String mimeType = "application/pdf";
+
+		// modifies response
+		response.setContentType(mimeType);
+
+		// forces download
+		String headerKey = "Content-Disposition";
+		String headerValue = null;
+		try {
+			headerValue = String.format("attachment; filename=\"%s\"", URLEncoder.encode("Hóa-đơn.pdf",
+					"UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		response.setHeader(headerKey, headerValue);
+
+		// obtains response's output stream
+
 		String id = (request.getParameter("id"));
 		Order order = orderDAO.get(id);
-		Customer customer = customerDAO.get(order.getCustomerId());
-		String toEmail = customer.getEmail();
-		switch (action) {
-			case "to-ship":
-				order.setStatus(Order.OrderStatus.TO_SHIP);
-				order.setConfirmTime(LocalDateTime.now());
-				EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.CONFIRMED_ORDER,toEmail, order, null, null);
-				break;
-			case "to-receive":
-				order.setStatus(Order.OrderStatus.TO_RECEIVE);
-				order.setShipTime(LocalDateTime.now());
-				EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.SHIPPED_ORDER,toEmail, order, null, null);
-				break;
-			case "completed":
-				order.setStatus(Order.OrderStatus.COMPLETED);
-				order.setCompletedTime(LocalDateTime.now());
-				EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.COMPLETED_ORDER,toEmail,order, null, null);
-				break;
-			case "cancel":
-				String reason = request.getParameter("reason");
-				String recommend = request.getParameter("recommend");
-				EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.CANCELED_ORDER,toEmail, order, reason, recommend);
-				order.setStatus(Order.OrderStatus.CANCELED);
-				break;
-		}
-		orderDAO.update(order);
-		response.sendRedirect(request.getParameter("from"));
+		byte[] bytes = JasperReportUtils.createBill(order);
+		response.setContentLength(bytes.length);
+		OutputStream os ;
+		try {
+			os = response.getOutputStream();
+			os.write(bytes);
+			os.flush();
+			os.close();
 
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
