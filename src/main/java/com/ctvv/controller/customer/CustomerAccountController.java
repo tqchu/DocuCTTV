@@ -8,6 +8,7 @@ import com.ctvv.model.Customer;
 import com.ctvv.model.ShippingAddress;
 import com.ctvv.dao.CustomerDAO;
 import com.ctvv.util.PasswordHashingUtil;
+import org.jboss.weld.bean.SessionBean;
 
 
 import javax.naming.Context;
@@ -106,13 +107,11 @@ public class CustomerAccountController
 		request.setAttribute("tab", "password");
 		session = request.getSession();
 		Customer customer = (Customer) session.getAttribute("customer");
-
 		String oldPassword = request.getParameter("oldPassword");
 		String newPassword = request.getParameter("password");
-		String confirmedPassword = request.getParameter("confirmedPassword");
 		if (PasswordHashingUtil.validatePassword(oldPassword, customer.getPassword())) {
 			//đổi mật khẩu trong database
-			customer.setPassword(PasswordHashingUtil.createHash(newPassword));
+			customer.setPassword(newPassword);
 			customer = customerDAO.update(customer);
 			//đổi mật khẩu cho session hien tai
 			session.setAttribute("customer", customer);
