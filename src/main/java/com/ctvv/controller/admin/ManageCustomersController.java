@@ -1,5 +1,5 @@
-package com.ctvv.controller.admin;
 
+package com.ctvv.controller.admin;
 import com.ctvv.dao.CustomerDAO;
 import com.ctvv.model.Customer;
 import com.ctvv.model.Provider;
@@ -27,7 +27,7 @@ public class ManageCustomersController
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-			listCustomers(request, response);
+		listCustomers(request, response);
 	}
 
 	private void listCustomers(
