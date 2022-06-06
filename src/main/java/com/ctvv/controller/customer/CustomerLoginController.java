@@ -48,6 +48,13 @@ public class CustomerLoginController
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		session = request.getSession();
+		session.removeAttribute("postData");
+		showLoginForm(request, response);
+	}
+
+	private void showLoginForm(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                            IOException {
 		request.setAttribute("headerAction", "Đăng nhập");
 		RequestDispatcher dispatcher = request.getRequestDispatcher(HOME_PAGE);
 		dispatcher.forward(request, response);
@@ -57,7 +64,12 @@ public class CustomerLoginController
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		authenticate(request, response);
+		String account = request.getParameter("account");
+		if (account != null) {
+			authenticate(request, response);
+		} else {
+			showLoginForm(request, response);
+		}
 	}
 
 	private void authenticate(HttpServletRequest request, HttpServletResponse response) throws ServletException,
@@ -71,10 +83,9 @@ public class CustomerLoginController
 		String password = request.getParameter("password");
 		Customer customer = new Customer();
 		boolean isPhoneNumber = (account.indexOf('@') == -1);
-		if (isPhoneNumber){
+		if (isPhoneNumber) {
 			customer.setPhoneNumber(account);
-		}
-		else{
+		} else {
 			customer.setEmail(account);
 		}
 		customer.setPassword(password);
@@ -84,13 +95,12 @@ public class CustomerLoginController
 		authenticatedCustomer = customerDAO.validate(customer);
 		if (authenticatedCustomer != null) {
 			// Tài khoản bình thường (active)
-			if (authenticatedCustomer.isActive()){
+			if (authenticatedCustomer.isActive()) {
 				session.setAttribute("customer", authenticatedCustomer);
 				String postData = (String) session.getAttribute("postData");
-				if (from.equals(request.getContextPath())){
+				if (from.equals(request.getContextPath())) {
 					response.sendRedirect(request.getContextPath());
-				}
-				else{
+				} else {
 					if (postData != null) {
 						response.setStatus(307);
 						response.setHeader("Location", from);
@@ -100,8 +110,9 @@ public class CustomerLoginController
 				}
 			}
 			// Tài khoản bị khóa
-			else{
-				session.setAttribute("loginMessage", "Tài khoản của bạn đã bị khóa vì vi phạm chính sách của chúng tôi");
+			else {
+				session.setAttribute("loginMessage", "Tài khoản của bạn đã bị khóa vì vi phạm chính sách của chúng " +
+						"tôi");
 				response.sendRedirect(request.getContextPath() + HOME_SERVLET);
 			}
 
@@ -109,7 +120,7 @@ public class CustomerLoginController
 		} else {
 
 			session.setAttribute("loginMessage", "Sai tài khoản hoặc mật khẩu");
-			response.sendRedirect(request.getContextPath()+ HOME_SERVLET);
+			response.sendRedirect(request.getContextPath() + HOME_SERVLET);
 		}
 	}
 }

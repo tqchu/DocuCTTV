@@ -46,7 +46,8 @@ public class CustomerFilter
 			String method = httpServletRequest.getMethod();
 			if (method.equals("POST")) {
 				session.setAttribute("postData", IOUtils.toString(request.getReader()));
-				httpServletResponse.sendRedirect(
+				httpServletResponse.setStatus(307);
+				httpServletResponse.setHeader("Location",
 						httpServletRequest.getContextPath() + "/login?from=" + requestURL + (queryString == null ? "" : "?" + queryString));
 			}
 			else{
