@@ -1,25 +1,20 @@
 package com.ctvv.controller.customer;
 
-import com.ctvv.dao.CategoryDAO;
 import com.ctvv.dao.CustomerDAO;
-import com.ctvv.dao.ProductDAO;
-import com.ctvv.model.Category;
 import com.ctvv.model.Customer;
-import com.ctvv.model.Product;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.sql.*;
-import java.util.List;
-import java.util.Objects;
-import java.util.regex.Pattern;
-import javax.sql.DataSource;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
+import java.io.IOException;
 
 @WebServlet(name = "CustomerController", value = "/login")
 
@@ -76,7 +71,7 @@ public class CustomerLoginController
 	                                                                                           IOException {
 		session = request.getSession();
 		String from = request.getParameter("from");
-		if (from.equals("/noithatctvv/login")) {
+		if (from.equals("")) {
 			from = request.getContextPath();
 		}
 		String account = request.getParameter("account");
@@ -98,15 +93,11 @@ public class CustomerLoginController
 			if (authenticatedCustomer.isActive()) {
 				session.setAttribute("customer", authenticatedCustomer);
 				String postData = (String) session.getAttribute("postData");
-				if (from.equals(request.getContextPath())) {
-					response.sendRedirect(request.getContextPath());
+				if (postData != null) {
+					response.setStatus(307);
+					response.setHeader("Location", from);
 				} else {
-					if (postData != null) {
-						response.setStatus(307);
-						response.setHeader("Location", from);
-					} else {
-						response.sendRedirect(from);
-					}
+					response.sendRedirect(from);
 				}
 			}
 			// Tài khoản bị khóa
@@ -115,7 +106,6 @@ public class CustomerLoginController
 						"tôi");
 				response.sendRedirect(request.getContextPath() + HOME_SERVLET);
 			}
-
 
 		} else {
 

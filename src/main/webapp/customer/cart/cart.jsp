@@ -63,8 +63,7 @@
                 <c:forEach items="${cart}" var="cartItem" varStatus="loop">
                     <input type="hidden" name="id" value="${cartItem.product.productId}"
                            form="delete-multiple-item-form">
-                    <input type="hidden" name="id" value="${cartItem.product.productId}"
-                           form="checkout-form">
+
                     <c:set var="errorMessage" scope="page">
                         <%= session.getAttribute("outOfStock" +
                                 ((CartItem)(pageContext.getAttribute("cartItem"))).getProduct().getProductId()) %>
@@ -76,6 +75,8 @@
                                         ((CartItem)(pageContext.getAttribute("cartItem"))).getProduct().getProductId());%>
                         </div>
                     </c:if>
+                    <input type="hidden" name="id" value="${cartItem.product.productId}"
+                           form="checkout-form">
                     <div class="cart-item">
                         <div class="cart__check-btn">
                             <input type="checkbox" name="item" form="delete-multiple-item-form"

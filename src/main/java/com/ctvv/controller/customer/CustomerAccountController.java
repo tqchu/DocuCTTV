@@ -111,10 +111,9 @@ public class CustomerAccountController
 		String newPassword = request.getParameter("password");
 		if (PasswordHashingUtil.validatePassword(oldPassword, customer.getPassword())) {
 			//đổi mật khẩu trong database
-			customer.setPassword(newPassword);
 			customer = customerDAO.update(customer);
 			//đổi mật khẩu cho session hien tai
-			session.setAttribute("customer", customer);
+			customer.setPassword(PasswordHashingUtil.createHash(newPassword));
 			request.setAttribute("successMessage", "Đổi mật khẩu thành công");
 		} else {
 			request.setAttribute("wrongOldPasswordMessage", "Sai mật khẩu cũ");
