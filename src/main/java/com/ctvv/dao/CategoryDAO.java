@@ -8,15 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryDAO
-		extends GenericDAO<Category> {
-	public CategoryDAO(DataSource dataSource) {
-		super(dataSource);
-	}
+		implements GenericDAO<Category> {
 
 	@Override
 	public Category get(int id) {
 		String sql = "SELECT * FROM category WHERE category_id=? ";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql);) {
 			statement.setInt(1, id);
 			ResultSet resultSet = statement.executeQuery();
@@ -34,7 +31,7 @@ public class CategoryDAO
 	public List<Category> getAll() {
 		List<Category> categoryList = new ArrayList<>();
 		String sql = "SELECT * FROM category";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql);) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -50,7 +47,7 @@ public class CategoryDAO
 	@Override
 	public Category create(Category category) {
 		String sql = "INSERT INTO category(category_name) VALUES(?)";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 			statement.setString(1, category.getCategoryName());
 			statement.execute();
@@ -72,7 +69,7 @@ public class CategoryDAO
 		int categoryId = category.getCategoryId();
 
 		String sql = "UPDATE category SET category_name=? WHERE category_id=?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, categoryName);
 			statement.setInt(2, categoryId);
@@ -86,7 +83,7 @@ public class CategoryDAO
 	@Override
 	public void delete(int id) {
 		String sql = "DELETE  FROM category WHERE category_id=?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, id);
 			statement.execute();
@@ -112,7 +109,7 @@ public class CategoryDAO
 	public List<Category> getAll(String orderBy, String order) {
 		List<Category> categoryList = new ArrayList<>();
 		String sql = "SELECT * FROM category ORDER BY " + orderBy +" "+ order;
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -126,7 +123,7 @@ public class CategoryDAO
 	public Category find(String categoryName) {
 		String sql = "SELECT * FROM category WHERE category_name = ?";
 		Category category = null;
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql);) {
 			ResultSet resultSet;
 			statement.setString(1, categoryName);
@@ -149,7 +146,7 @@ public class CategoryDAO
 						(keyword != null ? " WHERE category_name" +  " LIKE '%" + keyword + "%' " : "") +
 						(sortBy != null ? "ORDER BY " + sortBy +" " + order: "") +
 						" LIMIT " + begin + "," + numberOfRec;
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -168,7 +165,7 @@ public class CategoryDAO
 		String sql =
 				"SELECT COUNT(category_id) AS no FROM category " +
 						(keyword != null ? " WHERE " + field + " LIKE '%" + keyword + "%' " : "") ;
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();

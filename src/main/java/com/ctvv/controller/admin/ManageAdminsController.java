@@ -122,7 +122,7 @@ public class ManageAdminsController
 		String fullName = request.getParameter("fullName");
 		String role = request.getParameter("role");
 
-		if ((adminDAO.findByUsername(username) == null) && (adminDAO.findByEmail(email) == null) && (adminDAO.findByPhoneNumber(phoneNumber)==null)) {
+		if ((adminDAO.findByUsername(username) == null) && (adminDAO.findByEmail(email) == null) && (adminDAO.findByPhoneNumber(phoneNumber) == null)) {
 			Admin admin = new Admin(username, email, fullName, password, phoneNumber, address, role);
 			// Gửi email  thông báo về cho nhân viên
 			EmailUtils.sendPasswordForNewAdmin(email, password);
@@ -179,17 +179,6 @@ public class ManageAdminsController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		// Khởi tạo dataSource cho adminDao
-		try {
-			// Dòng bắt buộc để tạo dataSource
-			Context context = new InitialContext();
-			// Tạo và gán dataSource cho adminDAO
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			adminDAO = new AdminDAO(dataSource);
-
-		} catch (NamingException e) {
-			// Chưa tìm ra cách xử lý hợp lý
-			e.printStackTrace();
-		}
+		adminDAO = new AdminDAO();
 	}
 }

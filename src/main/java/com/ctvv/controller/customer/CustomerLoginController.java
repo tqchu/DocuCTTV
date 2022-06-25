@@ -28,16 +28,7 @@ public class CustomerLoginController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		Context context;
-		try {
-			context = new InitialContext();
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			customerDAO = new CustomerDAO(dataSource);
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
-
-
+		customerDAO = new CustomerDAO();
 	}
 
 	@Override

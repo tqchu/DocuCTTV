@@ -9,12 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StockItemDAO
-		extends GenericDAO<StockItem> {
-	private ProductDAO productDAO;
+		implements GenericDAO<StockItem> {
+	private final ProductDAO productDAO;
 
-	public StockItemDAO(DataSource dataSource) {
-		super(dataSource);
-		productDAO = new ProductDAO(dataSource);
+	public StockItemDAO() {
+		productDAO = new ProductDAO();
 	}
 
 	@Override
@@ -32,7 +31,7 @@ public class StockItemDAO
 				" WHERE customer_order.order_status <> 'canceled'" +
 				" GROUP BY order_detail.product_id) res2" +
 				" ON res1.product_id = res2.product_id";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -95,7 +94,7 @@ public class StockItemDAO
 				" ON res1.product_id = res2.product_id"
 				+ (sortBy != null ? " ORDER BY " + sortBy + " " + order : "")
 				+ " LIMIT " + begin + ", " + numberOfRecords;
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {

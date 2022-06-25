@@ -74,36 +74,35 @@ public class CustomerRegisterController
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession();
 		String phase = request.getParameter("phase");
-		if (phase.equals("takeBackAccount")){
-				// Đổi sdt người dùng cũ sang null
-				Customer oldCustomer = (Customer) session.getAttribute("oldCustomer");
-				oldCustomer.setPhoneNumber(null);
-				customerDAO.update(oldCustomer);
-				// remove các attribute k cần thiết
-				session.removeAttribute("oldCustomer");
-				session.removeAttribute("substituteCustomer");
+		if (phase.equals("takeBackAccount")) {
+			// Đổi sdt người dùng cũ sang null
+			Customer oldCustomer = (Customer) session.getAttribute("oldCustomer");
+			oldCustomer.setPhoneNumber(null);
+			customerDAO.update(oldCustomer);
+			// remove các attribute k cần thiết
+			session.removeAttribute("oldCustomer");
+			session.removeAttribute("substituteCustomer");
 
-				session.setAttribute("registerPhase", "email");
+			session.setAttribute("registerPhase", "email");
 
-		}
-		else
-		switch (phase) {
-			case "phone":
-				sendSMSOTP(request, response);
-				break;
-			case "otp-phone":
-				verifyPhoneOTP(request, response);
-				break;
-			case "email":
-				sendMailOTP(request, response);
-				break;
-			case "otp-email":
-				verifyMailOTP(request, response);
-				break;
-			case "set-up":
-				register(request, response);
-				break;
-		}
+		} else
+			switch (phase) {
+				case "phone":
+					sendSMSOTP(request, response);
+					break;
+				case "otp-phone":
+					verifyPhoneOTP(request, response);
+					break;
+				case "email":
+					sendMailOTP(request, response);
+					break;
+				case "otp-email":
+					verifyMailOTP(request, response);
+					break;
+				case "set-up":
+					register(request, response);
+					break;
+			}
 
 		redirectToHome(request, response);
 	}
@@ -227,9 +226,6 @@ public class CustomerRegisterController
 		session.removeAttribute("email");
 		Customer customer = new Customer(password, gender, fullName, phoneNumber, dateOfBirth, email, shippingAddress);
 		session.setAttribute("customer", customerDAO.create(customer));
-
-		// Khi register tạo shipping address dựa vào address, sdt, tên
-		//		customer.setAddress();
 	}
 
 	private void redirectToHome(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -239,13 +235,6 @@ public class CustomerRegisterController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		try {
-			Context context = new InitialContext();
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			customerDAO = new CustomerDAO(dataSource);
-
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
+		customerDAO = new CustomerDAO();
 	}
 }

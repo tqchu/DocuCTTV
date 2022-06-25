@@ -10,20 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAO
-		extends GenericDAO<Product> {
+		implements GenericDAO<Product> {
 	private final ImagePathDAO imagePathDAO;
 	private final CategoryDAO categoryDAO;
 
-	public ProductDAO(DataSource dataSource) {
-		super(dataSource);
-		categoryDAO = new CategoryDAO(dataSource);
-		imagePathDAO = new ImagePathDAO(dataSource);
+	public ProductDAO() {
+		categoryDAO = new CategoryDAO();
+		imagePathDAO = new ImagePathDAO();
 	}
 
 	@Override
 	public Product get(int id) {
 		String sql = "SELECT * FROM product WHERE product_id=?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
 			preparedStatement.setInt(1, id);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -42,7 +41,7 @@ public class ProductDAO
 
 		List<Product> productList = new ArrayList<>();
 		String sql = "SELECT * FROM product ";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
@@ -58,7 +57,7 @@ public class ProductDAO
 		List<Product> productList = new ArrayList<>();
 		String sql = "SELECT * FROM product " +
 				(sortBy != null ? " ORDER BY " + sortBy + " " + order : "");
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
@@ -77,7 +76,7 @@ public class ProductDAO
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DataSourceHelper.getDataSource().getConnection();
 			statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			connection.setAutoCommit(false);
 			statement.setString(1, product.getName());
@@ -124,7 +123,7 @@ public class ProductDAO
 	public Product update(Product product) {
 		String sql = "UPDATE product SET product_name=?, warranty_period=?,  description=?, " +
 				"dimension = ?, material = ?, price = ?, category_id=?, uri=? WHERE product_id=?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, product.getName());
 			statement.setInt(2, product.getWarrantyPeriod());
@@ -149,7 +148,7 @@ public class ProductDAO
 	@Override
 	public void delete(int productId) {
 		String sql = "DELETE FROM product WHERE product_id = ?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, productId);
 			statement.executeUpdate();
@@ -191,7 +190,7 @@ public class ProductDAO
 						(keyword != null ? " WHERE " + field + " LIKE '%" + keyword +
 								"%' OR category_name LIKE '%"+keyword+"%'"
 								: "");
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
@@ -218,7 +217,7 @@ public class ProductDAO
 								: "") +
 						(sortBy != null ? " ORDER BY " + sortBy + " " + order : "") +
 						" LIMIT " + begin + "," + numberOfRec;
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 			 PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -245,7 +244,7 @@ public class ProductDAO
 								: "") +
 						(sortBy != null ? " ORDER BY " + sortBy + " " + order : "") +
 						" LIMIT " + begin + "," + numberOfRec;
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -268,7 +267,7 @@ public class ProductDAO
 										"%' OR material  LIKE '%" + keyword + "' ) " +
 										" AND (price BETWEEN " + minPrice + " AND " + maxPrice + ")"
 								: "");
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
@@ -282,7 +281,7 @@ public class ProductDAO
 
 	public Product findByName(String name) {
 		String sql = "SELECT * FROM product WHERE product_name = ?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql);) {
 			ResultSet resultSet;
 			statement.setString(1, name);
@@ -303,7 +302,7 @@ public class ProductDAO
 		String sql =
 				"SELECT * FROM product LIMIT " + begin + ", " + numberOfRecords +
 						(sortBy != null ? " ORDER BY " + sortBy + " " + order : "");
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -320,7 +319,7 @@ public class ProductDAO
 		int count = 0;
 		String sql =
 				"SELECT COUNT(product_id) AS no FROM product ";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
@@ -340,7 +339,7 @@ public class ProductDAO
 						(categoryId != null ? " WHERE category_id = " + categoryId : "") +
 						(sortBy != null ? " ORDER BY " + sortBy + " " + order : "") +
 						" LIMIT " + begin + "," + numberOfRecs;
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -358,7 +357,7 @@ public class ProductDAO
 		String sql =
 				"SELECT COUNT(product_id) AS no FROM product " + (categoryId != null ?
 						" WHERE category_id = " + categoryId : "");
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
@@ -372,7 +371,7 @@ public class ProductDAO
 
 	public Product get(String productURI) {
 		String sql = "SELECT * FROM product WHERE uri=?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
 			preparedStatement.setString(1, productURI);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -386,24 +385,4 @@ public class ProductDAO
 		return null;
 	}
 
-//	public List<Product> get(int begin, int numberOfRecs, String keyword, String sortBy, String order) {
-//		if (order == null) order = "ASC";
-//		List<Product> productList = new ArrayList<>();
-//		String sql =
-//				"SELECT * FROM product " +
-//						(keyword != null ? " WHERE category_id = " + keyword : "") +
-//						(sortBy != null ? " ORDER BY " + sortBy + " " + order : "") +
-//						" LIMIT " + begin + "," + numberOfRecs;
-//		try (Connection connection = dataSource.getConnection();
-//		     PreparedStatement statement = connection.prepareStatement(sql)) {
-//			ResultSet resultSet = statement.executeQuery();
-//			while (resultSet.next()) {
-//				productList.add(map(resultSet));
-//			}
-//			resultSet.close();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		return productList;
-//	}
 }

@@ -173,7 +173,8 @@ public class CustomerPurchaseController
 		Order order = new Order(orderId, customerId, customerName, recipientName, phoneNumber, address, orderTime,
 				null, null, null, null, orderDetailList, shippingFee);
 		orderDAO.create(order);
-		EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.ORDERED_ORDER, "truongquangchu.tqc@gmail.com",order,null,null);
+		EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.ORDERED_ORDER, "truongquangchu.tqc@gmail.com", order, null,
+				null);
 		session.setAttribute("successMessage", "Đơn hàng " + orderId + " đã được đặt thành công, đang chờ xác nhận!");
 		response.sendRedirect(request.getContextPath() + request.getServletPath() + PENDING);
 	}
@@ -181,13 +182,7 @@ public class CustomerPurchaseController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		try {
-			Context context = new InitialContext();
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			orderDAO = new OrderDAO(dataSource);
-			stockItemDAO = new StockItemDAO(dataSource);
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
+		orderDAO = new OrderDAO();
+		stockItemDAO = new StockItemDAO();
 	}
 }

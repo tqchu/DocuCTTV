@@ -146,7 +146,7 @@ public class CustomerAccountController
 			request.setAttribute("successMessage", "Cập nhật thành công");
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
 			dispatcher.forward(request, response);
-		} catch (IOException | SQLException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
@@ -156,17 +156,9 @@ public class CustomerAccountController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		try {
-			// Dòng bắt buộc để tạo dataSource
-			Context context = new InitialContext();
-			// Tạo và gán dataSource cho adminDAO
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			shippingAddressDAO = new ShippingAddressDAO(dataSource);
-			customerDAO = new CustomerDAO(dataSource);
-		} catch (NamingException e) {
-			// Chưa tìm ra cách xử lý hợp lý
-			e.printStackTrace();
-		}
+		shippingAddressDAO = new ShippingAddressDAO();
+		customerDAO = new CustomerDAO();
+
 	}
 
 

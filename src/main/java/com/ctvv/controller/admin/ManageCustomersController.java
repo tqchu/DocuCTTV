@@ -91,13 +91,6 @@ public class ManageCustomersController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		try{
-			Context context = new InitialContext();
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			customerDAO = new CustomerDAO(dataSource);
-		}
-		catch (NamingException e){
-			e.printStackTrace();
-		}
+			customerDAO = new CustomerDAO();
 	}
 }

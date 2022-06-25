@@ -231,16 +231,8 @@ public class ManageProductsController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		try {
-			Context context = new InitialContext();
-			// Tạo và gán dataSource cho adminDAO
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			productDAO = new ProductDAO(dataSource);
-			categoryDAO = new CategoryDAO(dataSource);
-			imagePathDAO = new ImagePathDAO(dataSource);
-		} catch (NamingException e) {
-
-			e.printStackTrace();
-		}
+		productDAO = new ProductDAO();
+		categoryDAO = new CategoryDAO();
+		imagePathDAO = new ImagePathDAO();
 	}
 }

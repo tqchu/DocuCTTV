@@ -93,7 +93,6 @@ public class ManageInventoryController
 	private void downloadImportReport(HttpServletRequest request, HttpServletResponse response) {
 
 
-
 		// gets MIME type of the file
 		String mimeType = "application/pdf";
 
@@ -117,7 +116,7 @@ public class ManageInventoryController
 		Import anImport = importDAO.get(id);
 		byte[] bytes = JasperReportUtils.createImportReport(anImport);
 		response.setContentLength(bytes.length);
-		OutputStream os ;
+		OutputStream os;
 		try {
 			os = response.getOutputStream();
 			os.write(bytes);
@@ -154,7 +153,8 @@ public class ManageInventoryController
 			double tax = Integer.parseInt(taxParams[i]) / 100.0;
 			importDetailList.add(new ImportDetail(productId, product.getName(), quantity, price, tax));
 		}
-		Import anImport = new Import(importerName, providerId, providerTaxId,provider.getProviderName(), importDate, 0,
+		Import anImport = new Import(importerName, providerId, providerTaxId, provider.getProviderName(), importDate
+				, 0,
 				importDetailList);
 		importDAO.create(anImport);
 
@@ -248,16 +248,10 @@ public class ManageInventoryController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		try {
-			Context context = new InitialContext();
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			importDAO = new ImportDAO(dataSource);
-			productDAO = new ProductDAO(dataSource);
-			providerDAO = new ProviderDAO(dataSource);
-			importDetailDAO = new ImportDetailDAO(dataSource);
-			stockItemDAO = new StockItemDAO(dataSource);
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
+		importDAO = new ImportDAO();
+		productDAO = new ProductDAO();
+		providerDAO = new ProviderDAO();
+		importDetailDAO = new ImportDetailDAO();
+		stockItemDAO = new StockItemDAO();
 	}
 }

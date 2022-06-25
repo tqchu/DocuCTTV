@@ -31,7 +31,7 @@ public class CustomerHomeController
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession();
 		Customer customer = (Customer) session.getAttribute("customer");
-		if (customer==null){
+		if (customer == null) {
 
 			session.setAttribute("customer", session.getAttribute("substituteCustomer"));
 		}
@@ -70,15 +70,7 @@ public class CustomerHomeController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-
-		Context context;
-		try {
-			context = new InitialContext();
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			productDAO = new ProductDAO(dataSource);
-			categoryDAO = new CategoryDAO(dataSource);
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
+		productDAO = new ProductDAO();
+		categoryDAO = new CategoryDAO();
 	}
 }

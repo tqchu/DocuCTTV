@@ -13,11 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDetailDAO
-		extends GenericDAO<OrderDetail> {
+		implements GenericDAO<OrderDetail> {
 	private ProductDAO productDAO;
-	public OrderDetailDAO(DataSource dataSource) {
-		super(dataSource);
-		productDAO = new ProductDAO(dataSource);
+	public OrderDetailDAO() {
+		productDAO = new ProductDAO();
 	}
 
 	@Override
@@ -27,7 +26,7 @@ public class OrderDetailDAO
 	public List<OrderDetail> getGroup(String orderId){
 			List<OrderDetail> orderDetailList = new ArrayList<>();
 			String sql = "SELECT * FROM order_detail WHERE order_id=? ";
-			try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+			try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 					connection.prepareStatement(sql);) {
 				statement.setString(1, orderId);
 				ResultSet resultSet = statement.executeQuery();
@@ -86,7 +85,7 @@ public class OrderDetailDAO
 		Connection connection;
 		PreparedStatement statement;
 		try {
-			connection = dataSource.getConnection();
+			connection = DataSourceHelper.getDataSource().getConnection();
 			statement = connection.prepareStatement(sql);
 			// Loop qua từng orderDetail
 			for (OrderDetail orderDetail : orderDetailList) {

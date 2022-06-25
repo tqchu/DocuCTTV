@@ -34,8 +34,8 @@ public class CustomerProductController
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession();
 		List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-		if (cart!=null){
-			for (CartItem cartItem :cart) {
+		if (cart != null) {
+			for (CartItem cartItem : cart) {
 				cartItem.setProduct(productDAO.get(cartItem.getProduct().getProductId()));
 			}
 
@@ -113,12 +113,11 @@ public class CustomerProductController
 		request.setAttribute("product", product);
 		if (product != null) {
 			Category category = product.getCategory();
-			Integer categoryId ;
+			Integer categoryId;
 			if (category != null) {
 				categoryId = category.getCategoryId();
-			}
-			else categoryId = null;
-			List<Product> similarProducts = productDAO.get(0, 6, categoryId, null,null);
+			} else categoryId = null;
+			List<Product> similarProducts = productDAO.get(0, 6, categoryId, null, null);
 			similarProducts.remove(product);
 			request.setAttribute("similarProducts", similarProducts);
 		}
@@ -167,14 +166,7 @@ public class CustomerProductController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		Context context = null;
-		try {
-			context = new InitialContext();
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			productDAO = new ProductDAO(dataSource);
-			categoryDAO = new CategoryDAO(dataSource);
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
+		productDAO = new ProductDAO();
+		categoryDAO = new CategoryDAO();
 	}
 }

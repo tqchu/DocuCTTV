@@ -94,9 +94,8 @@ public class CustomerCartController
 		boolean isBuyNowOption = request.getParameter("buy-now") != null;
 		if (isBuyNowOption) {
 			session.setAttribute("isBuyNow", true);
-			response.sendRedirect(request.getContextPath()+ request.getServletPath());
-		}
-		else {
+			response.sendRedirect(request.getContextPath() + request.getServletPath());
+		} else {
 			String from = request.getParameter("from");
 			session.setAttribute("cartSuccessMessage", "Thêm vào giỏ hàng thành công");
 			response.sendRedirect(from);
@@ -147,14 +146,8 @@ public class CustomerCartController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		Context context = null;
-		try {
-			context = new InitialContext();
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			productDAO = new ProductDAO(dataSource);
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
+		productDAO = new ProductDAO();
+
 	}
 
 }

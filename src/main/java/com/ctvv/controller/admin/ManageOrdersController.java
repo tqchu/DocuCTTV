@@ -39,7 +39,7 @@ public class ManageOrdersController
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session= request.getSession();
+		session = request.getSession();
 		// orders/
 		String path = request.getPathInfo(); //
 		Order.OrderStatus status = Order.OrderStatus.PENDING;
@@ -67,11 +67,12 @@ public class ManageOrdersController
 				else
 					sortBy = "order_time";
 				String order = request.getParameter("order");
-				if (order==null) order="DESC";
+				if (order == null) order = "DESC";
 				//Xử lý numberOfPages
-				int numberOfPages = (orderDAO.count(status,keyword) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+				int numberOfPages = (orderDAO.count(status, keyword) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
 				request.setAttribute("numberOfPages", numberOfPages);
-				List<Order> orderList = orderDAO.getAll(begin, NUMBER_OF_RECORDS_PER_PAGE, status,keyword,sortBy,order);
+				List<Order> orderList = orderDAO.getAll(begin, NUMBER_OF_RECORDS_PER_PAGE, status, keyword, sortBy,
+						order);
 				request.setAttribute("tab", "orders");
 				request.setAttribute("statusTab", statusTab);
 				request.setAttribute("orderList", orderList);
@@ -96,22 +97,28 @@ public class ManageOrdersController
 	}
 
 	private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-																								  IOException {
-		String orderId =(request.getPathInfo().substring(1));
+	                                                                                              IOException {
+		String orderId = (request.getPathInfo().substring(1));
 		Order order = orderDAO.get(orderId);
 		request.setAttribute("tab", "orderDetail");
 		request.setAttribute("order", order);
 		goHome(request, response);
 	}
 
+	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	                                                                                     IOException {
+		request.setAttribute("tab", "orderDetail");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/manage/home.jsp");
+		dispatcher.forward(request, response);
+	}
+
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String path = request.getPathInfo();
-		if ("/download".equals(path)){
+		if ("/download".equals(path)) {
 			downloadBillFile(request, response);
-		}
-		else {
+		} else {
 			session = request.getSession();
 			String action = request.getParameter("action");
 			// to-ship, to-receive, cancel
@@ -173,7 +180,7 @@ public class ManageOrdersController
 		Order order = orderDAO.get(id);
 		byte[] bytes = JasperReportUtils.createBill(order);
 		response.setContentLength(bytes.length);
-		OutputStream os ;
+		OutputStream os;
 		try {
 			os = response.getOutputStream();
 			os.write(bytes);
@@ -186,23 +193,11 @@ public class ManageOrdersController
 		}
 	}
 
-	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-			IOException {
-		request.setAttribute("tab", "orderDetail");
-		RequestDispatcher dispatcher =  request.getRequestDispatcher("/admin/manage/home.jsp");
-		dispatcher.forward(request, response);
-	}
-
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		try {
-			Context context = new InitialContext();
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			orderDAO = new OrderDAO(dataSource);
-			customerDAO = new CustomerDAO(dataSource);
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
+		orderDAO = new OrderDAO();
+		customerDAO = new CustomerDAO();
+
 	}
 }

@@ -87,16 +87,6 @@ public class AdminController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		// Khởi tạo dataSource cho adminDao
-		try {
-			// Dòng bắt buộc để tạo dataSource
-			Context context = new InitialContext();
-			// Tạo và gán dataSource cho adminDAO
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			adminDAO = new AdminDAO(dataSource);
-		} catch (NamingException e) {
-			// Chưa tìm ra cách xử lý hợp lý
-			e.printStackTrace();
-		}
+		adminDAO=new AdminDAO();
 	}
 }

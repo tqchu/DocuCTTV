@@ -10,38 +10,30 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class 	AdminDAO extends GenericDAO<Admin> {
+public class 	AdminDAO
+		implements GenericDAO<Admin> {
 
-	public AdminDAO(DataSource dataSource) {
-		super(dataSource);
-	}
-
-	public Admin validate(Admin admin)  {
-		// Tạo connection
-		String usernameToAuthenticate = admin.getUsername();
-		String emailToAuthenticate = admin.getEmail();
-		String password = admin.getPassword();
-		String sql = "SELECT * FROM admin WHERE ((username=?) or email=? ) LIMIT 1";
-
-		try (Connection connection = dataSource.getConnection();
-		PreparedStatement statement = connection.prepareStatement(sql)){
-			statement.setString(1, usernameToAuthenticate);
-			statement.setString(2, emailToAuthenticate);
+	public Admin get(int id){
+		Admin admin = new Admin();
+		String sql = "SELECT * FROM admin WHERE user_id=? ";
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
+				connection.prepareStatement(sql);) {
+			statement.setInt(1, id);
 			ResultSet resultSet = statement.executeQuery();
+			// loop the result set
 			while (resultSet.next()) {
-				String validPassword = resultSet.getString("password");
-				if (PasswordHashingUtil.validatePassword(password,validPassword))
-					return map(resultSet);
+				return map(resultSet);
 			}
 		}
-		catch(SQLException e){
+		catch (SQLException e){
 			e.printStackTrace();
 		}
 		return null;
 	}
+
 	public Admin map(ResultSet resultSet){
 		try {
-		int id = resultSet.getInt("user_id");
+			int id = resultSet.getInt("user_id");
 			String username = resultSet.getString("username");
 			String email = resultSet.getString("email");
 			String phoneNumber = resultSet.getString("phone_number");
@@ -52,23 +44,6 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 			return new Admin(id, username, email, password, fullName, phoneNumber, address,role);
 		}
 		catch(SQLException e){
-			e.printStackTrace();
-		}
-		return null;
-	}
-	public Admin get(int id){
-		Admin admin = new Admin();
-		String sql = "SELECT * FROM admin WHERE user_id=? ";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
-				connection.prepareStatement(sql);) {
-			statement.setInt(1, id);
-			ResultSet resultSet = statement.executeQuery();
-			// loop the result set
-			while (resultSet.next()) {
-				return map(resultSet);
-			}
-		}
-		catch (SQLException e){
 			e.printStackTrace();
 		}
 		return null;
@@ -84,7 +59,7 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 		String sql = "INSERT INTO admin(username, password, fullname, phone_number, address, email, role)  VALUES(?," +
 				"?, ?, " +
 				"?, ?,?,?)";
-		try (Connection	connection = dataSource.getConnection();
+		try (Connection	connection = DataSourceHelper.getDataSource().getConnection();
 		PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);){
 
 			statement.setString(1, admin.getUsername());
@@ -114,7 +89,7 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 		int id = admin.getUserId();
 
 		String sql = "UPDATE admin SET fullname=?, username=?,email=?, password=? WHERE user_id=?";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql)) {
 			statement.setString(1, fullName);
 			statement.setString(2, username);
@@ -131,7 +106,7 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 	public void updateRole(String role, int id){
 
 		String sql = "UPDATE admin SET role=? WHERE user_id=?";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql)) {
 			statement.setString(1, role);
 			statement.setInt(2, id);
@@ -144,7 +119,7 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 	public List<Admin> getAdminList() {
 		List<Admin> adminList = new ArrayList<>();
 		String sql = "SELECT * FROM admin";
-		try (Connection connection = dataSource.getConnection(); Statement statement = connection.createStatement();) {
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); Statement statement = connection.createStatement();) {
 			ResultSet resultSet = statement.executeQuery(sql);
 			// loop the result set
 			while (resultSet.next()) {
@@ -162,7 +137,7 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 
 	public void delete(int id) {
 		String sql = "DELETE FROM admin WHERE user_id=?";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql)) {
 			statement.setInt(1, id);
 			statement.execute();
@@ -175,7 +150,7 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 	public Admin findByUsername(String username) {
 		String sql = "SELECT * FROM admin WHERE username=?";
 		Admin admin = null;
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql); ) {
 			ResultSet resultSet;
 			statement.setString(1, username);
@@ -194,7 +169,7 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 	public Admin findByEmail(String email) {
 		String sql = "SELECT * FROM admin WHERE email=?";
 		Admin admin = null;
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql); ) {
 			ResultSet resultSet;
 			statement.setString(1, email);
@@ -219,7 +194,7 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 						: "") +
 				(sortBy != null ? "ORDER BY " + sortBy +" " + order: "") +
 				" LIMIT " + begin + "," + numberOfRec;
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 			 PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -239,7 +214,7 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 						(keyword != null ? " WHERE username LIKE '%" + keyword + "%' "
 								+ "OR fullname LIKE '%" + keyword + "%' "
 								+ "OR email LIKE '%" + keyword + "%'": "");
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 			 PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
@@ -254,7 +229,7 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 	public Admin findByPhoneNumber(String phoneNumber) {
 		String sql = "SELECT * FROM admin WHERE phone_number=?";
 		Admin admin = null;
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql); ) {
 			ResultSet resultSet;
 			statement.setString(1, phoneNumber);
@@ -268,5 +243,29 @@ public class 	AdminDAO extends GenericDAO<Admin> {
 			e.printStackTrace();
 		}
 		return admin;
+	}
+
+	public Admin validate(Admin admin)  {
+		// Tạo connection
+		String usernameToAuthenticate = admin.getUsername();
+		String emailToAuthenticate = admin.getEmail();
+		String password = admin.getPassword();
+		String sql = "SELECT * FROM admin WHERE ((username=?) or email=? ) LIMIT 1";
+
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)){
+			statement.setString(1, usernameToAuthenticate);
+			statement.setString(2, emailToAuthenticate);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				String validPassword = resultSet.getString("password");
+				if (PasswordHashingUtil.validatePassword(password,validPassword))
+					return map(resultSet);
+			}
+		}
+		catch(SQLException e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

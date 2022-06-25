@@ -124,10 +124,9 @@ public class ManageCategoriesController
 			Category category = new Category(categoryId, categoryName);
 			categoryDAO.update(category);
 			session.setAttribute("successMessage", "Sửa doanh mục thành công");
-		} else if(categoryDAO.find(categoryName).getCategoryId() != categoryId) {
+		} else if (categoryDAO.find(categoryName).getCategoryId() != categoryId) {
 			session.setAttribute("errorMessage", "Tên doanh mục đã tồn tại");
-		}
-		else {
+		} else {
 			Category category = new Category(categoryId, categoryName);
 			categoryDAO.update(category);
 		}
@@ -155,13 +154,8 @@ public class ManageCategoriesController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		try {
-			Context context = new InitialContext();
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			categoryDAO = new CategoryDAO(dataSource);
-		} catch (NamingException e) {
-			throw new ServletException();
-		}
+		categoryDAO = new CategoryDAO();
+
 	}
 
 }

@@ -34,7 +34,7 @@ public class StatisticsController
 		extends HttpServlet {
 	private RevenueImportGraphPointDAO revenueImportGraphPointDAO;
 	private OrderDAO orderDAO;
-	private StatsProductDAO statsProductDAO ;
+	private StatsProductDAO statsProductDAO;
 
 	@Override
 	protected void doGet(
@@ -74,7 +74,7 @@ public class StatisticsController
 					break;
 			}
 			// Tạo 1 map lưu trữ các cặp (Trạng thái - số lượng) đơn hàng
-			Map<String,Integer> orderChartElementList = new HashMap<>();
+			Map<String, Integer> orderChartElementList = new HashMap<>();
 			int numberOfPendingOrder = orderDAO.count(Order.OrderStatus.PENDING, start, end);
 			int numberOfConfirmedOrder = orderDAO.count(Order.OrderStatus.TO_SHIP, start, end);
 			int numberOfShippedOrder = orderDAO.count(Order.OrderStatus.TO_RECEIVE, start, end);
@@ -88,17 +88,20 @@ public class StatisticsController
 
 			// Lấy tổng doanh thu và import amount sử dụng Java 8 Stream dựa trên dữ liệu có sẵn từ các pointList
 			// (Đỡ viết thêm hàm)
-			request.setAttribute("totalRevenue", pointList.stream().map(RevenueImportGraphPoint::getRevenue).reduce((long)0,Long::sum));
+			request.setAttribute("totalRevenue",
+					pointList.stream().map(RevenueImportGraphPoint::getRevenue).reduce((long) 0, Long::sum));
 			request.setAttribute("totalImportAmount",
-					pointList.stream().map(RevenueImportGraphPoint::getImportAmount).reduce((long)0,Long::sum));
+					pointList.stream().map(RevenueImportGraphPoint::getImportAmount).reduce((long) 0, Long::sum));
 
 
 			request.setAttribute("title", title);
 			request.setAttribute("orderChartElementList", GsonUtil.getOrderElementList(orderChartElementList));
 			request.setAttribute("statisticsTab", tab);
 			// Method reference (RevenueImportGraphPoint::getRevenue)
-			request.setAttribute("revenuePointList", GsonUtil.getAmount(pointList, startPoint, endPoint, RevenueImportGraphPoint::getRevenue));
-			request.setAttribute("importPointList", GsonUtil.getAmount(pointList, startPoint, endPoint, RevenueImportGraphPoint::getImportAmount));
+			request.setAttribute("revenuePointList", GsonUtil.getAmount(pointList, startPoint, endPoint,
+					RevenueImportGraphPoint::getRevenue));
+			request.setAttribute("importPointList", GsonUtil.getAmount(pointList, startPoint, endPoint,
+					RevenueImportGraphPoint::getImportAmount));
 			request.setAttribute("statsProductList", statsProductDAO.getAll(start, end));
 			goHome(request, response);
 		} else {
@@ -123,14 +126,9 @@ public class StatisticsController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		try {
-			Context context = new InitialContext();
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			revenueImportGraphPointDAO = new RevenueImportGraphPointDAO(dataSource);
-			orderDAO = new OrderDAO(dataSource);
-			statsProductDAO = new StatsProductDAO(dataSource);
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
+		revenueImportGraphPointDAO = new RevenueImportGraphPointDAO();
+		orderDAO = new OrderDAO();
+		statsProductDAO = new StatsProductDAO();
+
 	}
 }

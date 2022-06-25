@@ -10,18 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderDAO
-		extends GenericDAO<Order> {
+		implements GenericDAO<Order> {
 	private OrderDetailDAO orderDetailDAO;
 
-	public OrderDAO(DataSource dataSource) {
-		super(dataSource);
-		orderDetailDAO = new OrderDetailDAO(dataSource);
+	public OrderDAO() {
+		orderDetailDAO = new OrderDetailDAO();
 	}
 
 	@Override
 	public Order get(int id) {
 		String sql = "SELECT * FROM customer_order WHERE order_id = ?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			preparedStatement.setInt(1, id);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -42,7 +41,7 @@ public class OrderDAO
 	@Override
 	public Order create(Order order) {
 		String sql = "INSERT INTO customer_order VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql)) {
 			statement.setString(1, order.getOrderId());
 			statement.setInt(2, order.getCustomerId());
@@ -71,7 +70,7 @@ public class OrderDAO
 	public Order update(Order order) {
 		String sql = "UPDATE customer_order SET recipient_name=?, phone_number=?, address=?, order_status=?, " +
 				" confirm_time=?, ship_time=?, completed_time=? WHERE order_id=?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, order.getRecipientName());
 			statement.setString(2, order.getPhoneNumber());
@@ -138,7 +137,7 @@ public class OrderDAO
 		List<Order> orderList = new ArrayList<>();
 		String sql = "SELECT * FROM customer_order " +
 				(sortBy != null ? " ORDER BY " + sortBy + " " + order : "");
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
@@ -153,7 +152,7 @@ public class OrderDAO
 	public List<Order> getAll(Order.OrderStatus status) {
 		List<Order> orderList = new ArrayList<>();
 		String sql = "SELECT * FROM customer_order WHERE order_status=?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			preparedStatement.setString(1, status.toString());
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -174,7 +173,7 @@ public class OrderDAO
 				(keyword != null ? " AND (order_id LIKE '%" + keyword + "%' " +
 						"OR customer_name LIKE '%" + keyword + "%')" : "") +
 				(sortBy != null ? " ORDER BY " + sortBy + " " + order : "") + " LIMIT " + begin + ", " + num;
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, status.name());
 			ResultSet resultSet = statement.executeQuery();
@@ -203,7 +202,7 @@ public class OrderDAO
 					(sortBy != null ? " ORDER BY " + sortBy + " " + order : "") + " LIMIT " + begin + ", " + num;
 		}
 
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, status.name());
 			statement.setInt(2, id);
@@ -222,7 +221,7 @@ public class OrderDAO
 		String sql = "SELECT COUNT(*) AS count FROM customer_order WHERE order_status=?" +
 				(keyword != null ? " AND (order_id LIKE '% " + keyword + "%' " +
 						"OR customer_name LIKE '%" + keyword + "%')" : "");
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, status.name());
 			ResultSet resultSet = statement.executeQuery();
@@ -253,7 +252,7 @@ public class OrderDAO
 		int count = 0;
 		String sql = "SELECT COUNT(*) AS count FROM customer_order WHERE order_status=? AND " + time +" BETWEEN  ? " +
 				"and ? ";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, status.name());
 			statement.setTimestamp(2, Timestamp.valueOf(from));
@@ -279,7 +278,7 @@ public class OrderDAO
 			sql = "SELECT COUNT(*) AS count FROM customer_order WHERE order_status=? AND customer_id =?";
 		}
 		int count = 0;
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, status.name());
 			statement.setInt(2, id);
@@ -294,7 +293,7 @@ public class OrderDAO
 
 	public Order get(String id) {
 		String sql = "SELECT * FROM customer_order WHERE order_id = ?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			preparedStatement.setString(1, id);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -309,7 +308,7 @@ public class OrderDAO
 
 	public Order get(LocalDateTime shipTime) {
 		String sql = "SELECT * FROM customer_order WHERE ship_time = ?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 			preparedStatement.setString(1, String.valueOf(shipTime));
 			ResultSet resultSet = preparedStatement.executeQuery();

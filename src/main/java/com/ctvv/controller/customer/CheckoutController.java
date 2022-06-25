@@ -94,13 +94,7 @@ public class CheckoutController
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		try {
-			Context context = new InitialContext();
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			productDAO = new ProductDAO(dataSource);
-			stockItemDAO = new StockItemDAO(dataSource);
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
+			productDAO = new ProductDAO();
+			stockItemDAO = new StockItemDAO();
 	}
 }

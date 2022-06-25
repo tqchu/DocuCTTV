@@ -22,22 +22,22 @@ import java.util.Objects;
 public class ManageProviderController
 		extends HttpServlet {
 	final int NUMBER_OF_RECORDS_PER_PAGE = 10;
+	final String HOME_PAGE = "/admin/manage/home.jsp";
+	final String SEARCH_SERVLET = "/admin/providers/search";
 	private ProviderDAO providerDAO;
-    final String HOME_PAGE = "/admin/manage/home.jsp";
-	final String SEARCH_SERVLET ="/admin/providers/search";
 	private HttpSession session;
 
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		session = request.getSession();
-			listProviders(request, response);
+		listProviders(request, response);
 	}
 
 	private void listProviders(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String keyword = request.getParameter("keyword");
-		String sortBy =getOrder(request);
+		String sortBy = getOrder(request);
 		List<Provider> providerList;
 		int begin = getBegin(request);
 		providerList = providerDAO.get(begin, NUMBER_OF_RECORDS_PER_PAGE, keyword, sortBy, null);
@@ -45,6 +45,32 @@ public class ManageProviderController
 		request.setAttribute("numberOfPages", numberOfPages);
 		request.setAttribute("providerList", providerList);
 		goHome(request, response);
+	}
+
+	public String getOrder(HttpServletRequest request) {
+		String sortBy = request.getParameter("sortBy");
+		if (sortBy != null) {
+			switch (sortBy) {
+				case "default":
+					sortBy = null;
+					break;
+				case "name":
+					sortBy = "provider_name";
+					break;
+			}
+		}
+		return sortBy;
+	}
+
+	public int getBegin(HttpServletRequest request) {
+		String pageParam = request.getParameter("page");
+		int page;
+		if (pageParam == null) {
+			page = 1;
+		} else {
+			page = Integer.parseInt(pageParam);
+		}
+		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
 	}
 
 	private void goHome(HttpServletRequest request, HttpServletResponse response) throws ServletException,
@@ -71,6 +97,7 @@ public class ManageProviderController
 				break;
 		}
 	}
+
 	private void create(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	                                                                                     IOException {
 		String providerName = request.getParameter("name");
@@ -205,41 +232,10 @@ public class ManageProviderController
 			e.printStackTrace();
 		}
 	}
-	public String getOrder(HttpServletRequest request){
-		String sortBy = request.getParameter("sortBy");
-		if (sortBy != null) {
-			switch (sortBy) {
-				case "default":
-					sortBy = null;
-					break;
-				case "name":
-					sortBy = "provider_name";
-					break;
-			}
-		}
-		return sortBy;
-	}
-
-	public int getBegin(HttpServletRequest request){
-		String pageParam = request.getParameter("page");
-		int page;
-		if(pageParam == null){
-			page = 1;
-		} else {
-			page = Integer.parseInt(pageParam);
-		}
-		return NUMBER_OF_RECORDS_PER_PAGE * (page - 1);
-	}
 
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		try {
-			Context context = new InitialContext();
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			providerDAO = new ProviderDAO(dataSource);
-		} catch (NamingException e) {
-			throw new ServletException();
-		}
+		providerDAO = new ProviderDAO();
 	}
 }
