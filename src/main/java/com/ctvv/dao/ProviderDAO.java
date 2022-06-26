@@ -15,16 +15,12 @@ import java.util.Objects;
 
 public class ProviderDAO
 
-		extends GenericDAO<Provider> {
-
-	public ProviderDAO(DataSource dataSource) {
-		super(dataSource);
-	}
+		implements GenericDAO<Provider> {
 
 	@Override
 	public Provider get(int id) {
 		String sql = "SELECT * FROM provider WHERE provider_id = ?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, id);
 			ResultSet resultSet = statement.executeQuery();
@@ -40,7 +36,7 @@ public class ProviderDAO
 	public List<Provider> getAll() {
 		List<Provider> providerList = new ArrayList<>();
 		String sql = "SELECT * FROM provider";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -56,7 +52,7 @@ public class ProviderDAO
 	public Provider create(Provider provider) {
 		String sql = "INSERT INTO provider(provider_name, provider_address,phone_number,email,tax_id_number) VALUES " +
 				"(?,?,?,?,?)";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, provider.getProviderName());
 			statement.setString(2, provider.getAddress());
@@ -74,7 +70,7 @@ public class ProviderDAO
 	public Provider update(Provider provider) {
 		String sql = "UPDATE provider SET provider_name = ?, provider_address = ?, phone_number = ?, email = ?, " +
 				"tax_id_number = ? WHERE provider_id = ?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, provider.getProviderName());
 			statement.setString(2, provider.getAddress());
@@ -92,7 +88,7 @@ public class ProviderDAO
 	@Override
 	public void delete(int id) {
 		String sql = "DELETE FROM provider WHERE provider_id = ?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, id);
 			statement.executeUpdate();
@@ -126,7 +122,7 @@ public class ProviderDAO
 						(keyword != null ? " WHERE provider_name LIKE '%" + keyword + "%' " : "") +
 						(sortBy != null ? "ORDER BY " + sortBy + " " + order : "") +
 						" LIMIT " + begin + "," + numberOfRec;
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -145,7 +141,7 @@ public class ProviderDAO
 		String sql =
 				"SELECT COUNT(provider_id) AS no FROM provider " +
 						(keyword != null ? " WHERE provider_name" +  " LIKE '%" + keyword + "%' " : "");
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();
@@ -159,7 +155,7 @@ public class ProviderDAO
 
 	public Provider findByName(String name) {
 		String sql = "SELECT * FROM provider WHERE provider_name = ?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql);) {
 			ResultSet resultSet;
 			statement.setString(1, name);
@@ -176,7 +172,7 @@ public class ProviderDAO
 
 	public Provider findByEmail(String email) {
 		String sql = "SELECT * FROM provider where email=?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, email);
 			ResultSet resultSet = statement.executeQuery();
@@ -194,7 +190,7 @@ public class ProviderDAO
 	public Provider findByPhoneNumber(String phoneNumber) {
 		String sql = "SELECT * FROM provider WHERE phone_number = ?";
 		Provider provider = null;
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql);) {
 			ResultSet resultSet;
 			statement.setString(1, phoneNumber);
@@ -211,7 +207,7 @@ public class ProviderDAO
 
 	public Provider findByTaxId(String taxId) {
 		String sql = "SELECT * FROM provider where tax_id_number=?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, taxId);
 			ResultSet resultSet = statement.executeQuery();
@@ -229,7 +225,7 @@ public class ProviderDAO
 		List<Provider> providerList = new ArrayList<>();
 		String sql = "SELECT * FROM provider" +
 				(sortBy != null ? " ORDER BY " + sortBy + " " + order : "");
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {

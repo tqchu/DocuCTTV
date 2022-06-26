@@ -12,19 +12,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImportDAO
-		extends GenericDAO<Import> {
+		implements GenericDAO<Import> {
 	private ImportDetailDAO importDetailDAO;
 
-	public ImportDAO(DataSource dataSource) {
-
-		super(dataSource);
-		importDetailDAO = new ImportDetailDAO(dataSource);
+	public ImportDAO() {
+		importDetailDAO = new ImportDetailDAO();
 	}
 
 	@Override
 	public Import get(int id) {
 		String sql = "SELECT * FROM import WHERE import_id=?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
 			preparedStatement.setInt(1, id);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -48,7 +46,7 @@ public class ImportDAO
 		String sql = "INSERT INTO import(importer_name, provider_id, provider_tax_id,provider_name, import_date) " +
 				"VALUES (?,?,?,?,?)";
 
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);){
 
 			connection.setAutoCommit(false);
@@ -86,7 +84,7 @@ public class ImportDAO
 	@Override
 	public void delete(int id) {
 		/*String sql = "DELETE  FROM import WHERE import_id=?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, id);
 			statement.execute();
@@ -132,7 +130,7 @@ public class ImportDAO
 						(keyword != null ? " WHERE provider_name LIKE '%" + keyword + "%' " : "") +
 						(sortBy != null ? "ORDER BY " + sortBy + " " + order : "") +
 						" LIMIT " + begin + "," + numberOfRec;
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -164,7 +162,7 @@ public class ImportDAO
 								: "") +
 						(sortBy != null ? "ORDER BY " + sortBy + " " + order : "") +
 						" LIMIT " + begin + "," + numberOfRec;
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
@@ -190,7 +188,7 @@ public class ImportDAO
 										"%')" : "") +
 										((keyword != null ? " AND" : "") + " import_date BETWEEN '" + from + "' AND '" + to + "'")
 								: "");
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			ResultSet resultSet = statement.executeQuery();
 			resultSet.next();

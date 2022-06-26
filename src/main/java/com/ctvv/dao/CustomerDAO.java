@@ -12,17 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerDAO
-		extends GenericDAO<Customer> {
+		implements GenericDAO<Customer> {
 
-	public CustomerDAO(DataSource dataSource) {
-		super(dataSource);
-	}
 
 	@Override
 	public Customer get(int id) {
 		Customer customer = new Customer();
 		String sql = "SELECT * FROM customer WHERE user_id=? ";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql);) {
 			statement.setInt(1, id);
 			ResultSet resultSet = statement.executeQuery();
@@ -41,47 +38,12 @@ public class CustomerDAO
 		return null;
 	}
 
-	public List<Customer> get(int begin, int numberOfRec, String keyword) {
-		List<Customer> customerList = new ArrayList<>();
-		String sql =
-				"SELECT * FROM customer " +
-						(keyword != null ? " WHERE fullname LIKE '%" + keyword + "%' " : "") +
-						" LIMIT " + begin + "," + numberOfRec;
-		try (Connection connection = dataSource.getConnection();
-			 PreparedStatement statement = connection.prepareStatement(sql)) {
-			ResultSet resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				customerList.add(map(resultSet));
-			}
-			resultSet.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return customerList;
-	}
-
-	public int count(String keyword) {
-		int count = 0;
-		String sql =
-				"SELECT COUNT(user_id) AS no FROM customer " +
-						(keyword != null ? " WHERE fullname" +  " LIKE '%" + keyword + "%' " : "");
-		try (Connection connection = dataSource.getConnection();
-			 PreparedStatement statement = connection.prepareStatement(sql)) {
-			ResultSet resultSet = statement.executeQuery();
-			resultSet.next();
-			count = resultSet.getInt("no");
-			resultSet.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return count;
-	}
 	@Override
 	public Customer create(Customer customer) {
 		String sql = "INSERT INTO customer(phonenumber, email, password, fullname, date_of_birth, gender) VALUES (?," +
 				"?,?,?,?,?)";
 
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
 			connection.setAutoCommit(false);
 			statement.setString(1, customer.getPhoneNumber());
@@ -103,7 +65,7 @@ public class CustomerDAO
 			statement.close();
 			connection.close();
 
-			ShippingAddressDAO addressDAO = new ShippingAddressDAO(dataSource);
+			ShippingAddressDAO addressDAO = new ShippingAddressDAO();
 			addressDAO.create(customer.getAddress());
 
 			return customer;
@@ -118,19 +80,18 @@ public class CustomerDAO
 	public Customer update(Customer customer) {
 		String sql = "UPDATE customer  SET phonenumber =?, email=?, password=?, fullname=?, date_of_birth =?, " +
 				"gender=?, status=? WHERE user_id =?";
-		try (Connection connection= dataSource.getConnection();
-		PreparedStatement statement = connection.prepareStatement(sql)){
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, customer.getPhoneNumber());
 			statement.setString(2, customer.getEmail());
-			statement.setString(3, PasswordHashingUtil.createHash(customer.getPassword()));
+			statement.setString(3, customer.getPassword());
 			statement.setString(4, customer.getFullName());
 			statement.setDate(5, Date.valueOf(customer.getDateOfBirth()));
 			statement.setInt(6, customer.getGender().getValue());
-			statement.setBoolean(7,customer.isActive());
+			statement.setBoolean(7, customer.isActive());
 			statement.setInt(8, customer.getUserId());
 			statement.executeUpdate();
-		}
-		catch (SQLException e){
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return customer;
@@ -140,14 +101,15 @@ public class CustomerDAO
 	@Override
 	public void delete(int id) {
 		String sql = "DELETE FROM customer WHERE user_id = ?";
-		try (Connection connection = dataSource.getConnection();
-			 PreparedStatement statement = connection.prepareStatement(sql)) {
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, id);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+
 	@Override
 	public Customer map(ResultSet resultSet) {
 		try {
@@ -158,8 +120,8 @@ public class CustomerDAO
 			String email = resultSet.getString("email");
 			Customer.Gender gender = Customer.Gender.values()[resultSet.getByte("gender")];
 			LocalDate dateOfBirth = resultSet.getDate("date_of_birth").toLocalDate();
-			ShippingAddressDAO addressDAO = new ShippingAddressDAO(dataSource);
-			ShippingAddress address = addressDAO.getAddress(userId);
+			ShippingAddressDAO addressDAO = new ShippingAddressDAO();
+			ShippingAddress address = addressDAO.get(userId);
 			boolean status = resultSet.getBoolean("status");
 			return new Customer(userId, password, email, fullName, pNumber, gender, dateOfBirth,
 					address, status);
@@ -169,6 +131,42 @@ public class CustomerDAO
 		return null;
 	}
 
+	public List<Customer> get(int begin, int numberOfRec, String keyword) {
+		List<Customer> customerList = new ArrayList<>();
+		String sql =
+				"SELECT * FROM customer " +
+						(keyword != null ? " WHERE fullname LIKE '%" + keyword + "%' " : "") +
+						" LIMIT " + begin + "," + numberOfRec;
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				customerList.add(map(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return customerList;
+	}
+
+	public int count(String keyword) {
+		int count = 0;
+		String sql =
+				"SELECT COUNT(user_id) AS no FROM customer " +
+						(keyword != null ? " WHERE fullname" + " LIKE '%" + keyword + "%' " : "");
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
+		     PreparedStatement statement = connection.prepareStatement(sql)) {
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.next();
+			count = resultSet.getInt("no");
+			resultSet.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
 	public Customer validate(Customer customer) {
 		boolean isPhoneNumber = (customer.getPhoneNumber() != null);
 		String account = isPhoneNumber ? customer.getPhoneNumber() : customer.getEmail();
@@ -176,13 +174,13 @@ public class CustomerDAO
 		String sql = "SELECT * FROM customer WHERE " +
 				(isPhoneNumber ? "phonenumber=?" : "email=?") +
 				" LIMIT 1";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql)) {
 			statement.setString(1, account);
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next()) {
 				String validPassword = resultSet.getString("password");
-				if (PasswordHashingUtil.validatePassword(password,validPassword))
+				if (PasswordHashingUtil.validatePassword(password, validPassword))
 					return map(resultSet);
 			}
 		} catch (SQLException e) {
@@ -190,9 +188,10 @@ public class CustomerDAO
 		}
 		return null;
 	}
+
 	public Customer findCustomerByPhoneNumber(String phoneNumber) {
 		String sql = "SELECT * FROM customer WHERE phonenumber=? ";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql);) {
 			statement.setString(1, phoneNumber);
 			ResultSet resultSet = statement.executeQuery();
@@ -208,7 +207,7 @@ public class CustomerDAO
 
 	public Customer findCustomerByEmail(String email) {
 		String sql = "SELECT * FROM customer WHERE email=? ";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql);) {
 			statement.setString(1, email);
 			ResultSet resultSet = statement.executeQuery();

@@ -8,11 +8,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RevenueImportGraphPointDAO extends GenericDAO<RevenueImportGraphPoint>{
-
-	public RevenueImportGraphPointDAO(DataSource dataSource) {
-		super(dataSource);
-	}
+public class RevenueImportGraphPointDAO
+		implements GenericDAO<RevenueImportGraphPoint> {
 
 	@Override
 	public RevenueImportGraphPoint get(int id) {
@@ -27,7 +24,7 @@ public class RevenueImportGraphPointDAO extends GenericDAO<RevenueImportGraphPoi
 		List<RevenueImportGraphPoint> pointList = new ArrayList<>();
 		String sql ="CALL stats_by_date(?,?)";
 		try(
-				Connection connection = dataSource.getConnection();
+				Connection connection = DataSourceHelper.getDataSource().getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(sql);){
 			preparedStatement.setTimestamp(1, Timestamp.valueOf(start));
 			preparedStatement.setTimestamp(2, Timestamp.valueOf(end));
@@ -49,7 +46,7 @@ public class RevenueImportGraphPointDAO extends GenericDAO<RevenueImportGraphPoi
 		List<RevenueImportGraphPoint> pointList = new ArrayList<>();
 		String sql = "CALL stats_by_month(?,?)";
 		try(
-				Connection connection = dataSource.getConnection();
+				Connection connection = DataSourceHelper.getDataSource().getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(sql);){
 			preparedStatement.setTimestamp(1, Timestamp.valueOf(start));
 			preparedStatement.setTimestamp(2, Timestamp.valueOf(end));

@@ -1,20 +1,9 @@
 package com.ctvv.dao;
 
-import com.ctvv.model.Category;
-
-import javax.sql.DataSource;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
-abstract public class GenericDAO<T> {
-	final DataSource dataSource;
-
-	public GenericDAO(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
-
-	// ham count
+interface GenericDAO<T> {
 
 	/**
 	 * Return null if no entity with the id was found
@@ -39,5 +28,8 @@ abstract public class GenericDAO<T> {
 
 	abstract public void delete(int id);
 
+	/**
+	 * Map a result set row to an entity
+	 */
 	abstract  public T map(ResultSet resultSet);
 }

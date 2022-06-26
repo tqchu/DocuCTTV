@@ -7,6 +7,7 @@ import com.ctvv.dao.ShippingAddressDAO;
 import com.ctvv.model.Customer;
 import com.ctvv.model.ShippingAddress;
 import com.ctvv.dao.CustomerDAO;
+import com.ctvv.service.CustomerServices;
 import com.ctvv.util.PasswordHashingUtil;
 import org.jboss.weld.bean.SessionBean;
 
@@ -26,146 +27,34 @@ import java.sql.SQLException;
 public class CustomerAccountController
 		extends HttpServlet {
 
-	HttpSession session;
-	private ShippingAddressDAO shippingAddressDAO;
-	private CustomerDAO customerDAO;
+	private final CustomerServices customerServices = new CustomerServices();
 
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String tab = request.getParameter("tab");
 		if (tab != null) {
-			if (tab.equals("profile") || tab.equals("address") || tab.equals("password")) {
-				request.setAttribute("tab", tab);
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
-				dispatcher.forward(request, response);
-			} else
-				response.sendRedirect(request.getContextPath() + "/user/account?tab=profile");
+			customerServices.showManageInformationPage(request, response);
 
 		} else response.sendRedirect(request.getContextPath() + "/user/account?tab=profile");
-
-
 	}
 
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// Đặt charaterEncoding của request param thành UTF-8
-		try {
-			request.setCharacterEncoding("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-
-		String action = request.getParameter("action");
+			String action = request.getParameter("action");
 		switch (action) {
 			case "updateProfile":
-				updateProfile(request, response);
+				customerServices.updateProfile(request, response);
 				break;
 			case "changePassword":
-				changePassword(request, response);
+				customerServices.changePassword(request, response);
 				break;
 
 			case "updateAddress":
-				updateAddress(request, response);
+				customerServices.updateAddress(request, response);
 				break;
 
-		}
-	}
-
-	private void updateProfile(
-			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		request.setAttribute("tab", "profile");
-		session = request.getSession();
-
-		String fullName = request.getParameter("fullName");
-		Customer.Gender gender = Customer.Gender.valueOf(request.getParameter("gender"));
-		LocalDate date_of_birth = LocalDate.parse(request.getParameter("dateOfBirth"));
-
-		Customer customer = (Customer) session.getAttribute("customer");
-		Customer updatedCustomer = new Customer(customer);
-		updatedCustomer.setFullName(fullName);
-		updatedCustomer.setGender(gender);
-		updatedCustomer.setDateOfBirth(date_of_birth);
-
-		updatedCustomer = customerDAO.update(updatedCustomer);
-		session.setAttribute("customer", updatedCustomer);
-		request.setAttribute("successMessage", "Cập nhật thành công");
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
-		try {
-			dispatcher.forward(request, response);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	private void changePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                             IOException {
-
-		request.setAttribute("tab", "password");
-		session = request.getSession();
-		Customer customer = (Customer) session.getAttribute("customer");
-		String oldPassword = request.getParameter("oldPassword");
-		String newPassword = request.getParameter("password");
-		if (PasswordHashingUtil.validatePassword(oldPassword, customer.getPassword())) {
-			//đổi mật khẩu trong database
-			customer = customerDAO.update(customer);
-			//đổi mật khẩu cho session hien tai
-			customer.setPassword(PasswordHashingUtil.createHash(newPassword));
-			request.setAttribute("successMessage", "Đổi mật khẩu thành công");
-		} else {
-			request.setAttribute("wrongOldPasswordMessage", "Sai mật khẩu cũ");
-		}
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
-		dispatcher.forward(request, response);
-
-	}
-
-	private void updateAddress(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-
-		request.setAttribute("tab", "address");
-		session = request.getSession();
-		Customer customer = (Customer) session.getAttribute("customer");
-		ShippingAddress shippingAddress = customer.getAddress();
-
-		// Lấy dữ liệu từ form
-		String recipient_name = request.getParameter("recipientName");
-		String address = request.getParameter("address");
-
-		// Tạo 1 bản sao của shippingAddress (session)
-		ShippingAddress updatedShippingAddress = new ShippingAddress(shippingAddress);
-		updatedShippingAddress.setRecipientName(recipient_name);
-		updatedShippingAddress.setAddress(address);
-
-		try {
-			updatedShippingAddress = shippingAddressDAO.update(updatedShippingAddress);
-			customer.setAddress(updatedShippingAddress);
-			//Đặt lời nhắn thành công
-			request.setAttribute("successMessage", "Cập nhật thành công");
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/customer/account/manage-account.jsp");
-			dispatcher.forward(request, response);
-		} catch (IOException | SQLException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-
-	@Override
-	public void init() throws ServletException {
-		super.init();
-		try {
-			// Dòng bắt buộc để tạo dataSource
-			Context context = new InitialContext();
-			// Tạo và gán dataSource cho adminDAO
-			DataSource dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
-			shippingAddressDAO = new ShippingAddressDAO(dataSource);
-			customerDAO = new CustomerDAO(dataSource);
-		} catch (NamingException e) {
-			// Chưa tìm ra cách xử lý hợp lý
-			e.printStackTrace();
 		}
 	}
 

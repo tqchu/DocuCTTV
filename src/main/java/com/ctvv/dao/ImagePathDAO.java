@@ -11,12 +11,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImagePathDAO extends GenericDAO<ImagePath> {
-
-	public ImagePathDAO(DataSource dataSource) {
-		super(dataSource);
-	}
-
+public class ImagePathDAO
+		implements GenericDAO<ImagePath> {
+	
 	@Override
 	public ImagePath get(int id) {
 	return  null;
@@ -31,7 +28,7 @@ public class ImagePathDAO extends GenericDAO<ImagePath> {
 	@Override
 	public ImagePath create(ImagePath imagePath) {
 		String sql = "INSERT INTO image VALUES(?,?)";
-		try(Connection connection = dataSource.getConnection();
+		try(Connection connection = DataSourceHelper.getDataSource().getConnection();
 		    PreparedStatement statement = connection.prepareStatement(sql)){
 			statement.setInt(1,imagePath.getProductId());
 			statement.setString(2,imagePath.getPath());
@@ -51,7 +48,7 @@ public class ImagePathDAO extends GenericDAO<ImagePath> {
 	@Override
 	public void delete(int productId) {
 		String sql = "DELETE FROM image WHERE product_id=?";
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection();
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setInt(1, productId);
 			statement.execute();
@@ -68,7 +65,7 @@ public class ImagePathDAO extends GenericDAO<ImagePath> {
 	public List<ImagePath> getGroup(int productId) {
 		List<ImagePath> imagePathList = new ArrayList<>();
 		String sql = "SELECT * FROM image WHERE product_id=? ";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql);) {
 			statement.setInt(1, productId);
 			ResultSet resultSet = statement.executeQuery();

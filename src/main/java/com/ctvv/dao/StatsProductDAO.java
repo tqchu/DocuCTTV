@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatsProductDAO extends GenericDAO<StatsProduct> {
+public class StatsProductDAO
+        implements GenericDAO<StatsProduct> {
     private ProductDAO productDAO;
-    public StatsProductDAO(DataSource dataSource) {
-        super(dataSource);
-        productDAO = new ProductDAO(dataSource);
+    public StatsProductDAO() {
+        productDAO = new ProductDAO();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class StatsProductDAO extends GenericDAO<StatsProduct> {
                 "WHERE order_status = 'completed' AND completed_time BETWEEN ? AND ? " +
                 "GROUP BY product_id) result3 " +
                 "ON result2.product_id = result3.product_id";
-        try(Connection connection = dataSource.getConnection();
+        try(Connection connection = DataSourceHelper.getDataSource().getConnection();
             PreparedStatement statement = connection.prepareStatement(sql))
         {
             statement.setTimestamp(1, Timestamp.valueOf(start));

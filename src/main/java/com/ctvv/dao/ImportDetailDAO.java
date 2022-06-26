@@ -12,10 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImportDetailDAO
-		extends GenericDAO<ImportDetail> {
-	public ImportDetailDAO(DataSource dataSource) {
-		super(dataSource);
-	}
+		implements GenericDAO<ImportDetail> {
 
 	@Override
 	public ImportDetail get(int id) {
@@ -33,7 +30,7 @@ public class ImportDetailDAO
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
-			connection = dataSource.getConnection();
+			connection = DataSourceHelper.getDataSource().getConnection();
 			statement = connection.prepareStatement(sql);
 			statement.setInt(1,importDetail.getImportId());
 			statement.setInt(2, importDetail.getProductId());
@@ -79,7 +76,7 @@ public class ImportDetailDAO
 	public List<ImportDetail> getGroup(int importId) {
 		List<ImportDetail> importDetailList = new ArrayList<>();
 		String sql = "SELECT * FROM import_detail WHERE import_id=? ";
-		try (Connection connection = dataSource.getConnection(); PreparedStatement statement =
+		try (Connection connection = DataSourceHelper.getDataSource().getConnection(); PreparedStatement statement =
 				connection.prepareStatement(sql);) {
 			statement.setInt(1, importId);
 			ResultSet resultSet = statement.executeQuery();
