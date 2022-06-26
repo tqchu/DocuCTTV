@@ -4,8 +4,7 @@ import com.ctvv.dao.CustomerDAO;
 import com.ctvv.dao.ShippingAddressDAO;
 import com.ctvv.model.Customer;
 import com.ctvv.model.ShippingAddress;
-import com.ctvv.util.PasswordHashingUtil;
-import com.ctvv.util.RequestUtils;
+import com.ctvv.util.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class CustomerServices {
@@ -109,9 +110,9 @@ public class CustomerServices {
 		String newPassword = request.getParameter("password");
 		if (PasswordHashingUtil.validatePassword(oldPassword, customer.getPassword())) {
 			//đổi mật khẩu trong database
-			customer = customerDAO.update(customer);
-			//đổi mật khẩu cho session hien tai
 			customer.setPassword(PasswordHashingUtil.createHash(newPassword));
+			customerDAO.update(customer);
+			//đổi mật khẩu cho session hien tai
 			request.setAttribute("successMessage", "Đổi mật khẩu thành công");
 		} else {
 			request.setAttribute("wrongOldPasswordMessage", "Sai mật khẩu cũ");
@@ -154,7 +155,8 @@ public class CustomerServices {
 		dispatcher.forward(request, response);
 	}
 
-	public void authenticate(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void authenticate(HttpServletRequest request, HttpServletResponse response) throws IOException,
+	                                                                                          ServletException {
 		session = request.getSession();
 		String from = request.getParameter("from");
 		if (from.equals("")) {
@@ -194,9 +196,141 @@ public class CustomerServices {
 			}
 
 		} else {
-
-			session.setAttribute("loginMessage", "Sai tài khoản hoặc mật khẩu");
-			response.sendRedirect(request.getContextPath() + CUSTOMER_LOGIN_SERVLET);
+			request.setAttribute("loginMessage", "Sai tài khoản hoặc mật khẩu");
+			showLoginForm(request, response);
 		}
+	}
+
+	public void sendSMSOTP(HttpServletRequest request, HttpServletResponse response) {
+		String phoneNumber = request.getParameter("phoneNumber");
+
+		phoneNumber = StringUtils.regionPhoneNumber(phoneNumber);
+		session.setAttribute("phoneNumber", StringUtils.phoneNumberBeginWithZero(phoneNumber));
+		// Tạo otp
+		String otp = UniqueStringUtils.otp();
+		SMSUtils.send(phoneNumber, otp);
+		session.setAttribute("otp", otp);
+		session.setAttribute("expireTime", LocalDateTime.now().plusSeconds(SMSUtils.otpTime));
+		session.setAttribute("registerPhase", "phone-otp");
+	}
+
+	public void verifyPhoneOTP(HttpServletRequest request, HttpServletResponse response) {
+		String otpParam = request.getParameter("otp");
+		LocalDateTime expireTime = (LocalDateTime) session.getAttribute("expireTime");
+		// Trường hợp otp còn hiệu lực
+		if (!expireTime.isBefore(LocalDateTime.now())) {
+			// Success
+			if (otpParam.equals(session.getAttribute("otp"))) {
+
+				Customer customer = customerDAO.findCustomerByPhoneNumber((String) session.getAttribute("phoneNumber"
+				));
+				if (customer != null) {
+					session.setAttribute("oldCustomer", customer);
+					session.setAttribute("duplicatePhoneNumberMessage", "Số điện thoại này đã được đăng ký. " +
+							" \n" +
+							" Bạn " +
+							"muốn" +
+							" đăng nhập hay lấy lại tài khoản?");
+					session.setAttribute("substituteCustomer", customer);
+					session.setAttribute("registerPhase", "phone-otp");
+				} else
+					// Chuyển tới trang email
+					session.setAttribute("registerPhase", "email");
+			}
+			// Sai otp
+			else {
+				session.setAttribute("registerPhase", "phone-otp");
+				session.setAttribute("errorMessage", "Sai OTP");
+			}
+		}
+		// Trường hợp otp đã hết hạn
+		else {
+			session.setAttribute("registerPhase", "phone-otp");
+			session.setAttribute("errorMessage", "OTP đã hết hạn");
+		}
+	}
+
+	public void sendMailOTP(HttpServletRequest request, HttpServletResponse response) {
+		String email = request.getParameter("email");
+		Customer customer = null;
+		customer = customerDAO.findCustomerByEmail(email);
+		if (customer != null) {
+			session.setAttribute("registerPhase", "email");
+			session.setAttribute("errorMessage", "Email đã được sử dụng");
+		} else {
+			session.setAttribute("email", email);
+			// Tạo otp
+			String otp = UniqueStringUtils.otp();
+			EmailUtils.sendOTP(email, otp);
+			session.setAttribute("otp", otp);
+			session.setAttribute("expireTime", LocalDateTime.now().plusSeconds(SMSUtils.otpTime));
+			session.setAttribute("registerPhase", "email-otp");
+		}
+	}
+
+	public void verifyMailOTP(HttpServletRequest request, HttpServletResponse response) {
+		String otpParam = request.getParameter("otp");
+		LocalDateTime expireTime = (LocalDateTime) session.getAttribute("expireTime");
+		// Trường hợp otp còn hiệu lực
+		if (!expireTime.isBefore(LocalDateTime.now())) {
+			// Success
+			if (otpParam.equals(session.getAttribute("otp"))) {
+				// Chuyển tới trang thiết lập tài khoản
+				session.setAttribute("registerPhase", "set-up");
+			}
+			// Sai otp
+			else {
+				session.setAttribute("registerPhase", "email-otp");
+				session.setAttribute("errorMessage", "Sai OTP");
+			}
+		}
+		// Trường hợp otp đã hết hạn
+		else {
+			session.setAttribute("registerPhase", "email-otp");
+			session.setAttribute("errorMessage", "OTP đã hết hạn");
+		}
+	}
+
+	public void register(HttpServletRequest request, HttpServletResponse response) {
+		String phoneNumber = (String) session.getAttribute("phoneNumber");
+		session.removeAttribute("phoneNumber");
+		String fullName = request.getParameter("fullName");
+		String password = request.getParameter("password");
+		String dateOfBirthParam = request.getParameter("dateOfBirth");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate dateOfBirth = LocalDate.parse(dateOfBirthParam, formatter);
+		String genderParam = request.getParameter("gender");
+		Customer.Gender gender = null;
+		switch (genderParam) {
+			case "male":
+				gender = Customer.Gender.MALE;
+				break;
+			case "female":
+				gender = Customer.Gender.FEMALE;
+				break;
+			case "undefined":
+				gender = Customer.Gender.OTHER;
+				break;
+
+		}
+		String address = request.getParameter("address");
+		ShippingAddress shippingAddress = new ShippingAddress(fullName, phoneNumber, address);
+		String email = (String) session.getAttribute("email");
+		session.removeAttribute("email");
+		Customer customer = new Customer(password, gender, fullName, phoneNumber, dateOfBirth, email, shippingAddress);
+		session.setAttribute("customer", customerDAO.create(customer));
+	}
+
+	public void takeBackAccount(HttpServletRequest request, HttpServletResponse response) {
+		// Đổi sdt người dùng cũ sang null
+		Customer oldCustomer = (Customer) session.getAttribute("oldCustomer");
+		oldCustomer.setPhoneNumber(null);
+		CustomerDAO customerDAO = new CustomerDAO();
+		customerDAO.update(oldCustomer);
+		// remove các attribute k cần thiết
+		session.removeAttribute("oldCustomer");
+		session.removeAttribute("substituteCustomer");
+
+		session.setAttribute("registerPhase", "email");
 	}
 }

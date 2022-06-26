@@ -18,7 +18,7 @@ import java.util.Objects;
 public class AdminServices {
 	private final int NUMBER_OF_RECORDS_PER_PAGE = 10;
 	private final String ADMIN_HOME_SERVLET = "/admin";
-	private final String MANAGE_ADMINS_SERVLET = "/admin/admins/*";
+	private final String MANAGE_ADMINS_SERVLET = "/admin/admins";
 	HttpSession session;
 	private AdminDAO adminDAO = new AdminDAO();
 

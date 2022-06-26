@@ -84,7 +84,7 @@ public class CustomerDAO
 		     PreparedStatement statement = connection.prepareStatement(sql)) {
 			statement.setString(1, customer.getPhoneNumber());
 			statement.setString(2, customer.getEmail());
-			statement.setString(3, PasswordHashingUtil.createHash(customer.getPassword()));
+			statement.setString(3, customer.getPassword());
 			statement.setString(4, customer.getFullName());
 			statement.setDate(5, Date.valueOf(customer.getDateOfBirth()));
 			statement.setInt(6, customer.getGender().getValue());

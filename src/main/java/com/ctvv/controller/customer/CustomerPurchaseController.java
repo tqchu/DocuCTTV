@@ -29,39 +29,14 @@ public class CustomerPurchaseController
 		orderServices.viewOrdersForCustomer(request, response);
 	}
 
-
-	private void viewOrderDetail(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-	                                                                                              IOException {
-
-	}
-
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getParameter("action");
-		// to-ship, to-receive, cancel
 		if (action.equals("create")) {
 			orderServices.create(request, response);
 		} else {
-			String id = (request.getParameter("id"));
-			Order order = orderDAO.get(id);
-			switch (action) {
-				case "cancel":
-					order.setStatus(Order.OrderStatus.CANCELED);
-					break;
-
-			}
-			orderDAO.update(order);
-			response.sendRedirect(request.getParameter("from"));
+			orderServices.cancelOrderForCustomer(request, response);
 		}
-	}
-
-	private void create(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-	}
-
-	@Override
-	public void init() throws ServletException {
-		super.init();
 	}
 }

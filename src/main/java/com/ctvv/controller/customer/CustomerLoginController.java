@@ -1,10 +1,7 @@
 package com.ctvv.controller.customer;
 
-import com.ctvv.dao.CustomerDAO;
-import com.ctvv.model.Customer;
 import com.ctvv.service.CustomerServices;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

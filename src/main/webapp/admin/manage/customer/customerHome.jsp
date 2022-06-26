@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+
 <div class="search">
     <form action="${context}/admin/customers/search" class="search__form">
         <input type="search" class="search__bar form-control" name="keyword"
@@ -11,6 +12,21 @@
 
     </form>
 </div>
+
+<c:if test="${not empty successMessage}">
+    <div class="toast align-items-center toast-message toast-message--success show" role="alert"
+         aria-live="assertive"
+         aria-atomic="true" data-bs-autohide="false">
+        <div class="d-flex ">
+            <div class="toast-body">
+                    ${successMessage}
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+    <c:remove var="successMessage" scope="session"/>
+</c:if>
 <div class="list">
     <table class="table table-hover table-bordered ">
         <thead>

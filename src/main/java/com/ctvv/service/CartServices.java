@@ -19,8 +19,8 @@ import java.util.List;
 
 public class CartServices {
 	private static final String CHECKOUT_PAGE = "/customer/checkout/checkout.jsp";
-	private ProductDAO productDAO;
-	private StockItemDAO stockItemDAO;
+	private ProductDAO productDAO = new ProductDAO();
+	private StockItemDAO stockItemDAO = new StockItemDAO();
 	private HttpSession session;
 
 	public void checkout(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

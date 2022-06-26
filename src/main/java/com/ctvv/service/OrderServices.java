@@ -24,6 +24,7 @@ import java.util.List;
 
 public class OrderServices {
 	private static final int NUMBER_OF_RECORDS_PER_ADMIN_MANAGE_ORDER_PAGE = 10;
+	private static final int NUMBER_OF_RECORDS_PER_CUSTOMER_MANAGE_ORDER_PAGE = 10;
 	private final String PENDING = "/pending";
 	private final String TO_SHIP = "/to-ship";
 	private final String TO_RECEIVE = "/to-receive";
@@ -190,7 +191,7 @@ public class OrderServices {
 				session = request.getSession();
 				Customer customer = (Customer) session.getAttribute("customer");
 				String keyword = request.getParameter("keyword");
-				int begin = RequestUtils.getBegin(request, NUMBER_OF_RECORDS_PER_PAGE);
+				int begin = RequestUtils.getBegin(request, NUMBER_OF_RECORDS_PER_CUSTOMER_MANAGE_ORDER_PAGE);
 				String sortBy;
 				if (status.name().equals("COMPLETED"))
 					sortBy = "completed_time";
@@ -200,9 +201,10 @@ public class OrderServices {
 				if (order == null) order = "DESC";
 				//Xử lý numberOfPages
 				int numberOfPages =
-						(orderDAO.countForCustomer(status, keyword, customer.getUserId()) - 1) / NUMBER_OF_RECORDS_PER_PAGE + 1;
+						(orderDAO.countForCustomer(status, keyword, customer.getUserId()) - 1) / NUMBER_OF_RECORDS_PER_CUSTOMER_MANAGE_ORDER_PAGE + 1;
 				request.setAttribute("numberOfPages", numberOfPages);
-				List<Order> orderList = orderDAO.getAllForCustomers(begin, NUMBER_OF_RECORDS_PER_PAGE, status, keyword
+				List<Order> orderList = orderDAO.getAllForCustomers(begin,
+						NUMBER_OF_RECORDS_PER_CUSTOMER_MANAGE_ORDER_PAGE, status, keyword
 						, sortBy,
 						order,
 						customer.getUserId());
@@ -217,7 +219,8 @@ public class OrderServices {
 		}
 	}
 
-	private void viewOrderDetailForCustomer(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void viewOrderDetailForCustomer(
+			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String orderId = (request.getPathInfo().substring(1));
 		Order order = orderDAO.get(orderId);
 		request.setAttribute("tab", "orderDetail");
@@ -227,6 +230,7 @@ public class OrderServices {
 	}
 
 	public void create(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		session = request.getSession();
 		String recipientName = request.getParameter("recipientName");
 		String phoneNumber = request.getParameter("phoneNumber");
 		String address = request.getParameter("address");
@@ -267,5 +271,13 @@ public class OrderServices {
 				null);
 		session.setAttribute("successMessage", "Đơn hàng " + orderId + " đã được đặt thành công, đang chờ xác nhận!");
 		response.sendRedirect(request.getContextPath() + request.getServletPath() + PENDING);
+	}
+
+	public void cancelOrderForCustomer(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String id = (request.getParameter("id"));
+		Order order = orderDAO.get(id);
+		order.setStatus(Order.OrderStatus.CANCELED);
+		orderDAO.update(order);
+		response.sendRedirect(request.getParameter("from"));
 	}
 }

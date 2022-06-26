@@ -3,10 +3,12 @@ package com.ctvv.controller.customer;
 import com.ctvv.dao.CustomerDAO;
 import com.ctvv.model.Customer;
 import com.ctvv.model.ShippingAddress;
+import com.ctvv.service.CustomerServices;
 import com.ctvv.util.EmailUtils;
 import com.ctvv.util.SMSUtils;
 import com.ctvv.util.StringUtils;
 import com.ctvv.util.UniqueStringUtils;
+import org.checkerframework.checker.units.qual.C;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -25,18 +27,11 @@ public class CustomerRegisterController
 		extends HttpServlet {
 
 	private static final String HOME_SERVLET = "/register";
-	private final String HOME_PAGE = "/customer/register/register.jsp";
-	private final String PHONE_OTP_PAGE = "/customer/register/otp.jsp";
-	private final String EMAIL_PAGE = "/customer/register/email.jsp";
-	private final String EMAIL_OTP_PAGE = "/customer/register/otpEmail.jsp";
-	private final String SETUP_PAGE = "/customer/register/setUp.jsp";
-	private HttpSession session;
-	private CustomerDAO customerDAO;
-
+	private CustomerServices customerServices = new CustomerServices();
 	@Override
 	protected void doGet(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session = request.getSession();
+		HttpSession session = request.getSession();
 		Customer customer = (Customer) session.getAttribute("customer");
 		// Dispatch về home_page
 		if (customer == null) {
@@ -44,8 +39,13 @@ public class CustomerRegisterController
 			String page = "";
 
 			if (registerPhase == null) {
+				String HOME_PAGE = "/customer/register/register.jsp";
 				page = HOME_PAGE;
 			} else {
+				String PHONE_OTP_PAGE = "/customer/register/otp.jsp";
+				String EMAIL_PAGE = "/customer/register/email.jsp";
+				String EMAIL_OTP_PAGE = "/customer/register/otpEmail.jsp";
+				String SETUP_PAGE = "/customer/register/setUp.jsp";
 				switch (registerPhase) {
 					case "phone-otp":
 						page = PHONE_OTP_PAGE;
@@ -72,169 +72,34 @@ public class CustomerRegisterController
 	@Override
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		session = request.getSession();
 		String phase = request.getParameter("phase");
 		if (phase.equals("takeBackAccount")) {
-			// Đổi sdt người dùng cũ sang null
-			Customer oldCustomer = (Customer) session.getAttribute("oldCustomer");
-			oldCustomer.setPhoneNumber(null);
-			customerDAO.update(oldCustomer);
-			// remove các attribute k cần thiết
-			session.removeAttribute("oldCustomer");
-			session.removeAttribute("substituteCustomer");
-
-			session.setAttribute("registerPhase", "email");
+			customerServices.takeBackAccount(request, response);
 
 		} else
 			switch (phase) {
 				case "phone":
-					sendSMSOTP(request, response);
+					customerServices.sendSMSOTP(request, response);
 					break;
 				case "otp-phone":
-					verifyPhoneOTP(request, response);
+					customerServices.verifyPhoneOTP(request, response);
 					break;
 				case "email":
-					sendMailOTP(request, response);
+					customerServices.sendMailOTP(request, response);
 					break;
 				case "otp-email":
-					verifyMailOTP(request, response);
+					customerServices.verifyMailOTP(request, response);
 					break;
 				case "set-up":
-					register(request, response);
+					customerServices.register(request, response);
 					break;
 			}
 
 		redirectToHome(request, response);
 	}
 
-	private void sendSMSOTP(HttpServletRequest request, HttpServletResponse response) {
-		String phoneNumber = request.getParameter("phoneNumber");
-
-		phoneNumber = StringUtils.regionPhoneNumber(phoneNumber);
-		session.setAttribute("phoneNumber", StringUtils.phoneNumberBeginWithZero(phoneNumber));
-		// Tạo otp
-		String otp = UniqueStringUtils.otp();
-		SMSUtils.send(phoneNumber, otp);
-		session.setAttribute("otp", otp);
-		session.setAttribute("expireTime", LocalDateTime.now().plusSeconds(SMSUtils.otpTime));
-		session.setAttribute("registerPhase", "phone-otp");
-	}
-
-	private void verifyPhoneOTP(HttpServletRequest request, HttpServletResponse response) {
-		String otpParam = request.getParameter("otp");
-		LocalDateTime expireTime = (LocalDateTime) session.getAttribute("expireTime");
-		// Trường hợp otp còn hiệu lực
-		if (!expireTime.isBefore(LocalDateTime.now())) {
-			// Success
-			if (otpParam.equals(session.getAttribute("otp"))) {
-
-				Customer customer = customerDAO.findCustomerByPhoneNumber((String) session.getAttribute("phoneNumber"
-				));
-				if (customer != null) {
-					session.setAttribute("oldCustomer", customer);
-					session.setAttribute("duplicatePhoneNumberMessage", "Số điện thoại này đã được đăng ký. " +
-							" \n" +
-							" Bạn " +
-							"muốn" +
-							" đăng nhập hay lấy lại tài khoản?");
-					session.setAttribute("substituteCustomer", customer);
-					session.setAttribute("registerPhase", "phone-otp");
-				} else
-					// Chuyển tới trang email
-					session.setAttribute("registerPhase", "email");
-			}
-			// Sai otp
-			else {
-				session.setAttribute("registerPhase", "phone-otp");
-				session.setAttribute("errorMessage", "Sai OTP");
-			}
-		}
-		// Trường hợp otp đã hết hạn
-		else {
-			session.setAttribute("registerPhase", "phone-otp");
-			session.setAttribute("errorMessage", "OTP đã hết hạn");
-		}
-	}
-
-	private void sendMailOTP(HttpServletRequest request, HttpServletResponse response) {
-		String email = request.getParameter("email");
-		Customer customer = null;
-		customer = customerDAO.findCustomerByEmail(email);
-		if (customer != null) {
-			session.setAttribute("registerPhase", "email");
-			session.setAttribute("errorMessage", "Email đã được sử dụng");
-		} else {
-			session.setAttribute("email", email);
-			// Tạo otp
-			String otp = UniqueStringUtils.otp();
-			EmailUtils.sendOTP(email, otp);
-			session.setAttribute("otp", otp);
-			session.setAttribute("expireTime", LocalDateTime.now().plusSeconds(SMSUtils.otpTime));
-			session.setAttribute("registerPhase", "email-otp");
-		}
-
-	}
-
-	private void verifyMailOTP(HttpServletRequest request, HttpServletResponse response) {
-		String otpParam = request.getParameter("otp");
-		LocalDateTime expireTime = (LocalDateTime) session.getAttribute("expireTime");
-		// Trường hợp otp còn hiệu lực
-		if (!expireTime.isBefore(LocalDateTime.now())) {
-			// Success
-			if (otpParam.equals(session.getAttribute("otp"))) {
-				// Chuyển tới trang thiết lập tài khoản
-				session.setAttribute("registerPhase", "set-up");
-			}
-			// Sai otp
-			else {
-				session.setAttribute("registerPhase", "email-otp");
-				session.setAttribute("errorMessage", "Sai OTP");
-			}
-		}
-		// Trường hợp otp đã hết hạn
-		else {
-			session.setAttribute("registerPhase", "email-otp");
-			session.setAttribute("errorMessage", "OTP đã hết hạn");
-		}
-	}
-
-	private void register(HttpServletRequest request, HttpServletResponse response) {
-		String phoneNumber = (String) session.getAttribute("phoneNumber");
-		session.removeAttribute("phoneNumber");
-		String fullName = request.getParameter("fullName");
-		String password = request.getParameter("password");
-		String dateOfBirthParam = request.getParameter("dateOfBirth");
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		LocalDate dateOfBirth = LocalDate.parse(dateOfBirthParam, formatter);
-		String genderParam = request.getParameter("gender");
-		Customer.Gender gender = null;
-		switch (genderParam) {
-			case "male":
-				gender = Customer.Gender.MALE;
-				break;
-			case "female":
-				gender = Customer.Gender.FEMALE;
-				break;
-			case "undefined":
-				gender = Customer.Gender.OTHER;
-				break;
-
-		}
-		String address = request.getParameter("address");
-		ShippingAddress shippingAddress = new ShippingAddress(fullName, phoneNumber, address);
-		String email = (String) session.getAttribute("email");
-		session.removeAttribute("email");
-		Customer customer = new Customer(password, gender, fullName, phoneNumber, dateOfBirth, email, shippingAddress);
-		session.setAttribute("customer", customerDAO.create(customer));
-	}
-
 	private void redirectToHome(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		response.sendRedirect(request.getContextPath() + HOME_SERVLET);
 	}
 
-	@Override
-	public void init() throws ServletException {
-		super.init();
-		customerDAO = new CustomerDAO();
-	}
 }
