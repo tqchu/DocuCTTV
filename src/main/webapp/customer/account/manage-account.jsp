@@ -91,7 +91,7 @@
                         <div class="user__manage-account__content__main">
                             <c:if test="${not empty successMessage}">
                                 <div
-                                        class="user__manage-account__update__message user__manage-account__update__message--success">
+                                        class="user__manage-account__update__message success-message">
                                         ${successMessage}
                                 </div>
                             </c:if>
@@ -139,6 +139,7 @@
 
                                 <input type="submit"
                                        class="btn btn-md btn-primary user__manage-account__profile__submit-btn"
+                                       style="width:100px"
                                        value="Lưu"
                                 />
                             </form>
@@ -168,7 +169,7 @@
                                     </c:if>
                                     <c:if test="${not empty successMessage}">
                                         <div
-                                                class="user__manage-account__update__message user__manage-account__update__message--success">
+                                                class="user__manage-account__update__message success-message">
                                                 ${successMessage}
                                         </div>
                                     </c:if>
@@ -191,7 +192,7 @@
                                         </div>
                                         <input type="submit"
                                                class="btn btn-md btn-primary user__manage-account__profile__submit-btn"
-                                               value="Xác nhận"
+                                               style="width:160px" value="Xác nhận"
                                         />
                                     </form>
                                 </div>
@@ -219,7 +220,7 @@
                                     </c:if>
                                     <c:if test="${not empty successMessage}">
                                         <div
-                                                class="user__manage-account__update__message user__manage-account__update__message--success">
+                                                class="user__manage-account__update__message success-message">
                                                 ${successMessage}
                                         </div>
                                     </c:if>
@@ -247,7 +248,7 @@
                                         </div>
                                         <input type="submit"
                                                class="btn btn-md btn-primary user__manage-account__profile__submit-btn"
-                                               value="Xác nhận"
+                                               style="width:160px"   value="Xác nhận"
                                         />
                                     </form>
                                 </div>

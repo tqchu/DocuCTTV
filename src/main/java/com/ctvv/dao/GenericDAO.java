@@ -11,25 +11,25 @@ interface GenericDAO<T> {
 	 * @param id id of the entity
 	 * @return entity
 	 */
-	abstract public T get(int id);
+	T get(int id);
 
 	/**
 	 * @return list of entities, emmpty list if no was found
 	 */
-	abstract public List<T> getAll();
+	List<T> getAll();
 
 	/**
 	 * @param t the entity to be persisted
 	 * @return the persisted entity
 	 */
-	abstract public T create(T t);
+	T create(T t);
 
-	abstract public T update(T t);
+	T update(T t);
 
-	abstract public void delete(int id);
+	void delete(int id);
 
 	/**
 	 * Map a result set row to an entity
 	 */
-	abstract  public T map(ResultSet resultSet);
+	T map(ResultSet resultSet);
 }

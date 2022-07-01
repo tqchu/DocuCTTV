@@ -118,7 +118,7 @@ public class EmailUtils {
 		sendEmail(toEmail, subject, content);
 
 	}
-	private static void sendEmail(String toEmail, String subject, String content){
+	public static void sendEmail(String toEmail, String subject, String content){
 		String host = "smtp.gmail.com";
 
 		Properties properties = System.getProperties();

@@ -124,7 +124,7 @@ public class ProviderServices {
 		boolean isPhoneNumberValid =
 				(Objects.equals(phoneNumber, provider.getPhoneNumber())) || (providerDAO.findByPhoneNumber(phoneNumber) == null);
 		if (isEmailValid && isTaxIdValid && isNameValid && isPhoneNumberValid) {
-			provider = new Provider(providerId, providerName, phoneNumber, address, email, taxId);
+			provider = new Provider(providerId, providerName, address,phoneNumber, email, taxId);
 			providerDAO.update(provider);
 			session.setAttribute("successMessage", "Cập nhật thành công!");
 			try {

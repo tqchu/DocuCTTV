@@ -55,7 +55,7 @@ public class CustomerServices {
 
 		}
 		customerDAO.update(customer);
-		session.setAttribute("successMessage", action.equals("activate")?"Bỏ khóa":"Khóa"+" tài khoản khách hàng " +
+		session.setAttribute("successMessage", (action.equals("activate")?"Bỏ khóa":"Khóa")+" tài khoản khách hàng " +
 				"thành " +
 				"công");
 		try {

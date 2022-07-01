@@ -262,12 +262,13 @@ public class OrderServices {
 		}
 
 		int customerId = Integer.parseInt(request.getParameter("customerId"));
+		Customer customer = customerDAO.get(customerId);
 		String customerName = request.getParameter("customerName");
 		LocalDateTime orderTime = LocalDateTime.now();
 		Order order = new Order(orderId, customerId, customerName, recipientName, phoneNumber, address, orderTime,
 				null, null, null, null, orderDetailList, shippingFee);
 		orderDAO.create(order);
-		EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.ORDERED_ORDER, "truongquangchu.tqc@gmail.com", order, null,
+		EmailUtils.sendOrderEmail(EmailUtils.EMAIL_TYPE.ORDERED_ORDER, customer.getEmail(), order, null,
 				null);
 		session.setAttribute("successMessage", "Đơn hàng " + orderId + " đã được đặt thành công, đang chờ xác nhận!");
 		response.sendRedirect(request.getContextPath() + request.getServletPath() + PENDING);

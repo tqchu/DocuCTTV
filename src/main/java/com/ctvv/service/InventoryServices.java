@@ -122,6 +122,8 @@ public class InventoryServices {
 	}
 
 	public void create(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		httpSession = request.getSession();
 		int providerId = Integer.parseInt(request.getParameter("providerId"));
 		Provider provider = providerDAO.get(providerId);
 		String providerTaxId = provider.getTaxId();
@@ -143,7 +145,7 @@ public class InventoryServices {
 			double tax = Integer.parseInt(taxParams[i]) / 100.0;
 			importDetailList.add(new ImportDetail(productId, product.getName(), quantity, price, tax));
 		}
-		Import anImport = new Import(importerName, providerId, providerTaxId, provider.getProviderName(), importDate
+		Import anImport = new Import(importerName, providerId,  provider.getProviderName(),providerTaxId, importDate
 				, 0,
 				importDetailList);
 		importDAO.create(anImport);

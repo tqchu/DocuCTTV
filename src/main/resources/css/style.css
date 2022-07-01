@@ -638,6 +638,9 @@
     text-align: start;
     margin-bottom: 10px;
 }
+.login__fail-message.error-message {
+    margin-left: 20px;
+}
 
 
 .create-admin__form-box {
@@ -647,4 +650,7 @@
     color: #fff;
     margin-top: 10px;
     background-color: var(--solid-red);
+}
+.user__manage-account__update__message{
+    margin-left: 160px;
 }

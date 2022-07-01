@@ -174,7 +174,7 @@ public class AdminServices {
 		dispatcher.forward(request, response);
 	}
 
-	public void createAdmin(HttpServletRequest request, HttpServletResponse response) {
+	public void createAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		session = request.getSession();
 		String username = request.getParameter("username");
 		String password = UniqueStringUtils.randomUUID(8);
@@ -205,10 +205,10 @@ public class AdminServices {
 			if (adminDAO.findByPhoneNumber(phoneNumber) != null) {
 				request.setAttribute("phoneNumberErrorMessage", "Số điện thoại đã tồn tại, vui lòng chọn tên khác");
 			}
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/admins/addForm.jsp");
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/admin/manage/admins/addForm.jsp");
 			try {
 				dispatcher.forward(request, response);
-			} catch (IOException | ServletException ex) {
+			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
 		}

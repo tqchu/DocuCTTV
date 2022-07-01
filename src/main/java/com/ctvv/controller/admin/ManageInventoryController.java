@@ -53,7 +53,7 @@ public class ManageInventoryController
 	protected void doPost(
 			HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String path = request.getPathInfo();
-		if (path.equals("/history/download")) {
+		if ((path!=null) && (path.equals("/history/download"))) {
 			inventoryServices.downloadImportReport(request, response);
 		} else {
 			String action = request.getParameter("action");

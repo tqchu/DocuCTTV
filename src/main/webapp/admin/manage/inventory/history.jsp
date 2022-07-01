@@ -26,7 +26,7 @@
             class="las la-plus"></i></a>
 </div>
 <c:if test="${successMessage!=null}">
-    <div class="toast align-items-center toast-message toast-message--success" role="alert"
+    <div class="toast align-items-center toast-message toast-message--success show" role="alert"
          aria-live="assertive"
          aria-atomic="true" data-bs-autohide="false">
         <div class="d-flex ">

@@ -10,6 +10,7 @@ import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,10 +22,11 @@ public class JasperReportUtils {
 		parameters.put("providerName", anImport.getProviderName());
 		parameters.put("providerTaxId", anImport.getProviderTaxId());
 
-		parameters.put("totalPrice", (long)anImport.getTotalPrice());
-		parameters.put("day", 5);
-		parameters.put("month", 6);
-		parameters.put("year", 2022);
+		parameters.put("totalPrice", anImport.getTotalPrice());
+		LocalDate thisDay = LocalDate.now();
+		parameters.put("day", thisDay.getDayOfMonth());
+		parameters.put("month", thisDay.getMonthValue());
+		parameters.put("year", thisDay.getYear());
 		parameters.put("importerName", anImport.getImporterName());
 		parameters.put("CollectionBeanDataSet", collectionDataSource);
 

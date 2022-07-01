@@ -88,14 +88,15 @@
                                     <div class="form-in-modal">
                                         <form action="${context}/admin/customers"
                                               class="delete-form" method="post">
-                                            Bạn có chắc chắn ${currentRow.active?'khóa':'bỏ khóa'} tài khoản khách hàng
-                                            này?
+                                            <span style="width: 100%;display: block;text-align: center;">Bạn có chắc chắn ${currentRow.active?'khóa':'bỏ khóa'} tài khoản
+                                                khách hàng
+                                            này?</span>
                                             <input type="hidden" name="action"
                                                    value="${currentRow.active?'deactivate':'activate'}">
                                             <input type="hidden" name="id"
                                                    value="${currentRow.userId}">
                                             <button type="submit"
-                                                    class="confirm-delete-btn btn text-center">
+                                                    class="confirm-delete-btn btn text-center" style="margin-left:160px">
                                                 Xác nhận
                                             </button>
                                         </form>

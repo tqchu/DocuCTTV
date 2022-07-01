@@ -22,17 +22,19 @@ public class Product {
 	}
 
 	public Product(Product product) {
-		this.productId = product.productId;
-		this.name = product.name;
-		this.warrantyPeriod = product.warrantyPeriod;
-		this.material = product.material;
-		this.dimension = product.dimension;
-		this.description = product.description;
-		this.price = product.price;
-		this.category = product.category;
-		if (product.imagePathList != null)
-			this.imagePathList = new ArrayList<>(product.imagePathList);
-		this.uri = product.uri;
+		if (product!=null){
+			this.productId = product.productId;
+			this.name = product.name;
+			this.warrantyPeriod = product.warrantyPeriod;
+			this.material = product.material;
+			this.dimension = product.dimension;
+			this.description = product.description;
+			this.price = product.price;
+			this.category = product.category;
+			if (product.imagePathList != null)
+				this.imagePathList = new ArrayList<>(product.imagePathList);
+			this.uri = product.uri;
+		}
 	}
 
 	public Product(
