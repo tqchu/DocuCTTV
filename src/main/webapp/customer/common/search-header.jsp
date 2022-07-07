@@ -3,7 +3,7 @@
 
 <%--CONTENT--%>
 <div class="header">
-    <a href="${context}" class="header__logo"></a>
+    <a href="${context}/" class="header__logo"></a>
     <c:if test="${not empty action}">
         <div class="header__action">
                 ${action}
