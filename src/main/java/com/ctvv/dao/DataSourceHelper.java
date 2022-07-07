@@ -16,7 +16,6 @@ public class DataSourceHelper {
 			Context context;
 			try {
 				context = new InitialContext();
-//				dataSource = (DataSource) context.lookup("java:comp/env/jdbc/sb9hnupswpo6p7e3");
 				dataSource = (DataSource) context.lookup("java:comp/env/jdbc/ctvv");
 			} catch (NamingException e) {
 				e.printStackTrace();

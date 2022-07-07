@@ -13,6 +13,7 @@ import java.util.List;
 public class 	AdminDAO
 		implements GenericDAO<Admin> {
 
+	@Override
 	public Admin get(int id){
 		Admin admin = new Admin();
 		String sql = "SELECT * FROM admin WHERE user_id=? ";
